@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Open Inference Fabric</title>
+<meta name="description" content="Open source, bare metal to tokens: one platform to schedule, serve, benchmark and observe LLMs on NVIDIA and AMD GPUs.">
+<meta property="og:title" content="Open Inference Fabric">
+<meta property="og:description" content="Open source, bare metal to tokens: Run:ai, KAI Scheduler and Dynamo on NVIDIA and AMD GPUs.">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<meta property="og:url" content="https://openinferencefabric.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column of sections on a quiet paper ground; the brand weave carries the colour. */
+:root {
+  --bg: #F3F5F6; --surface: #FFFFFF; --fg: #16202A; --muted: #56636E; --line: #D9DFE3;
+  --teal: #0E7C86; --saffron: #E39A2D; --ink: #16202A; --tint: #E3F0F1;
+  --g: var(--bg); --i: var(--ink); --t: var(--teal); --s: var(--saffron);
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0E141A; --surface: #151D25; --fg: #E6EBEE; --muted: #9AA6B0; --line: #26313B;
+    --teal: #2BA7B1; --saffron: #F0AE48; --ink: #E6EBEE; --tint: #13262A; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.6 var(--body); }
+a { color: var(--teal); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+header.top { padding-block: 22px; display: flex; align-items: center; gap: 12px; }
+header.top svg { width: 56px; height: auto; }
+header.top b { font: 700 20px/1 var(--display); letter-spacing: -0.01em; }
+header.top nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; font-size: 15px; }
+header.top nav a { color: var(--fg); text-decoration: none; }
+header.top nav a:hover { color: var(--teal); }
+h1, h2, h3 { font-family: var(--display); letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+.hero { padding-block: 48px 56px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; }
+.hero h1 { font-size: clamp(36px, 5.4vw, 60px); font-weight: 800; line-height: 1.02; }
+.hero h1 em { font-style: normal; color: var(--teal); }
+.hero p { font-size: 19px; color: var(--muted); max-width: 56ch; margin: 18px 0 0; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+.btn { display: inline-block; padding: 11px 18px; border-radius: 6px; font-weight: 600; text-decoration: none; border: 1px solid var(--line); color: var(--fg); background: var(--surface); }
+.btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.hero .mark svg { width: 100%; max-width: 380px; height: auto; display: block; margin-left: auto; }
+section { padding-block: 44px; border-top: 1px solid var(--line); }
+.eyebrow { font: 500 13px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+h2 { font-size: clamp(26px, 3.4vw, 36px); font-weight: 800; }
+.lede { color: var(--muted); max-width: 64ch; margin: 12px 0 0; }
+.stack { margin-top: 26px; display: grid; gap: 10px; }
+.layer { display: grid; grid-template-columns: 180px 1fr; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; }
+.layer b { font-family: var(--display); font-size: 18px; }
+.layer span { color: var(--muted); min-width: 0; }
+.stats { margin-top: 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-top: 6px solid var(--saffron); border-radius: 8px; padding: 16px 18px; }
+.stat:nth-child(odd) { border-top-color: var(--teal); }
+.stat b { display: block; font: 800 40px/1.1 var(--display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 15px; }
+.shots { margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.shots figure { margin: 0; }
+.shots img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); display: block; }
+.shots figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+table { border-collapse: collapse; width: 100%; margin-top: 22px; font-size: 15px; }
+.tbl { overflow-x: auto; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 13px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td code, .mono { font-family: var(--mono); font-size: 14px; }
+.state { display: inline-block; font: 500 12px var(--mono); padding: 2px 8px; border-radius: 999px; background: var(--tint); color: var(--teal); white-space: nowrap; }
+.join { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
+.join div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+.join h3 { font-size: 22px; color: var(--teal); }
+.join p { margin: 6px 0 0; color: var(--muted); }
+footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+@media (max-width: 820px) {
+  .hero { grid-template-columns: 1fr; padding-block: 28px 40px; }
+  .hero .mark { display: none; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .shots, .join { grid-template-columns: 1fr; }
+  .layer { grid-template-columns: 1fr; gap: 2px; }
+  header.top nav { display: none; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="weave" viewBox="0 0 132 100">
+    <rect x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--t)"/>
+    <rect x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--s)"/>
+    <rect x="8" y="27" width="76" height="21" style="fill:var(--g)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--i)"/>
+    <rect x="8" y="53" width="76" height="21" style="fill:var(--g)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--i)"/>
+    <rect x="51" y="29" width="21" height="17" style="fill:var(--g)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--s)"/>
+    <rect x="23" y="55" width="21" height="17" style="fill:var(--g)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--t)"/>
+    <circle cx="96" cy="37.5" r="7.5" style="fill:var(--i)"/><circle cx="113" cy="37.5" r="5" style="fill:var(--i)"/><circle cx="125" cy="37.5" r="3" style="fill:var(--i)"/>
+    <circle cx="96" cy="63.5" r="7.5" style="fill:var(--i)"/><circle cx="113" cy="63.5" r="5" style="fill:var(--i)"/><circle cx="125" cy="63.5" r="3" style="fill:var(--i)"/>
+  </symbol>
+</defs></svg>
+
+<div class="wrap">
+  <header class="top">
+    <svg role="img" aria-label="Open Inference Fabric logo"><use href="#weave"/></svg>
+    <b>open inference fabric</b>
+    <nav aria-label="Main">
+      <a href="#what">What it is</a>
+      <a href="#amd">AMD in Run:ai</a>
+      <a href="#upstream">Upstream</a>
+      <a href="#join">Get involved</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>Bare metal to tokens, on <em>NVIDIA and AMD</em> GPUs.</h1>
+      <p>Open Inference Fabric turns GPU servers into one open-source platform to schedule, serve, benchmark and observe language models. One installer, every step tested on real hardware and documented.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/openinferencefabric/oif">View on GitHub</a>
+        <a class="btn" href="https://github.com/openinferencefabric/oif/tree/main/docs/guides">Read the guides</a>
+        <a class="btn" href="https://github.com/openinferencefabric/oif/blob/main/docs/PROJECT-BRIEF.md">Project brief</a>
+      </div>
+    </div>
+    <div class="mark" aria-hidden="true"><svg><use href="#weave"/></svg></div>
+  </div>
+</div>
+
+<section id="what"><div class="wrap">
+  <div class="eyebrow">What it is</div>
+  <h2>One command, a whole inference stack</h2>
+  <p class="lede"><code class="mono">sudo ./oif install</code> builds the platform layer by layer. Every change it makes to a host is recorded, and <code class="mono">oif uninstall</code> takes it back out.</p>
+  <div class="stack">
+    <div class="layer"><b>Kubernetes</b><span>Upstream kubeadm Kubernetes 1.35, hardened, with a highly available control plane</span></div>
+    <div class="layer"><b>GPUs</b><span>NVIDIA GPU Operator and AMD GPU Operator side by side, one vendor per node</span></div>
+    <div class="layer"><b>Orchestration</b><span>Open-source NVIDIA Run:ai 3.0 with the KAI Scheduler: projects, quotas, node pools and fractional GPUs</span></div>
+    <div class="layer"><b>Serving</b><span>NVIDIA Dynamo with vLLM, under Run:ai's quotas <span class="state">in progress</span></span></div>
+    <div class="layer"><b>Observability</b><span>Prometheus and Grafana dashboards that show both GPU vendors on one screen; AIPerf benchmarks</span></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>15</b><span>tested install and deployment guides</span></div>
+    <div class="stat"><b>23</b><span>architecture decision records</span></div>
+    <div class="stat"><b>4</b><span>pull requests to Run:ai and KAI</span></div>
+    <div class="stat"><b>12</b><span>upstream issues with lab evidence</span></div>
+  </div>
+</div></section>
+
+<section id="amd"><div class="wrap">
+  <div class="eyebrow">Run:ai on AMD GPUs</div>
+  <h2>NVIDIA and AMD in one Run:ai</h2>
+  <p class="lede">When NVIDIA open-sourced Run:ai in October 2026, its GPU inventory, interface and GPU fractions were built for NVIDIA. OIF adds AMD: GPUs in the node inventory, a node pool and quota per vendor so a CUDA job never lands on an AMD GPU, and fractional AMD GPUs. Two workloads can share one Radeon Pro W7900 at half a GPU each, with soft memory isolation for trusted teams.</p>
+  <div class="shots">
+    <figure><img src="img/03-form.png" alt="Run:ai form asking for half an AMD GPU in node pool amd" loading="lazy" width="1080" height="1350"><figcaption>Ask for half an AMD GPU in the usual Run:ai form.</figcaption></figure>
+    <figure><img src="img/04-workloads.png" alt="Two Run:ai workloads at 0.5 GPU each on one AMD Radeon Pro W7900" loading="lazy" width="1080" height="1350"><figcaption>Two jobs share one W7900 at 0.5 GPU each.</figcaption></figure>
+    <figure><img src="img/05-grafana.png" alt="Grafana dashboard with an AMD and an NVIDIA GPU side by side" loading="lazy" width="1080" height="1350"><figcaption>Both vendors on one Grafana dashboard.</figcaption></figure>
+  </div>
+</div></section>
+
+<section id="upstream"><div class="wrap">
+  <div class="eyebrow">Upstream first</div>
+  <h2>Work goes back to the projects we build on</h2>
+  <p class="lede">OIF patches are proposed upstream with lab evidence, so everyone running Run:ai or the KAI Scheduler benefits. The full list, with issues, is in <a href="https://github.com/openinferencefabric/oif/blob/main/docs/UPSTREAM.md">UPSTREAM.md</a>.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Pull request</th><th>Change</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3950">run-ai #3950</a></td><td>cluster-sync: count AMD GPUs (<code>amd.com/gpu</code>) in the node inventory</td><td><span class="state">in review</span></td></tr>
+      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3948">run-ai #3948</a></td><td>frontend: AMD icon for workloads on ROCm images</td><td><span class="state">in review</span></td></tr>
+      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3949">run-ai #3949</a></td><td>go-operator: report GPU fractions unavailable when the daemons have no target nodes</td><td><span class="state">in review</span></td></tr>
+      <tr><td><a href="https://github.com/kai-scheduler/KAI-Scheduler/pull/2557">KAI #2557</a></td><td>binder: do not modify the configured reservation pod resources</td><td><span class="state">in review</span></td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="join"><div class="wrap">
+  <div class="eyebrow">Get involved</div>
+  <h2>Help build it</h2>
+  <div class="join">
+    <div><h3>Test</h3><p>Run the guides on NVIDIA, AMD or mixed GPU servers and <a href="https://github.com/openinferencefabric/oif/issues/new/choose">tell us what breaks</a>.</p></div>
+    <div><h3>Review</h3><p>Read and test the upstream pull requests above. Reviews help them land for everyone.</p></div>
+    <div><h3>Contribute</h3><p>Go, Kubernetes, ROCm, CUDA or docs: start with <a href="https://github.com/openinferencefabric/oif/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p></div>
+  </div>
+</div></section>
+
+<div class="wrap">
+  <footer>
+    <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="https://github.com/openinferencefabric">GitHub</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
+    <span>NVIDIA, Run:ai, AMD and Radeon are trademarks of their owners; this project is not affiliated with them.</span>
+  </footer>
+</div>
+</body>
+</html>
