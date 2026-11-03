@@ -9,7 +9,13 @@
    "threads": [
     {"url": "https://github.com/kai-scheduler/gpu-fractioning/issues/173", "kind": "issue", "ref": "K7", "date": "2026-11-03",
      "summary": "AMD backend for fractiond: a hard VRAM cap per pod with the Linux dmem cgroup. Lab: no measurable cost against the whole GPU; the cap refuses an over-ask.",
-     "links": [{"label": "benchmark", "url": "https://manmohanbrahma.github.io/gpu-benchmark/amd-fraction-dmem-cap/"}, {"label": "code", "url": "https://github.com/openinferencefabric/gpu-fractioning"}]}
+     "links": [{"label": "benchmark", "url": "https://manmohanbrahma.github.io/gpu-benchmark/amd-fraction-dmem-cap/"}, {"label": "code", "url": "https://github.com/openinferencefabric/gpu-fractioning"}],
+     "ours": [
+      {"url": "https://github.com/kai-scheduler/gpu-fractioning/issues/173#issuecomment-6613757949", "date": "2026-11-03", "note": "Announces PR #175, reworked to the existing annotation contract; asks about the annotation prefix and the KAI side (KAI#2556)"}
+     ]},
+    {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175", "kind": "pr", "ref": "K7", "date": "2026-11-03",
+     "summary": "feat(fractiond): limit AMD GPU memory with the dmem cgroup. --gpu-vendor=amd turns the existing gpu-memory annotations into dmem.max and dmem.min on the container through NRI; AMD guide in docs/amd (refs #173).",
+     "links": [{"label": "branch", "url": "https://github.com/openinferencefabric/gpu-fractioning/tree/feat/fractiond-amd-dmem"}]}
    ]
   },
   {
