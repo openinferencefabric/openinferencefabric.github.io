@@ -1,0 +1,82 @@
+{
+ "author": "manmohanbrahma",
+ "since": "2026-10-01",
+ "about": "Every upstream thread Open Inference Fabric opened or joined. Add a thread here when it is filed; scripts/upstream_status.py refreshes status.json daily and lists threads it finds that are not here yet. ref = the item in docs/UPSTREAM.md of the oif repository.",
+ "projects": [
+  {
+   "name": "KAI Scheduler gpu-fractioning",
+   "repo": "kai-scheduler/gpu-fractioning",
+   "threads": [
+    {"url": "https://github.com/kai-scheduler/gpu-fractioning/issues/173", "kind": "issue", "ref": "K7", "date": "2026-11-03",
+     "summary": "AMD backend for fractiond: a hard VRAM cap per pod with the Linux dmem cgroup. Lab: no measurable cost against the whole GPU; the cap refuses an over-ask.",
+     "links": [{"label": "benchmark", "url": "https://manmohanbrahma.github.io/gpu-benchmark/amd-fraction-dmem-cap/"}, {"label": "code", "url": "https://github.com/openinferencefabric/gpu-fractioning"}]}
+   ]
+  },
+  {
+   "name": "KAI Scheduler",
+   "repo": "kai-scheduler/KAI-Scheduler",
+   "threads": [
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556", "kind": "issue", "ref": "K1–K4", "date": "2026-11-01",
+     "summary": "GPU fractions on AMD GPU nodes (amd.com/gpu): node helper, scheduler readiness check, binder reservation, resource-reservation without NVML. Design questions first.",
+     "ours": [
+      {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6560342620", "date": "2026-11-01", "note": "Lab measurements: soft memory isolation, 23 GiB taken from a 22.5 GiB share"},
+      {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6598391590", "date": "2026-11-03", "note": "Update: isolation can be hard with the dmem cgroup; links gpu-fractioning#173"}
+     ]},
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2554", "kind": "issue", "ref": "K3b", "date": "2026-11-01",
+     "summary": "The binder changes the configured reservation-pod resources in place on every GPU reservation."},
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557", "kind": "pr", "ref": "K3b", "date": "2026-11-01",
+     "summary": "fix(binder): do not modify the configured reservation pod resources (fixes #2554).",
+     "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557#issuecomment-6570793323", "date": "2026-11-02", "note": "Ping for review, offering to split the PR or add tests"}]},
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555", "kind": "issue", "ref": "K5", "date": "2026-11-01",
+     "summary": "Fraction pods get runtimeClassName nvidia even when they can only run on AMD GPU nodes."},
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544", "kind": "comment", "ref": "K6", "date": "2026-11-01",
+     "summary": "CDI/NRI-native GPU injection for fraction pods (opened by others): our AMD device injector as a working NRI example.",
+     "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544#issuecomment-6557664853", "date": "2026-11-01", "note": "oif-amd-share NRI plugin for AMD fraction pods"}]}
+   ]
+  },
+  {
+   "name": "Run:ai (open source)",
+   "repo": "dsx-ai-factory/run-ai",
+   "threads": [
+    {"url": "https://github.com/dsx-ai-factory/run-ai/discussions/4103", "kind": "discussion", "ref": "K7", "date": "2026-11-03",
+     "summary": "AMD GPU fractions with a hard VRAM cap (dmem cgroup): implementation and lab results, and where it touches Run:ai."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3939", "kind": "issue", "ref": "R1", "date": "2026-11-01",
+     "summary": "cluster-sync: AMD GPUs missing from the node inventory and the Overview GPU total."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/pull/3950", "kind": "pr", "ref": "R1", "date": "2026-11-01",
+     "summary": "cluster-sync: count AMD GPUs (amd.com/gpu) in the node inventory (fixes #3939)."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3940", "kind": "issue", "ref": "R2", "date": "2026-11-01",
+     "summary": "Show an AMD icon for workloads on ROCm images."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/pull/3948", "kind": "pr", "ref": "R2", "date": "2026-11-01",
+     "summary": "frontend: AMD icon for workloads on ROCm images (fixes #3940)."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3941", "kind": "issue", "ref": "R3", "date": "2026-11-01",
+     "summary": "GPU nodes counted as not ready when GPU fractioning has no target nodes."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/pull/3949", "kind": "pr", "ref": "R3", "date": "2026-11-01",
+     "summary": "go-operator: report GPU fractions unavailable when the fractioning daemons have no target nodes (fixes #3941)."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3942", "kind": "issue", "ref": "R4", "date": "2026-11-01",
+     "summary": "A setting to replace the New cluster wizard when clusters are installed by other tooling.",
+     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-6584484326", "date": "2026-11-02", "note": "After the maintainers declined the setting: why the wizard is hard to undo on clusters installed by other tooling"}]},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3943", "kind": "issue", "ref": "R5", "date": "2026-11-01",
+     "summary": "global.replicaCount gives cluster-redis unreplicated copies: workspace logins loop and Jupyter never loads.",
+     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3943#issuecomment-6560336091", "date": "2026-11-01", "note": "Evidence: one cluster-redis copy survives a restart with a workspace logged in"}]},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3944", "kind": "issue", "ref": "R6", "date": "2026-11-01",
+     "summary": "GET /api/v1/org-unit/departments omits defaultNodePools and description."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3945", "kind": "issue", "ref": "R7", "date": "2026-11-01",
+     "summary": "Default node pool order: GPU pools first, or a cluster-level default."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3946", "kind": "issue", "ref": "R9", "date": "2026-11-01",
+     "summary": "Sample workload templates for AMD GPUs (ROCm PyTorch training and Jupyter)."},
+    {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3947", "kind": "issue", "ref": "R10", "date": "2026-11-01",
+     "summary": "First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant."}
+   ]
+  },
+  {
+   "name": "ROCm",
+   "repo": "ROCm/rocm-systems",
+   "threads": [
+    {"url": "https://github.com/ROCm/rocm-systems/issues/14860", "kind": "issue", "ref": "S-8", "date": "2026-11-02",
+     "summary": "hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit: apps inside a cap still see the whole GPU."},
+    {"url": "https://github.com/ROCm/rocm-systems/issues/14861", "kind": "issue", "ref": "S-8", "date": "2026-11-02",
+     "summary": "Per-process compute busy time for KFD queues, for per-container GPU utilisation."}
+   ]
+  }
+ ]
+}

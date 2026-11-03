@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Upstream Contributions · Open Inference Fabric</title>
+<meta name="description" content="Every issue, pull request, discussion and comment Open Inference Fabric has filed upstream with Run:ai, KAI Scheduler and ROCm, with live status.">
+<meta property="og:title" content="Open Inference Fabric upstream contributions">
+<meta property="og:description" content="Issues, pull requests, discussions and comments filed with Run:ai, KAI Scheduler and ROCm, with live status.">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<link rel="icon" href="../img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the site's paper ground; a status strip, then one ledger table per upstream project. */
+:root {
+  --bg: #F3F5F6; --surface: #FFFFFF; --fg: #16202A; --muted: #56636E; --line: #D9DFE3;
+  --teal: #0E7C86; --saffron: #E39A2D; --ink: #16202A; --tint: #E3F0F1;
+  --merged: #6250d6; --merged-bg: #ecebfb; --closed: #6b7280; --closed-bg: #eceef0; --wait-bg: #fdf1dc; --wait: #8a5a00;
+  --g: var(--bg); --i: var(--ink); --t: var(--teal); --s: var(--saffron);
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0E141A; --surface: #151D25; --fg: #E6EBEE; --muted: #9AA6B0; --line: #26313B;
+    --teal: #2BA7B1; --saffron: #F0AE48; --ink: #E6EBEE; --tint: #13262A;
+    --merged: #9085e9; --merged-bg: #221f3d; --closed: #9aa3ad; --closed-bg: #1d242c; --wait-bg: #33270f; --wait: #f0c674; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.6 var(--body); }
+a { color: var(--teal); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+header.top { padding-block: 22px; display: flex; align-items: center; gap: 12px; }
+header.top a.home { display: flex; align-items: center; gap: 12px; color: var(--fg); text-decoration: none; }
+header.top svg { width: 56px; height: 42px; }
+header.top b { font: 700 20px/1 var(--display); letter-spacing: -0.01em; }
+header.top b span { color: var(--teal); }
+header.top nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; font-size: 15px; }
+header.top nav a { color: var(--fg); text-decoration: none; }
+header.top nav a:hover { color: var(--teal); }
+h1, h2, h3 { font-family: var(--display); letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+.intro { padding-block: 36px 28px; }
+.eyebrow { font: 500 13px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+h1 { font-size: clamp(34px, 5vw, 52px); font-weight: 800; line-height: 1.04; }
+.lede { color: var(--muted); max-width: 70ch; margin: 14px 0 0; font-size: 18px; }
+.stats { margin-top: 28px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-top: 6px solid var(--teal); border-radius: 8px; padding: 14px 16px; }
+.stat:nth-child(even) { border-top-color: var(--saffron); }
+.stat b { display: block; font: 800 34px/1.1 var(--display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 14px; }
+.waiting { margin-top: 22px; background: var(--wait-bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; }
+.waiting h3 { font-size: 18px; color: var(--wait); }
+.waiting ul { margin: 8px 0 0; padding-left: 20px; }
+section { padding-block: 34px; border-top: 1px solid var(--line); }
+section h2 { font-size: clamp(24px, 3vw, 30px); font-weight: 800; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+section h2 small { font: 500 14px var(--mono); color: var(--muted); letter-spacing: 0; }
+.tbl { overflow-x: auto; margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 760px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font: 500 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+td.ref { font: 500 14px var(--mono); color: var(--muted); white-space: nowrap; }
+td.thread { white-space: nowrap; }
+td.thread a { font: 600 15px var(--mono); }
+td.when { font: 14px var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.num { font: 14px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+.kind { display: block; font: 500 11px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+.title { font-weight: 600; }
+.sum { color: var(--muted); margin-top: 2px; }
+.ours { margin: 6px 0 0; padding: 0; list-style: none; font-size: 14px; display: grid; gap: 3px; }
+.ours li::before { content: "↳ "; color: var(--saffron); }
+.links { font-size: 14px; margin-top: 4px; display: flex; gap: 12px; flex-wrap: wrap; }
+.state { display: inline-block; font: 500 12px var(--mono); padding: 2px 9px; border-radius: 999px; background: var(--tint); color: var(--teal); white-space: nowrap; }
+.state.merged { background: var(--merged-bg); color: var(--merged); }
+.state.closed { background: var(--closed-bg); color: var(--closed); }
+.state.reply { display: block; width: max-content; margin-top: 6px; background: var(--wait-bg); color: var(--wait); }
+footer { border-top: 1px solid var(--line); padding-block: 26px 40px; color: var(--muted); font-size: 14px; display: grid; gap: 6px; }
+@media (max-width: 820px) { .stats { grid-template-columns: repeat(2, 1fr); } header.top nav { display: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="weave" viewBox="0 0 132 100">
+    <rect x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--t)"/>
+    <rect x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--s)"/>
+    <rect x="8" y="27" width="76" height="21" style="fill:var(--g)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--i)"/>
+    <rect x="8" y="53" width="76" height="21" style="fill:var(--g)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--i)"/>
+    <rect x="51" y="29" width="21" height="17" style="fill:var(--g)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--s)"/>
+    <rect x="23" y="55" width="21" height="17" style="fill:var(--g)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--t)"/>
+    <circle cx="96" cy="37.5" r="7.5" style="fill:var(--i)"/><circle cx="113" cy="37.5" r="5" style="fill:var(--i)"/><circle cx="125" cy="37.5" r="3" style="fill:var(--i)"/>
+    <circle cx="96" cy="63.5" r="7.5" style="fill:var(--i)"/><circle cx="113" cy="63.5" r="5" style="fill:var(--i)"/><circle cx="125" cy="63.5" r="3" style="fill:var(--i)"/>
+  </symbol>
+</defs></svg>
+
+<div class="wrap">
+  <header class="top">
+    <a class="home" href="../"><svg role="img" aria-label="Open Inference Fabric logo"><use href="#weave"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav aria-label="Main">
+      <a href="../">Home</a>
+      <a href="https://github.com/openinferencefabric/oif/blob/main/docs/UPSTREAM.md">UPSTREAM.md</a>
+      <a href="https://manmohanbrahma.github.io/gpu-benchmark/">Benchmarks</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="intro">
+    <p class="eyebrow">Upstream contributions</p>
+    <h1>What OIF has proposed to the projects it builds on</h1>
+    <p class="lede">Every issue, pull request, discussion and comment Open Inference Fabric has filed with Run:ai, KAI Scheduler and ROCm, each backed by lab evidence. Status is read from GitHub every day.</p>
+    <div class="stats" id="stats"></div>
+    <div class="waiting" id="waiting" hidden></div>
+  </div>
+
+  <div id="projects"></div>
+  <section id="new-sec" hidden><h2>Found on GitHub, not yet described here</h2><div class="tbl"><table id="new"></table></div></section>
+
+  <footer>
+    <span id="gen">Loading status…</span>
+    <span>The list lives in <a href="https://github.com/openinferencefabric/openinferencefabric.github.io/blob/main/upstream/contributions.json">upstream/contributions.json</a>; a daily GitHub Action (<a href="https://github.com/openinferencefabric/openinferencefabric.github.io/blob/main/scripts/upstream_status.py">upstream_status.py</a>) refreshes the status and finds new threads. Ref is the item in <a href="https://github.com/openinferencefabric/oif/blob/main/docs/UPSTREAM.md">docs/UPSTREAM.md</a>.</span>
+  </footer>
+</div>
+
+<script>
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const short = url => { const m = url.match(/github\.com\/([^/]+)\/([^/]+)\/(issues|pull|discussions)\/(\d+)/); return m ? `${m[2]}#${m[4]}` : url; };
+const day = iso => iso ? new Date(iso).toISOString().slice(0, 10) : "";
+const ago = iso => { if (!iso) return ""; const d = Math.round((Date.now() - new Date(iso)) / 864e5); return d <= 0 ? "today" : d === 1 ? "1 day ago" : d + " days ago"; };
+const KIND = { issue: "issue", pr: "pull request", discussion: "discussion", comment: "comment" };
+function chip(st) {
+  if (!st) return `<span class="state closed">unknown</span>`;
+  const cls = st.state === "merged" ? "merged" : (st.state === "closed" ? "closed" : "");
+  const label = st.state === "closed" && st.closed_reason === "not_planned" ? "closed, not planned" : st.state;
+  return `<span class="state ${cls}">${esc(label)}</span>` + (st.reply_waiting ? `<span class="state reply">reply from ${esc(st.last_comment.author)}</span>` : "");
+}
+// our summary only when it adds to GitHub's title (most words new), else just the title
+const words = s => new Set(String(s || "").toLowerCase().replace(/\[[^\]]*\]|[^a-z0-9.#]+/g, " ").split(" ").filter(w => w.length > 2));
+function adds(summary, title) { const a = words(summary), b = words(title); if (!a.size) return false; let n = 0; a.forEach(w => b.has(w) || n++); return n / a.size > 0.4; }
+function row(t, st) {
+  const ours = (t.ours || []).map(o => `<li><a href="${esc(o.url)}">our comment</a> · ${esc(o.date)} · ${esc(o.note)}</li>`).join("");
+  const links = (t.links || []).map(l => `<a href="${esc(l.url)}">${esc(l.label)}</a>`).join("");
+  return `<tr>
+    <td class="ref">${esc(t.ref || "")}</td>
+    <td class="thread"><a href="${esc(t.url)}">${esc(short(t.url))}</a><span class="kind">${esc(KIND[t.kind] || t.kind)}</span></td>
+    <td><div class="title">${esc(st ? st.title : "")}</div>${adds(t.summary, st && st.title) || !st ? `<div class="sum">${esc(t.summary)}</div>` : ""}${ours ? `<ul class="ours">${ours}</ul>` : ""}${links ? `<div class="links">${links}</div>` : ""}</td>
+    <td>${chip(st)}</td>
+    <td class="num">${st ? st.comments : ""}</td>
+    <td class="when">${esc(t.date)}<br>${st ? esc(ago(st.updated)) : ""}</td></tr>`;
+}
+const HEAD = `<thead><tr><th>Ref</th><th>Thread</th><th>What</th><th>Status</th><th class="num">Comments</th><th>Filed / active</th></tr></thead>`;
+
+Promise.all([fetch("contributions.json").then(r => r.json()), fetch("status.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : { threads: {}, new: [] }).catch(() => ({ threads: {}, new: [] }))])
+.then(([c, s]) => {
+  const all = c.projects.flatMap(p => p.threads), S = s.threads || {};
+  const n = k => all.filter(t => S[t.url] && k(S[t.url], t)).length;
+  const stats = [
+    [all.length, "threads"],
+    [all.filter(t => t.kind === "pr").length, "pull requests"],
+    [n(st => st.state === "merged"), "merged"],
+    [n(st => !["closed", "merged"].includes(st.state)), "open"],
+    [n(st => st.reply_waiting), "replies to answer"],
+  ];
+  document.getElementById("stats").innerHTML = stats.map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join("");
+  const wait = all.filter(t => S[t.url] && S[t.url].reply_waiting);
+  if (wait.length) {
+    const w = document.getElementById("waiting");
+    w.innerHTML = `<h3>Waiting on us</h3><ul>${wait.map(t => `<li><a href="${esc(S[t.url].last_comment.url)}">${esc(short(t.url))}</a>: ${esc(S[t.url].last_comment.author)} replied ${esc(ago(S[t.url].last_comment.at))}</li>`).join("")}</ul>`;
+    w.hidden = false;
+  }
+  document.getElementById("projects").innerHTML = c.projects.map(p => `<section><h2>${esc(p.name)} <small><a href="https://github.com/${esc(p.repo)}">${esc(p.repo)}</a> · ${p.threads.length} threads</small></h2>
+    <div class="tbl"><table>${HEAD}<tbody>${p.threads.map(t => row(t, S[t.url])).join("")}</tbody></table></div></section>`).join("");
+  if ((s.new || []).length) {
+    document.getElementById("new").innerHTML = HEAD + "<tbody>" + s.new.map(u => row({ url: u, kind: S[u].kind, summary: "" }, S[u])).join("") + "</tbody>";
+    document.getElementById("new-sec").hidden = false;
+  }
+  document.getElementById("gen").textContent = s.generated ? `Status read from GitHub on ${s.generated.replace("T", " ").replace("Z", " UTC")}.` : "Status not generated yet.";
+});
+</script>
+</body>
+</html>
