@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-03T12:35:31Z",
+ "generated": "2026-11-03T19:45:22Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/rocm-systems/issues/14860": {
@@ -263,13 +263,27 @@
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
+   "comments": 1,
+   "labels": [],
+   "last_comment": {
+    "at": "2026-11-03T19:43:20Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kai-scheduler/gpu-fractioning/issues/173#issuecomment-6613757949"
+   },
+   "reply_waiting": false,
+   "state": "open",
+   "title": "[Feature]: AMD GPU backend for fractiond \u2014 hard VRAM cap with the Linux dmem cgroup",
+   "updated": "2026-11-03T19:43:21Z"
+  },
+  "https://github.com/kai-scheduler/gpu-fractioning/pull/175": {
+   "closed_reason": null,
    "comments": 0,
    "labels": [],
    "last_comment": null,
    "reply_waiting": false,
    "state": "open",
-   "title": "[Feature]: AMD GPU backend for fractiond \u2014 hard VRAM cap with the Linux dmem cgroup",
-   "updated": "2026-11-03T07:57:41Z"
+   "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
+   "updated": "2026-11-03T19:43:11Z"
   }
  }
 }
