@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-03T19:45:22Z",
+ "generated": "2026-11-04T11:48:58Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/rocm-systems/issues/14860": {
@@ -74,9 +74,10 @@
    "updated": "2026-11-02T10:00:44Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3942": {
-   "closed_reason": "completed",
+   "closed_reason": "reopened",
    "comments": 2,
    "labels": [
+    "area/installation",
     "community"
    ],
    "last_comment": {
@@ -85,9 +86,9 @@
     "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-6584484326"
    },
    "reply_waiting": false,
-   "state": "closed",
+   "state": "open",
    "title": "[feature] A setting to replace the New cluster wizard when clusters are installed by other tooling",
-   "updated": "2026-11-02T18:03:30Z"
+   "updated": "2026-11-04T07:48:58Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3943": {
    "closed_reason": null,
@@ -163,6 +164,18 @@
    "state": "open",
    "title": "[bug] First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant",
    "updated": "2026-11-02T09:52:06Z"
+  },
+  "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
+   "closed_reason": null,
+   "comments": 0,
+   "labels": [
+    "community"
+   ],
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "[feature] AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter",
+   "updated": "2026-11-04T11:48:00Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
    "closed_reason": null,
