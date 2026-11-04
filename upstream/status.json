@@ -1,17 +1,21 @@
 {
  "failed": [],
- "generated": "2026-11-04T13:04:32Z",
+ "generated": "2026-11-04T18:54:38Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
    "closed_reason": null,
-   "comments": 0,
+   "comments": 1,
    "labels": [],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-04T14:37:23Z",
+    "author": "spraveenio",
+    "url": "https://github.com/ROCm/device-metrics-exporter/issues/722#issuecomment-6633445313"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "[Feature]: per-pod metrics for pods sharing a GPU without their own amd.com/gpu allocation",
-   "updated": "2026-11-04T12:14:15Z"
+   "updated": "2026-11-04T14:40:53Z"
   },
   "https://github.com/ROCm/rocm-systems/issues/14860": {
    "closed_reason": null,
@@ -258,17 +262,17 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-03T07:57:43Z",
+    "at": "2026-11-04T18:53:48Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6598391590"
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6639255329"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "feat: GPU fractions on AMD GPU nodes (amd.com/gpu)",
-   "updated": "2026-11-03T07:57:43Z"
+   "updated": "2026-11-04T18:53:48Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557": {
    "closed_reason": null,
