@@ -26,7 +26,8 @@
      "summary": "GPU fractions on AMD GPU nodes (amd.com/gpu): node helper, scheduler readiness check, binder reservation, resource-reservation without NVML. Design questions first.",
      "ours": [
       {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6560342620", "date": "2026-11-01", "note": "Lab measurements: soft memory isolation, 23 GiB taken from a 22.5 GiB share"},
-      {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6598391590", "date": "2026-11-03", "note": "Update: isolation can be hard with the dmem cgroup; links gpu-fractioning#173"}
+      {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6598391590", "date": "2026-11-03", "note": "Update: isolation can be hard with the dmem cgroup; links gpu-fractioning#173"},
+      {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6639255329", "date": "2026-11-04", "note": "The scheduler cannot size GPU-memory fractions on AMD nodes (reads only nvidia.com/gpu.memory); oif's one-function fix reads beta.amd.com/gpu.vram as the pod-group controller does; lab evidence from T-140"}
      ]},
     {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2554", "kind": "issue", "ref": "K3b", "date": "2026-11-01",
      "summary": "The binder changes the configured reservation-pod resources in place on every GPU reservation."},
