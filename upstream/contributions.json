@@ -81,6 +81,8 @@
    "name": "ROCm",
    "repo": "ROCm/rocm-systems",
    "threads": [
+    {"url": "https://github.com/ROCm/device-metrics-exporter/issues/722", "kind": "issue", "ref": "A5", "date": "2026-11-04",
+     "summary": "Feature request: pods sharing a GPU without their own amd.com/gpu allocation (KAI/Run:ai fractions) get no per-pod metrics; the exporter labels the GPU with the reservation pod. Asks for attribution by the processes using the GPU (KFD, dmem.current) and a pod UID label. Lab evidence on a W7900."},
     {"url": "https://github.com/ROCm/rocm-systems/issues/14860", "kind": "issue", "ref": "S-8", "date": "2026-11-02",
      "summary": "hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit: apps inside a cap still see the whole GPU."},
     {"url": "https://github.com/ROCm/rocm-systems/issues/14861", "kind": "issue", "ref": "S-8", "date": "2026-11-02",
