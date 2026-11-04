@@ -1,6 +1,8 @@
 {
- "failed": [],
- "generated": "2026-11-04T12:15:00Z",
+ "failed": [
+  "https://github.com/dsx-ai-factory/run-ai/discussions/4103"
+ ],
+ "generated": "2026-11-04T12:15:47Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -32,14 +34,6 @@
    "state": "open",
    "title": "[Feature]: Per-process compute busy time for KFD queues (per-container GPU utilization)",
    "updated": "2026-11-02T20:56:26Z"
-  },
-  "https://github.com/dsx-ai-factory/run-ai/discussions/4103": {
-   "comments": 0,
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
-   "title": "AMD GPU fractions with a hard VRAM cap (dmem cgroup): implementation and lab results",
-   "updated": "2026-11-03T07:57:54Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3939": {
    "closed_reason": null,
