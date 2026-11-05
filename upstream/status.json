@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-05T13:17:52Z",
+ "generated": "2026-11-05T20:55:06Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -102,7 +102,8 @@
    "comments": 2,
    "labels": [
     "area/installation",
-    "community"
+    "community",
+    "team/infra"
    ],
    "last_comment": {
     "at": "2026-11-02T18:03:30Z",
@@ -112,7 +113,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[feature] A setting to replace the New cluster wizard when clusters are installed by other tooling",
-   "updated": "2026-11-04T07:48:58Z"
+   "updated": "2026-11-05T14:33:22Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3943": {
    "closed_reason": null,
@@ -285,6 +286,16 @@
    "title": "feat: GPU fractions on AMD GPU nodes (amd.com/gpu)",
    "updated": "2026-11-04T18:53:48Z"
   },
+  "https://github.com/kai-scheduler/KAI-Scheduler/issues/2593": {
+   "closed_reason": null,
+   "comments": 0,
+   "labels": [],
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "Topology: required level is never satisfied when all of a job's nodes share a domain below it (e.g. a one-node node pool)",
+   "updated": "2026-11-05T20:49:35Z"
+  },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557": {
    "closed_reason": null,
    "comments": 1,
@@ -298,6 +309,16 @@
    "state": "open",
    "title": "fix(binder): do not modify the configured reservation pod resources",
    "updated": "2026-11-02T09:27:01Z"
+  },
+  "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
+   "closed_reason": null,
+   "comments": 0,
+   "labels": [],
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
+   "updated": "2026-11-05T20:50:15Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
