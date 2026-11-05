@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-05T07:25:53Z",
+ "generated": "2026-11-05T13:17:52Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -187,19 +187,20 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[bug] First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant",
-   "updated": "2026-11-02T09:52:06Z"
+   "updated": "2026-11-05T08:07:55Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
    "closed_reason": null,
    "comments": 0,
    "labels": [
+    "enhancement",
     "community"
    ],
    "last_comment": null,
    "reply_waiting": false,
    "state": "open",
    "title": "[feature] AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter",
-   "updated": "2026-11-04T11:48:00Z"
+   "updated": "2026-11-05T11:25:23Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
    "closed_reason": null,
@@ -301,7 +302,9 @@
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
    "comments": 1,
-   "labels": [],
+   "labels": [
+    "priority/P2"
+   ],
    "last_comment": {
     "at": "2026-11-03T19:43:20Z",
     "author": "manmohanbrahma",
@@ -310,7 +313,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[Feature]: AMD GPU backend for fractiond \u2014 hard VRAM cap with the Linux dmem cgroup",
-   "updated": "2026-11-03T19:43:21Z"
+   "updated": "2026-11-05T09:38:26Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/pull/175": {
    "closed_reason": null,
