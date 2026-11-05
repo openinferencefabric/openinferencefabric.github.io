@@ -38,7 +38,11 @@
      "summary": "Fraction pods get runtimeClassName nvidia even when they can only run on AMD GPU nodes."},
     {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544", "kind": "comment", "ref": "K6", "date": "2026-11-01",
      "summary": "CDI/NRI-native GPU injection for fraction pods (opened by others): our AMD device injector as a working NRI example.",
-     "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544#issuecomment-6557664853", "date": "2026-11-01", "note": "oif-amd-share NRI plugin for AMD fraction pods"}]}
+     "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544#issuecomment-6557664853", "date": "2026-11-01", "note": "oif-amd-share NRI plugin for AMD fraction pods"}]},
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2593", "kind": "issue", "ref": "K10", "date": "2026-11-06",
+     "summary": "Topology: a required level is never satisfied when all of a job's nodes share a domain below it (e.g. a one-node node pool); found on the lab with Run:ai node pools linked to a network topology."},
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594", "kind": "pr", "ref": "K10", "date": "2026-11-06",
+     "summary": "fix(scheduler): honour a required topology level above the job's lowest common domain (fixes #2593); 5-case test, changelog fragment. Same fix as oif KAI patch 0007."}
    ]
   },
   {
