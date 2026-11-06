@@ -1,21 +1,21 @@
 {
  "failed": [],
- "generated": "2026-11-06T13:00:31Z",
+ "generated": "2026-11-06T15:54:22Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-04T14:37:23Z",
-    "author": "spraveenio",
-    "url": "https://github.com/ROCm/device-metrics-exporter/issues/722#issuecomment-6633445313"
+    "at": "2026-11-06T15:52:52Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/ROCm/device-metrics-exporter/issues/722#issuecomment-6689065458"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "[Feature]: per-pod metrics for pods sharing a GPU without their own amd.com/gpu allocation",
-   "updated": "2026-11-04T14:40:53Z"
+   "updated": "2026-11-06T15:52:52Z"
   },
   "https://github.com/ROCm/gpu-operator/issues/679": {
    "closed_reason": null,
