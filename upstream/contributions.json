@@ -39,9 +39,9 @@
     {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544", "kind": "comment", "ref": "K6", "date": "2026-11-01",
      "summary": "CDI/NRI-native GPU injection for fraction pods (opened by others): our AMD device injector as a working NRI example.",
      "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544#issuecomment-6557664853", "date": "2026-11-01", "note": "oif-amd-share NRI plugin for AMD fraction pods"}]},
-    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2593", "kind": "issue", "ref": "K10", "date": "2026-11-06",
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2593", "kind": "issue", "ref": "K10", "date": "2026-11-05",
      "summary": "Topology: a required level is never satisfied when all of a job's nodes share a domain below it (e.g. a one-node node pool); found on the lab with Run:ai node pools linked to a network topology."},
-    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594", "kind": "pr", "ref": "K10", "date": "2026-11-06",
+    {"url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594", "kind": "pr", "ref": "K10", "date": "2026-11-05",
      "summary": "fix(scheduler): honour a required topology level above the job's lowest common domain (fixes #2593); 5-case test, changelog fragment. Same fix as oif KAI patch 0007."}
    ]
   },
@@ -84,16 +84,16 @@
   },
   {
    "name": "ROCm",
-   "repo": "ROCm/rocm-systems",
+   "repo": "ROCm",
    "threads": [
     {"url": "https://github.com/ROCm/gpu-operator/issues/679", "kind": "issue", "ref": "A6", "date": "2026-11-05",
      "summary": "Feature request: node labels and DRA attributes for scale-up domains (xGMI hive on MI300/MI350 servers, UALink domain on Helios racks) and partition capabilities, MI455X in amdgpu.ids; for topology-aware scheduling (KAI Topology levels). Points to oif's fake AMD Instinct nodes.",
      "links": [{"label": "code", "url": "https://github.com/openinferencefabric/oif/tree/129600fe50538994292bdcb0da6227cad6af25be/tools/fake-gpu"}]},
     {"url": "https://github.com/ROCm/device-metrics-exporter/issues/722", "kind": "issue", "ref": "A5", "date": "2026-11-04",
      "summary": "Feature request: pods sharing a GPU without their own amd.com/gpu allocation (KAI/Run:ai fractions) get no per-pod metrics; the exporter labels the GPU with the reservation pod. Asks for attribution by the processes using the GPU (KFD, dmem.current) and a pod UID label. Lab evidence on a W7900."},
-    {"url": "https://github.com/ROCm/rocm-systems/issues/14860", "kind": "issue", "ref": "S-8", "date": "2026-11-02",
+    {"url": "https://github.com/ROCm/rocm-systems/issues/14860", "kind": "issue", "ref": "A2", "date": "2026-11-02",
      "summary": "hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit: apps inside a cap still see the whole GPU."},
-    {"url": "https://github.com/ROCm/rocm-systems/issues/14861", "kind": "issue", "ref": "S-8", "date": "2026-11-02",
+    {"url": "https://github.com/ROCm/rocm-systems/issues/14861", "kind": "issue", "ref": "A3", "date": "2026-11-02",
      "summary": "Per-process compute busy time for KFD queues, for per-container GPU utilisation."}
    ]
   },
