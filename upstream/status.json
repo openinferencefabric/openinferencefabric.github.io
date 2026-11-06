@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-05T20:55:06Z",
+ "generated": "2026-11-06T13:00:31Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -25,7 +25,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[Feature] Topology labels for scale-up domains: xGMI hive (MI300/MI350 series) and UALink domain (Helios), partition capabilities, DRA attributes",
-   "updated": "2026-11-05T07:24:26Z"
+   "updated": "2026-11-05T23:46:39Z"
   },
   "https://github.com/ROCm/rocm-systems/issues/14860": {
    "closed_reason": null,
@@ -348,13 +348,17 @@
   },
   "https://github.com/kubernetes-sigs/kwok/issues/1802": {
    "closed_reason": null,
-   "comments": 0,
+   "comments": 1,
    "labels": [],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-06T06:27:49Z",
+    "author": "wzshiming",
+    "url": "https://github.com/kubernetes-sigs/kwok/issues/1802#issuecomment-6678702142"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "Docs example: simulated AMD Instinct GPU nodes (MI300 series, Helios rack), next to the NVIDIA GPU node example",
-   "updated": "2026-11-05T07:24:11Z"
+   "updated": "2026-11-06T06:27:49Z"
   }
  }
 }
