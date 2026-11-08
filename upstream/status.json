@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-06T15:54:22Z",
+ "generated": "2026-11-08T11:59:21Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -205,33 +205,45 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-08T09:01:00Z",
+    "author": "camielRunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-6719563625"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "frontend: AMD icon for workloads on ROCm images",
-   "updated": "2026-11-01T12:07:31Z"
+   "updated": "2026-11-08T09:01:00Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3949": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-08T09:00:52Z",
+    "author": "camielRunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3949#issuecomment-6719562377"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "go-operator: report GPU fractions unavailable when the fractioning daemons have no target nodes",
-   "updated": "2026-11-01T15:55:09Z"
+   "updated": "2026-11-08T09:00:52Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3950": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-08T09:00:43Z",
+    "author": "camielRunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3950#issuecomment-6719561040"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "cluster-sync: count AMD GPUs (amd.com/gpu) in the node inventory",
-   "updated": "2026-11-02T06:43:25Z"
+   "updated": "2026-11-08T09:00:43Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544": {
    "closed_reason": null,
@@ -318,7 +330,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
-   "updated": "2026-11-05T20:50:15Z"
+   "updated": "2026-11-07T17:46:26Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
