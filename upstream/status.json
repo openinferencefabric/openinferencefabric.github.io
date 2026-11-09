@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-08T11:59:21Z",
+ "generated": "2026-11-09T14:00:02Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -56,32 +56,40 @@
    "updated": "2026-11-03T07:57:54Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3939": {
-   "closed_reason": null,
-   "comments": 0,
+   "closed_reason": "not_planned",
+   "comments": 1,
    "labels": [
     "bug",
     "area/resource-management",
     "community"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
+   "last_comment": {
+    "at": "2026-11-08T12:48:29Z",
+    "author": "sarad-pm",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3939#issuecomment-6721687458"
+   },
+   "reply_waiting": true,
+   "state": "closed",
    "title": "[bug] cluster-sync: AMD GPUs missing from the node inventory (type, count) and from the Overview GPU total",
-   "updated": "2026-11-02T10:05:53Z"
+   "updated": "2026-11-08T13:08:03Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3940": {
-   "closed_reason": null,
-   "comments": 0,
+   "closed_reason": "not_planned",
+   "comments": 1,
    "labels": [
     "enhancement",
     "area/workloads",
     "community"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
+   "last_comment": {
+    "at": "2026-11-08T13:46:27Z",
+    "author": "oferbaratz",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3940#issuecomment-6722271840"
+   },
+   "reply_waiting": true,
+   "state": "closed",
    "title": "[feature] Show an AMD icon for workloads on ROCm images",
-   "updated": "2026-11-03T08:03:01Z"
+   "updated": "2026-11-08T13:46:27Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3941": {
    "closed_reason": null,
@@ -121,7 +129,8 @@
    "labels": [
     "bug",
     "area/workloads",
-    "community"
+    "community",
+    "team/infra"
    ],
    "last_comment": {
     "at": "2026-11-01T15:59:44Z",
@@ -131,7 +140,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[bug] global.replicaCount gives cluster-redis unreplicated copies: workspace logins loop and Jupyter never loads",
-   "updated": "2026-11-02T09:55:57Z"
+   "updated": "2026-11-09T13:47:17Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3944": {
    "closed_reason": null,
@@ -139,13 +148,14 @@
    "labels": [
     "bug",
     "area/org-management",
+    "issue/approved",
     "community"
    ],
    "last_comment": null,
    "reply_waiting": false,
    "state": "open",
    "title": "[bug] GET /api/v1/org-unit/departments omits defaultNodePools and description",
-   "updated": "2026-11-02T09:53:49Z"
+   "updated": "2026-11-09T11:47:19Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3945": {
    "closed_reason": null,
@@ -162,18 +172,22 @@
    "updated": "2026-11-02T09:50:50Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3946": {
-   "closed_reason": null,
-   "comments": 0,
+   "closed_reason": "not_planned",
+   "comments": 1,
    "labels": [
     "enhancement",
     "area/workloads",
     "community"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
+   "last_comment": {
+    "at": "2026-11-08T13:47:35Z",
+    "author": "oferbaratz",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3946#issuecomment-6722283193"
+   },
+   "reply_waiting": true,
+   "state": "closed",
    "title": "[feature] Sample workload templates for AMD GPUs (ROCm PyTorch training and Jupyter)",
-   "updated": "2026-11-02T09:48:33Z"
+   "updated": "2026-11-08T13:47:35Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3947": {
    "closed_reason": null,
@@ -188,20 +202,24 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[bug] First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant",
-   "updated": "2026-11-05T08:07:55Z"
+   "updated": "2026-11-08T15:43:50Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
-   "closed_reason": null,
-   "comments": 0,
+   "closed_reason": "not_planned",
+   "comments": 1,
    "labels": [
     "enhancement",
     "community"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
+   "last_comment": {
+    "at": "2026-11-08T14:01:02Z",
+    "author": "nsober",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-6722420866"
+   },
+   "reply_waiting": true,
+   "state": "closed",
    "title": "[feature] AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter",
-   "updated": "2026-11-05T11:25:23Z"
+   "updated": "2026-11-08T14:01:12Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
    "closed_reason": null,
@@ -233,17 +251,17 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3950": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-08T09:00:43Z",
-    "author": "camielRunai",
-    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3950#issuecomment-6719561040"
+    "at": "2026-11-08T12:49:13Z",
+    "author": "sarad-pm",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3950#issuecomment-6721694564"
    },
    "reply_waiting": true,
-   "state": "open",
+   "state": "closed",
    "title": "cluster-sync: count AMD GPUs (amd.com/gpu) in the node inventory",
-   "updated": "2026-11-08T09:00:43Z"
+   "updated": "2026-11-08T12:49:14Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544": {
    "closed_reason": null,
@@ -310,7 +328,7 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [],
    "last_comment": {
     "at": "2026-11-02T06:37:01Z",
@@ -320,7 +338,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "fix(binder): do not modify the configured reservation pod resources",
-   "updated": "2026-11-02T09:27:01Z"
+   "updated": "2026-11-09T12:53:11Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
    "closed_reason": null,
