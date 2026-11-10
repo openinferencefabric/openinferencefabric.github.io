@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-09T14:00:02Z",
+ "generated": "2026-11-10T13:34:33Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -129,8 +129,7 @@
    "labels": [
     "bug",
     "area/workloads",
-    "community",
-    "team/infra"
+    "community"
    ],
    "last_comment": {
     "at": "2026-11-01T15:59:44Z",
@@ -140,22 +139,26 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[bug] global.replicaCount gives cluster-redis unreplicated copies: workspace logins loop and Jupyter never loads",
-   "updated": "2026-11-09T13:47:17Z"
+   "updated": "2026-11-10T08:19:33Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3944": {
-   "closed_reason": null,
-   "comments": 0,
+   "closed_reason": "completed",
+   "comments": 1,
    "labels": [
     "bug",
     "area/org-management",
     "issue/approved",
     "community"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
+   "last_comment": {
+    "at": "2026-11-10T09:16:16Z",
+    "author": "edithgluck",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3944#issuecomment-6763575332"
+   },
+   "reply_waiting": true,
+   "state": "closed",
    "title": "[bug] GET /api/v1/org-unit/departments omits defaultNodePools and description",
-   "updated": "2026-11-09T11:47:19Z"
+   "updated": "2026-11-10T09:16:34Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3945": {
    "closed_reason": null,
@@ -353,9 +356,7 @@
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
    "comments": 1,
-   "labels": [
-    "priority/P2"
-   ],
+   "labels": [],
    "last_comment": {
     "at": "2026-11-03T19:43:20Z",
     "author": "manmohanbrahma",
@@ -364,7 +365,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[Feature]: AMD GPU backend for fractiond \u2014 hard VRAM cap with the Linux dmem cgroup",
-   "updated": "2026-11-05T09:38:26Z"
+   "updated": "2026-11-10T09:28:33Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/pull/175": {
    "closed_reason": null,
