@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-11T12:47:20Z",
+ "generated": "2026-11-11T17:23:26Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -47,6 +47,26 @@
    "title": "[Feature]: Per-process compute busy time for KFD queues (per-container GPU utilization)",
    "updated": "2026-11-02T20:56:26Z"
   },
+  "https://github.com/ai-dynamo/dynamo/pull/12537": {
+   "closed_reason": null,
+   "comments": 5,
+   "labels": [
+    "external-contribution",
+    "size/L",
+    "feat",
+    "Stale",
+    "container"
+   ],
+   "last_comment": {
+    "at": "2026-11-11T17:13:02Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/ai-dynamo/dynamo/pull/12537#issuecomment-6802330157"
+   },
+   "reply_waiting": false,
+   "state": "closed",
+   "title": "feat(container): add rocm device for vllm and sglang",
+   "updated": "2026-11-11T17:13:02Z"
+  },
   "https://github.com/dsx-ai-factory/run-ai/discussions/4103": {
    "comments": 0,
    "last_comment": null,
@@ -57,21 +77,21 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3939": {
    "closed_reason": "not_planned",
-   "comments": 1,
+   "comments": 2,
    "labels": [
     "bug",
     "area/resource-management",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-08T12:48:29Z",
-    "author": "sarad-pm",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3939#issuecomment-6721687458"
+    "at": "2026-11-11T17:17:59Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3939#issuecomment-6802449436"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "closed",
    "title": "[bug] cluster-sync: AMD GPUs missing from the node inventory (type, count) and from the Overview GPU total",
-   "updated": "2026-11-08T13:08:03Z"
+   "updated": "2026-11-11T17:17:59Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3940": {
    "closed_reason": "not_planned",
@@ -107,21 +127,21 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3942": {
    "closed_reason": "reopened",
-   "comments": 2,
+   "comments": 4,
    "labels": [
     "area/installation",
     "community",
     "team/infra"
    ],
    "last_comment": {
-    "at": "2026-11-02T18:03:30Z",
+    "at": "2026-11-11T17:17:54Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-6584484326"
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-6802447469"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "[feature] A setting to replace the New cluster wizard when clusters are installed by other tooling",
-   "updated": "2026-11-05T14:33:22Z"
+   "updated": "2026-11-11T17:17:54Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3943": {
    "closed_reason": null,
@@ -143,7 +163,7 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3944": {
    "closed_reason": "completed",
-   "comments": 1,
+   "comments": 2,
    "labels": [
     "bug",
     "area/org-management",
@@ -151,14 +171,14 @@
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-10T09:16:16Z",
-    "author": "edithgluck",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3944#issuecomment-6763575332"
+    "at": "2026-11-11T17:17:56Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3944#issuecomment-6802448253"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "closed",
    "title": "[bug] GET /api/v1/org-unit/departments omits defaultNodePools and description",
-   "updated": "2026-11-10T09:16:34Z"
+   "updated": "2026-11-11T17:17:56Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3945": {
    "closed_reason": null,
@@ -341,7 +361,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "fix(binder): do not modify the configured reservation pod resources",
-   "updated": "2026-11-09T12:53:11Z"
+   "updated": "2026-11-11T17:17:22Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
    "closed_reason": null,
@@ -351,7 +371,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
-   "updated": "2026-11-07T17:46:26Z"
+   "updated": "2026-11-11T17:17:25Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
@@ -369,27 +389,31 @@
   },
   "https://github.com/kai-scheduler/gpu-fractioning/pull/175": {
    "closed_reason": null,
-   "comments": 0,
-   "labels": [],
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
-   "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
-   "updated": "2026-11-11T11:48:43Z"
-  },
-  "https://github.com/kubernetes-sigs/kwok/issues/1802": {
-   "closed_reason": null,
    "comments": 1,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-06T06:27:49Z",
-    "author": "wzshiming",
-    "url": "https://github.com/kubernetes-sigs/kwok/issues/1802#issuecomment-6678702142"
+    "at": "2026-11-11T17:17:50Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6802445636"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
+   "updated": "2026-11-11T17:17:50Z"
+  },
+  "https://github.com/kubernetes-sigs/kwok/issues/1802": {
+   "closed_reason": null,
+   "comments": 2,
+   "labels": [],
+   "last_comment": {
+    "at": "2026-11-11T17:17:52Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kubernetes-sigs/kwok/issues/1802#issuecomment-6802446459"
+   },
+   "reply_waiting": false,
    "state": "open",
    "title": "Docs example: simulated AMD Instinct GPU nodes (MI300 series, Helios rack), next to the NVIDIA GPU node example",
-   "updated": "2026-11-06T06:27:49Z"
+   "updated": "2026-11-11T17:17:52Z"
   }
  }
 }
