@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-11T17:47:52Z",
+ "generated": "2026-11-11T19:43:07Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -75,41 +75,49 @@
    "title": "AMD GPU fractions with a hard VRAM cap (dmem cgroup): implementation and lab results",
    "updated": "2026-11-03T07:57:54Z"
   },
+  "https://github.com/dsx-ai-factory/run-ai/discussions/5023": {
+   "comments": 0,
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "AMD GPU support in open-source Run:ai: please reconsider, or let the community carry it",
+   "updated": "2026-11-11T19:36:59Z"
+  },
   "https://github.com/dsx-ai-factory/run-ai/issues/3939": {
    "closed_reason": "not_planned",
-   "comments": 2,
+   "comments": 3,
    "labels": [
     "bug",
     "area/resource-management",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-11T17:17:59Z",
+    "at": "2026-11-11T19:37:10Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3939#issuecomment-6802449436"
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3939#issuecomment-6805462080"
    },
    "reply_waiting": false,
    "state": "closed",
    "title": "[bug] cluster-sync: AMD GPUs missing from the node inventory (type, count) and from the Overview GPU total",
-   "updated": "2026-11-11T17:17:59Z"
+   "updated": "2026-11-11T19:37:10Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3940": {
    "closed_reason": "not_planned",
-   "comments": 1,
+   "comments": 2,
    "labels": [
     "enhancement",
     "area/workloads",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-08T13:46:27Z",
-    "author": "oferbaratz",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3940#issuecomment-6722271840"
+    "at": "2026-11-11T19:37:11Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3940#issuecomment-6805462515"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "closed",
    "title": "[feature] Show an AMD icon for workloads on ROCm images",
-   "updated": "2026-11-08T13:46:27Z"
+   "updated": "2026-11-11T19:37:11Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3941": {
    "closed_reason": null,
@@ -196,21 +204,21 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3946": {
    "closed_reason": "not_planned",
-   "comments": 1,
+   "comments": 2,
    "labels": [
     "enhancement",
     "area/workloads",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-08T13:47:35Z",
-    "author": "oferbaratz",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3946#issuecomment-6722283193"
+    "at": "2026-11-11T19:37:13Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3946#issuecomment-6805462976"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "closed",
    "title": "[feature] Sample workload templates for AMD GPUs (ROCm PyTorch training and Jupyter)",
-   "updated": "2026-11-08T13:47:35Z"
+   "updated": "2026-11-11T19:37:13Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3947": {
    "closed_reason": null,
@@ -229,20 +237,20 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
    "closed_reason": "not_planned",
-   "comments": 1,
+   "comments": 2,
    "labels": [
     "enhancement",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-08T14:01:02Z",
-    "author": "nsober",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-6722420866"
+    "at": "2026-11-11T19:37:14Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-6805463604"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "closed",
    "title": "[feature] AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter",
-   "updated": "2026-11-08T14:01:12Z"
+   "updated": "2026-11-11T19:37:14Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
    "closed_reason": null,
@@ -274,17 +282,17 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3950": {
    "closed_reason": null,
-   "comments": 3,
+   "comments": 4,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-08T12:49:13Z",
-    "author": "sarad-pm",
-    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3950#issuecomment-6721694564"
+    "at": "2026-11-11T19:37:16Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3950#issuecomment-6805464072"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "closed",
    "title": "cluster-sync: count AMD GPUs (amd.com/gpu) in the node inventory",
-   "updated": "2026-11-08T12:49:14Z"
+   "updated": "2026-11-11T19:37:16Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544": {
    "closed_reason": null,
