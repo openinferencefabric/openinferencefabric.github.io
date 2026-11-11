@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-11T17:23:26Z",
+ "generated": "2026-11-11T17:47:52Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -389,17 +389,17 @@
   },
   "https://github.com/kai-scheduler/gpu-fractioning/pull/175": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-11T17:17:50Z",
+    "at": "2026-11-11T17:45:54Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6802445636"
+    "url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6803066882"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
-   "updated": "2026-11-11T17:17:50Z"
+   "updated": "2026-11-11T17:45:55Z"
   },
   "https://github.com/kubernetes-sigs/kwok/issues/1802": {
    "closed_reason": null,
