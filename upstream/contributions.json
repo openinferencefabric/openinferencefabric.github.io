@@ -57,6 +57,10 @@
    "name": "Run:ai (open source)",
    "repo": "dsx-ai-factory/run-ai",
    "threads": [
+    {"url": "https://github.com/dsx-ai-factory/run-ai/discussions/5023", "kind": "discussion", "ref": "R12", "date": "2026-11-11",
+     "summary": "AMD GPU support in open-source Run:ai: asks the maintainers to reconsider the not-planned AMD threads (#3939, #3940, #3946, #4274, PR #3950) as community-maintained support, with OIF owning the tests and an AMD lab run per release; otherwise a stop-gap fork under its own name, kept in step and offered back.",
+     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3939#issuecomment-6805462080", "date": "2026-11-11", "note": "Reopen requests on #3939, #3940, #3946, #4274 and PR #3950, linking the discussion"}],
+     "links": [{"label": "#3939", "url": "https://github.com/dsx-ai-factory/run-ai/issues/3939#issuecomment-6805462080"}, {"label": "#3940", "url": "https://github.com/dsx-ai-factory/run-ai/issues/3940#issuecomment-6805462515"}, {"label": "#3946", "url": "https://github.com/dsx-ai-factory/run-ai/issues/3946#issuecomment-6805462976"}, {"label": "#4274", "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-6805463604"}, {"label": "#3950", "url": "https://github.com/dsx-ai-factory/run-ai/pull/3950#issuecomment-6805464072"}]},
     {"url": "https://github.com/dsx-ai-factory/run-ai/issues/4274", "kind": "issue", "ref": "R11", "date": "2026-11-04",
      "summary": "Feature request: AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter. Run:ai's AMD rules read amd_gpu_* names no current exporter emits and its Prometheus does not watch kube-amd-gpu, so AMD GPUs are missing from GPU totals, memory, utilization and free GPUs. Offers OIF's working mapping as a PR.",
      "links": [{"label": "OIF rules", "url": "https://github.com/openinferencefabric/oif/blob/8d0fd98c41a4093cf72c641865d8cc4cd1156dc1/platform/observability/rules/oif-gpu.rules.yaml#L10-L49"}]},
