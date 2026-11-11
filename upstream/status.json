@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-11T19:43:07Z",
+ "generated": "2026-11-11T19:54:22Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -254,31 +254,31 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-08T09:01:00Z",
-    "author": "camielRunai",
-    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-6719563625"
+    "at": "2026-11-11T19:53:01Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-6805787888"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "frontend: AMD icon for workloads on ROCm images",
-   "updated": "2026-11-08T09:01:00Z"
+   "updated": "2026-11-11T19:53:02Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3949": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-08T09:00:52Z",
-    "author": "camielRunai",
-    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3949#issuecomment-6719562377"
+    "at": "2026-11-11T19:53:03Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3949#issuecomment-6805788429"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "go-operator: report GPU fractions unavailable when the fractioning daemons have no target nodes",
-   "updated": "2026-11-08T09:00:52Z"
+   "updated": "2026-11-11T19:53:03Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3950": {
    "closed_reason": null,
