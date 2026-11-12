@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-11T19:54:22Z",
+ "generated": "2026-11-12T13:50:31Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -222,18 +222,22 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3947": {
    "closed_reason": null,
-   "comments": 0,
+   "comments": 1,
    "labels": [
     "bug",
     "area/networking",
     "community",
     "team/infra"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-12T13:27:09Z",
+    "author": "SaraNachmias",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6824900680"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "[bug] First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant",
-   "updated": "2026-11-08T15:43:50Z"
+   "updated": "2026-11-12T13:27:36Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
    "closed_reason": "not_planned",
@@ -369,17 +373,17 @@
    "reply_waiting": false,
    "state": "open",
    "title": "fix(binder): do not modify the configured reservation pod resources",
-   "updated": "2026-11-11T17:17:22Z"
+   "updated": "2026-11-12T12:12:14Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
    "closed_reason": null,
-   "comments": 0,
+   "comments": 2,
    "labels": [],
    "last_comment": null,
    "reply_waiting": false,
    "state": "open",
    "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
-   "updated": "2026-11-11T17:17:25Z"
+   "updated": "2026-11-12T11:24:50Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
