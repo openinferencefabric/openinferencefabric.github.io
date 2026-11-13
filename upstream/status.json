@@ -1,7 +1,9 @@
 {
  "failed": [],
- "generated": "2026-11-13T02:36:25Z",
- "new": [],
+ "generated": "2026-11-13T03:33:07Z",
+ "new": [
+  "https://github.com/kubernetes-sigs/kwok/pull/1808"
+ ],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
    "closed_reason": null,
@@ -430,6 +432,23 @@
    "state": "open",
    "title": "Docs example: simulated AMD Instinct GPU nodes (MI300 series, Helios rack), next to the NVIDIA GPU node example",
    "updated": "2026-11-11T17:17:52Z"
+  },
+  "https://github.com/kubernetes-sigs/kwok/pull/1808": {
+   "closed_reason": null,
+   "comments": 5,
+   "kind": "pr",
+   "labels": [
+    "needs-ok-to-test",
+    "kind/documentation",
+    "cncf-cla: yes",
+    "release-note-none",
+    "size/L"
+   ],
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "docs: add AMD GPU nodes example",
+   "updated": "2026-11-13T03:31:49Z"
   }
  }
 }
