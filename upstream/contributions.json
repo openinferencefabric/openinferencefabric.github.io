@@ -127,7 +127,8 @@
     {"url": "https://github.com/kubernetes-sigs/kwok/issues/1802", "kind": "issue", "ref": "X1", "date": "2026-11-05",
      "summary": "Docs example for simulated AMD Instinct GPU nodes (MI300 series servers, Helios racks, partitions, the AMD GPU Operator's labels) next to the NVIDIA one; offers oif's generator as a PR.",
      "links": [{"label": "code", "url": "https://github.com/openinferencefabric/oif/tree/129600fe50538994292bdcb0da6227cad6af25be/tools/fake-gpu"}],
-     "ours": [{"url": "https://github.com/kubernetes-sigs/kwok/issues/1802#issuecomment-6802446459", "date": "2026-11-11", "note": "The maintainer accepted the example; PR with MI300X, CPX MI355X and Helios tray manifests to follow"}]}
+     "ours": [{"url": "https://github.com/kubernetes-sigs/kwok/issues/1802#issuecomment-6802446459", "date": "2026-11-11", "note": "The maintainer accepted the example; PR with MI300X, CPX MI355X and Helios tray manifests to follow"},
+              {"url": "https://github.com/kubernetes-sigs/kwok/pull/1808", "date": "2026-11-13", "note": "PR: amd-gpu-nodes docs example (MI300X server, MI355X in CPX/NPS2, Helios tray, two pods), tested on kwokctl v0.8.0"}]}
    ]
   },
   {
