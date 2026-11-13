@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-13T02:23:56Z",
+ "generated": "2026-11-13T02:36:25Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -222,7 +222,7 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3947": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [
     "bug",
     "area/networking",
@@ -230,14 +230,14 @@
     "team/infra"
    ],
    "last_comment": {
-    "at": "2026-11-12T13:27:09Z",
-    "author": "SaraNachmias",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6824900680"
+    "at": "2026-11-13T02:34:51Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6842107938"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "[bug] First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant",
-   "updated": "2026-11-12T13:27:36Z"
+   "updated": "2026-11-13T02:34:51Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
    "closed_reason": "not_planned",
