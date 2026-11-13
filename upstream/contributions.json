@@ -100,7 +100,8 @@
     {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3946", "kind": "issue", "ref": "R9", "date": "2026-11-01",
      "summary": "Sample workload templates for AMD GPUs (ROCm PyTorch training and Jupyter)."},
     {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3947", "kind": "issue", "ref": "R10", "date": "2026-11-01",
-     "summary": "First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant."}
+     "summary": "First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant.",
+     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6842107938", "date": "2026-11-13", "note": "Run:ai could not reproduce it; answered that it may have come from the two-copy cluster-redis issue (#3943) and promised a re-test with one copy, proxy logs and a stripped HAR"}]}
    ]
   },
   {
