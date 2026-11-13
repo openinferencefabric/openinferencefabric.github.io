@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-13T03:33:07Z",
+ "generated": "2026-11-13T04:04:45Z",
  "new": [
   "https://github.com/kubernetes-sigs/kwok/pull/1808"
  ],
@@ -223,8 +223,8 @@
    "updated": "2026-11-11T19:37:13Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3947": {
-   "closed_reason": null,
-   "comments": 2,
+   "closed_reason": "not_planned",
+   "comments": 3,
    "labels": [
     "bug",
     "area/networking",
@@ -232,14 +232,14 @@
     "team/infra"
    ],
    "last_comment": {
-    "at": "2026-11-13T02:34:51Z",
+    "at": "2026-11-13T04:00:51Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6842107938"
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6843447475"
    },
    "reply_waiting": false,
-   "state": "open",
+   "state": "closed",
    "title": "[bug] First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant",
-   "updated": "2026-11-13T02:34:51Z"
+   "updated": "2026-11-13T04:00:53Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
    "closed_reason": "not_planned",
@@ -331,17 +331,17 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-13T02:22:12Z",
+    "at": "2026-11-13T04:00:54Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6841915768"
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6843448607"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "Fraction pods get runtimeClassName nvidia even when they can only run on AMD GPU nodes",
-   "updated": "2026-11-13T02:22:12Z"
+   "updated": "2026-11-13T04:00:55Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556": {
    "closed_reason": null,
@@ -435,20 +435,24 @@
   },
   "https://github.com/kubernetes-sigs/kwok/pull/1808": {
    "closed_reason": null,
-   "comments": 5,
+   "comments": 6,
    "kind": "pr",
    "labels": [
-    "needs-ok-to-test",
+    "ok-to-test",
     "kind/documentation",
     "cncf-cla: yes",
     "release-note-none",
     "size/L"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-13T03:37:27Z",
+    "author": "wzshiming",
+    "url": "https://github.com/kubernetes-sigs/kwok/pull/1808#issuecomment-6843050455"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "docs: add AMD GPU nodes example",
-   "updated": "2026-11-13T03:31:49Z"
+   "updated": "2026-11-13T03:37:31Z"
   }
  }
 }
