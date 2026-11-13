@@ -44,7 +44,8 @@
      ]},
     {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555", "kind": "issue", "ref": "K5", "date": "2026-11-01",
      "summary": "Fraction pods get runtimeClassName nvidia even when they can only run on AMD GPU nodes.",
-     "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6841915768", "date": "2026-11-13", "note": "A contributor traced it to the admission webhook and offered a fix; suggested skipping the mutation when no reachable node reports nvidia.com/gpu, until #1544 removes the runtime class"}]},
+     "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6841915768", "date": "2026-11-13", "note": "A contributor traced it to the admission webhook and offered a fix; suggested skipping the mutation when no reachable node reports nvidia.com/gpu, until #1544 removes the runtime class"},
+              {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6843448607", "date": "2026-11-13", "note": "Withdrew the webhook node check; a RuntimeClass with the runc handler set by the platform already avoids the mutation, so a docs note may be enough"}]},
     {"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544", "kind": "comment", "ref": "K6", "date": "2026-11-01",
      "summary": "CDI/NRI-native GPU injection for fraction pods (opened by others): our AMD device injector as a working NRI example.",
      "ours": [{"url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544#issuecomment-6557664853", "date": "2026-11-01", "note": "oif-amd-share NRI plugin for AMD fraction pods"}]},
@@ -101,7 +102,8 @@
      "summary": "Sample workload templates for AMD GPUs (ROCm PyTorch training and Jupyter)."},
     {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3947", "kind": "issue", "ref": "R10", "date": "2026-11-01",
      "summary": "First visit to a workspace URL: parallel requests each start a login and fail with invalid_grant.",
-     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6842107938", "date": "2026-11-13", "note": "Run:ai could not reproduce it; answered that it may have come from the two-copy cluster-redis issue (#3943) and promised a re-test with one copy, proxy logs and a stripped HAR"}]}
+     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6842107938", "date": "2026-11-13", "note": "Run:ai could not reproduce it; answered that it may have come from the two-copy cluster-redis issue (#3943) and promised a re-test with one copy, proxy logs and a stripped HAR"},
+              {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3947#issuecomment-6843447475", "date": "2026-11-13", "note": "No re-test after all (seen only over a slow VPN path while cluster-redis had two copies); closed as not planned"}]}
    ]
   },
   {
