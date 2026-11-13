@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-13T02:04:24Z",
+ "generated": "2026-11-13T02:23:56Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -329,17 +329,17 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-12T18:38:31Z",
-    "author": "Thezone-1",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6832578045"
+    "at": "2026-11-13T02:22:12Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6841915768"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "Fraction pods get runtimeClassName nvidia even when they can only run on AMD GPU nodes",
-   "updated": "2026-11-12T18:38:31Z"
+   "updated": "2026-11-13T02:22:12Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556": {
    "closed_reason": null,
@@ -415,7 +415,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
-   "updated": "2026-11-13T02:00:17Z"
+   "updated": "2026-11-13T02:12:41Z"
   },
   "https://github.com/kubernetes-sigs/kwok/issues/1802": {
    "closed_reason": null,
