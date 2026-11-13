@@ -18,7 +18,8 @@
      "links": [{"label": "branch", "url": "https://github.com/openinferencefabric/gpu-fractioning/tree/feat/fractiond-amd-dmem"}],
      "ours": [
       {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6802445636", "date": "2026-11-11", "note": "Answers the maintainer review point by point: re-apply caps on Synchronize, drop dmem.min, dmem.capacity check, runc >= 1.2.0, kernel 6.15; asks where AMD metrics should go"},
-      {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6803066882", "date": "2026-11-11", "note": "Review fixes pushed (261f6ce, 584b4b8), with a reply on each of the 13 inline comments; lab check of the re-apply path to follow"}
+      {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6803066882", "date": "2026-11-11", "note": "Review fixes pushed (261f6ce, 584b4b8), with a reply on each of the 13 inline comments; lab check of the re-apply path to follow"},
+      {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6841571283", "date": "2026-11-13", "note": "Lab result on the W7900 node, 11/11: readiness, 4096 MiB dmem.max on create, no dmem.min, re-apply in place after fractiond was down, fail-closed with the clear error; suggests AMD metrics as a follow-up PR"}
      ]}
    ]
   },
