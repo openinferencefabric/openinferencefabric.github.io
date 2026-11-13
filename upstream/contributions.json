@@ -115,9 +115,11 @@
      "links": [{"label": "code", "url": "https://github.com/openinferencefabric/oif/tree/129600fe50538994292bdcb0da6227cad6af25be/tools/fake-gpu"}]},
     {"url": "https://github.com/ROCm/device-metrics-exporter/issues/722", "kind": "issue", "ref": "A5", "date": "2026-11-04",
      "summary": "Feature request: pods sharing a GPU without their own amd.com/gpu allocation (KAI/Run:ai fractions) get no per-pod metrics; the exporter labels the GPU with the reservation pod. Asks for attribution by the processes using the GPU (KFD, dmem.current) and a pod UID label. Lab evidence on a W7900.",
-     "ours": [{"url": "https://github.com/ROCm/device-metrics-exporter/issues/722#issuecomment-6689065458", "date": "2026-11-06", "note": "Answer to the triage: what the KAI fraction setup is, and an offer to test any build on a W7900"}]},
+     "ours": [{"url": "https://github.com/ROCm/device-metrics-exporter/issues/722#issuecomment-6689065458", "date": "2026-11-06", "note": "Answer to the triage: what the KAI fraction setup is, and an offer to test any build on a W7900"},
+              {"url": "https://github.com/ROCm/device-metrics-exporter/issues/722#issuecomment-6843611398", "date": "2026-11-13", "note": "Ping to the assigned engineer a week later; offer to test any build or config"}]},
     {"url": "https://github.com/ROCm/rocm-systems/issues/14860", "kind": "issue", "ref": "A2", "date": "2026-11-02",
-     "summary": "hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit: apps inside a cap still see the whole GPU."},
+     "summary": "hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit: apps inside a cap still see the whole GPU.",
+     "ours": [{"url": "https://github.com/ROCm/rocm-systems/issues/14860#issuecomment-6843610810", "date": "2026-11-13", "note": "Follow-up with new evidence: dmem caps are heading into Kubernetes (gpu-fractioning#175); asked for routing to the clr/rocr-runtime owners"}]},
     {"url": "https://github.com/ROCm/rocm-systems/issues/14861", "kind": "issue", "ref": "A3", "date": "2026-11-02",
      "summary": "Per-process compute busy time for KFD queues, for per-container GPU utilisation."}
    ]
