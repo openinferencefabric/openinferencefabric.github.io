@@ -41,6 +41,7 @@ header.top b { font: 700 20px/1 var(--display); letter-spacing: -0.01em; }
 header.top nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; font-size: 15px; }
 header.top nav a { color: var(--fg); text-decoration: none; }
 header.top nav a:hover { color: var(--teal); }
+header.top nav a.ext { border: 1px solid var(--line); border-radius: 999px; padding: 0 10px; }
 h1, h2, h3 { font-family: var(--display); letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
 .hero { padding-block: 48px 56px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; }
 .hero h1 { font-size: clamp(36px, 5.4vw, 60px); font-weight: 800; line-height: 1.02; }
@@ -127,13 +128,13 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
     <svg role="img" aria-label="Open Inference Fabric logo"><use href="#weave"/></svg>
     <b>open inference fabric</b>
     <nav aria-label="Main">
-      <a href="#what">What it is</a>
-      <a href="#architecture">Architecture</a>
-      <a href="#amd">AMD in Run:ai</a>
-      <a href="roadmap/">Roadmap</a>
-      <a href="#upstream">Upstream</a>
-      <a href="#join">Get involved</a>
-      <a href="https://github.com/openinferencefabric/oif">GitHub</a>
+      <a href="#stack">The stack</a>
+      <a href="#architecture">How it works</a>
+      <a href="#amd">NVIDIA + AMD</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#upstream">Upstream work</a>
+      <a href="#contribute">Contribute</a>
+      <a class="ext" href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
     </nav>
   </header>
 
@@ -151,8 +152,8 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   </div>
 </div>
 
-<section id="what"><div class="wrap">
-  <div class="eyebrow">What it is</div>
+<section id="stack"><div class="wrap">
+  <div class="eyebrow">01 · The stack</div>
   <h2>One command, a whole inference stack</h2>
   <p class="lede"><code class="mono">sudo ./oif install</code> builds the platform layer by layer. Every change it makes to a host is recorded, and <code class="mono">oif uninstall</code> takes it back out.</p>
   <div class="stack">
@@ -171,7 +172,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
 </div></section>
 
 <section id="architecture"><div class="wrap">
-  <div class="eyebrow">Architecture</div>
+  <div class="eyebrow">02 · How it works</div>
   <h2>Two ways in, one set of accelerators</h2>
   <p class="lede">Requests enter through one OpenAI-compatible endpoint and reach a Dynamo worker on either vendor. Jobs describe what they need, a model and a number of GPUs, and OIF picks the vendor; Run:ai and the KAI Scheduler then place them. Both land on the same GPU nodes: NVIDIA, AMD, or both in one server.</p>
   <figure class="arch">
@@ -266,7 +267,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
 </div></section>
 
 <section id="amd"><div class="wrap">
-  <div class="eyebrow">Run:ai on AMD GPUs</div>
+  <div class="eyebrow">03 · NVIDIA + AMD</div>
   <h2>NVIDIA and AMD in one Run:ai</h2>
   <p class="lede">When NVIDIA open-sourced Run:ai in October 2026, its GPU inventory, interface and GPU fractions were built for NVIDIA. OIF adds AMD: GPUs in the node inventory, a node pool and quota per vendor so a CUDA job never lands on an AMD GPU, and fractional AMD GPUs. Two workloads can share one Radeon Pro W7900 at half a GPU each, with soft memory isolation for trusted teams.</p>
   <div class="shots">
@@ -277,14 +278,14 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
 </div></section>
 
 <section id="roadmap"><div class="wrap">
-  <div class="eyebrow">Roadmap</div>
+  <div class="eyebrow">04 · Roadmap</div>
   <h2>What is built, what comes next</h2>
   <p class="lede">The orchestration platform is built and tested: Run:ai on NVIDIA and AMD, a highly available multi-node cluster, and jobs that ask for GPUs without naming a vendor. Now: the v0.1 test on a clean server with both GPUs. Next: serving with Dynamo on both vendors, compared fairly, then one AI gateway with keys and budgets per team.</p>
   <p style="margin-top:16px"><a class="btn" href="roadmap/">See the roadmap →</a></p>
 </div></section>
 
 <section id="upstream"><div class="wrap">
-  <div class="eyebrow">Upstream first</div>
+  <div class="eyebrow">05 · Upstream work</div>
   <h2>Work goes back to the projects we build on</h2>
   <p class="lede">OIF patches are proposed upstream with lab evidence, so everyone running Run:ai, the KAI Scheduler or ROCm benefits. Every issue, pull request, discussion and comment, with live status, is on the <a href="upstream/">upstream tracker</a>; the plan behind them is in <a href="https://github.com/openinferencefabric/oif/blob/main/docs/UPSTREAM.md">UPSTREAM.md</a>.</p>
   <div class="tbl"><table>
@@ -301,8 +302,8 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   <p style="margin-top:16px"><a class="btn" href="upstream/">All upstream contributions →</a></p>
 </div></section>
 
-<section id="join"><div class="wrap">
-  <div class="eyebrow">Get involved</div>
+<section id="contribute"><div class="wrap">
+  <div class="eyebrow">06 · Contribute</div>
   <h2>Help build it</h2>
   <div class="join">
     <div><h3>Test</h3><p>Run the guides on NVIDIA, AMD or mixed GPU servers and <a href="https://github.com/openinferencefabric/oif/issues/new/choose">tell us what breaks</a>.</p></div>
