@@ -21,7 +21,7 @@ NAV = [
     ("Contribute", "#contribute", "contribute"),
     ("GitHub ↗", "https://github.com/openinferencefabric/oif", "github"),
 ]
-CONTACT = "contact@openinferencefabric.us.ci"
+CONTACT = "manmohan@openinferencefabric.us.ci"
 
 def mark(loop=False, label=None):
     """The OIF mark, animated (site.css .wv), drawn in the page's colour tokens so it follows light and dark."""
