@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roadmap · Open Inference Fabric</title>
+<meta name="description" content="What Open Inference Fabric has built, what is being proven now and what comes next, task by task.">
+<meta property="og:title" content="Open Inference Fabric roadmap">
+<meta property="og:description" content="Built, in progress and next: orchestration on NVIDIA and AMD, the v0.1 release, serving with Dynamo, one AI gateway.">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<link rel="icon" href="../img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+html { padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* Layout: a woven timeline. One vertical thread runs down the page; each milestone is a knot on it, open to its tasks. */
+:root {
+  --bg: #FFFFFF;
+  --panel: #F4F7F8;
+  --line: #DCE4E7;
+  --ink: #16202A;
+  --muted: #55636E;
+  --teal: #0E7C86;
+  --saffron: #E39A2D;
+  --saffron-ink: #9A5B05;
+  --done: #0E7C86;
+  --doing: #C27C12;
+  --next: #3E5BA8;
+  --later: #7A8791;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121A22; --panel: #18232D; --line: #2A3946; --ink: #E6EBEE; --muted: #9AA8B3;
+    --teal: #2BA7B1; --saffron: #F0AE48; --saffron-ink: #F0AE48;
+    --done: #2BA7B1; --doing: #F0AE48; --next: #8FA6E8; --later: #8593A0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121A22; --panel: #18232D; --line: #2A3946; --ink: #E6EBEE; --muted: #9AA8B3;
+  --teal: #2BA7B1; --saffron: #F0AE48; --saffron-ink: #F0AE48;
+  --done: #2BA7B1; --doing: #F0AE48; --next: #8FA6E8; --later: #8593A0; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 72px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+a { color: var(--teal); }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; border-radius: 4px; }
+
+/* header */
+.top { display: grid; gap: 20px; }
+.brand { color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
+.brand svg { width: 52px; height: auto; flex: none; }
+.brand .f { color: var(--teal); }
+h1 { font-size: clamp(32px, 5.4vw, 52px); font-weight: 700; letter-spacing: -0.02em; max-width: 18ch; }
+.lede { font-size: 18px; color: var(--muted); max-width: 62ch; margin: 0; }
+.lede strong { color: var(--ink); font-weight: 600; }
+
+/* where we are now */
+.now { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.stat { background: var(--panel); border-radius: 10px; padding: 16px 18px; display: grid; gap: 4px; min-width: 0; }
+.stat .k { font: 500 12px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.stat .v { font: 700 28px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.stat .s { font-size: 14px; color: var(--muted); }
+.bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--line); gap: 2px; margin-top: 6px; }
+.bar span { display: block; height: 100%; }
+
+/* controls */
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px; border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 14px/1 var(--body); border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 8px 12px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip .n { font: 500 12px/1 var(--mono); opacity: 0.75; font-variant-numeric: tabular-nums; }
+.side { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.search { font: 400 15px/1 var(--body); padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); width: 220px; max-width: 100%; }
+.ghost { font: 500 14px/1 var(--body); background: none; border: 0; color: var(--teal); cursor: pointer; padding: 8px 4px; }
+
+/* the thread */
+.projects { display: grid; gap: 48px; }
+.project { display: grid; gap: 18px; }
+.phead { display: grid; gap: 6px; }
+.eyebrow { font: 500 12px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--saffron-ink); }
+.phead h2 { font-size: clamp(24px, 3.4vw, 32px); }
+.phead p { margin: 0; color: var(--muted); max-width: 66ch; }
+.thread { position: relative; display: grid; gap: 14px; padding-left: 34px; }
+.thread::before { content: ""; position: absolute; left: 10px; top: 6px; bottom: 6px; width: 4px; border-radius: 2px; background: var(--line); }
+.ms { position: relative; }
+.knot { position: absolute; left: -34px; top: 18px; width: 24px; height: 24px; border-radius: 50%; border: 4px solid var(--bg); background: var(--c); box-shadow: 0 0 0 2px var(--c); }
+.ms[data-status="later"] .knot { background: var(--bg); }
+.ms[data-status="doing"] .knot::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px solid var(--c); animation: pulse 2.4s ease-out infinite; }
+@keyframes pulse { from { opacity: 0.8; transform: scale(0.7); } to { opacity: 0; transform: scale(1.4); } }
+@media (prefers-reduced-motion: reduce) { .ms[data-status="doing"] .knot::after { animation: none; opacity: 0.5; } }
+details.card { background: var(--panel); border-radius: 10px; }
+details.card > summary { list-style: none; cursor: pointer; padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; align-items: start; }
+details.card > summary::-webkit-details-marker { display: none; }
+.title { display: grid; gap: 4px; min-width: 0; }
+.title h3 { font-size: 19px; font-weight: 600; }
+.title .sum { color: var(--muted); font-size: 15px; }
+.meta { display: grid; justify-items: end; gap: 6px; }
+.pill { font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 9px; border-radius: 999px; color: var(--c); border: 1px solid var(--c); white-space: nowrap; }
+.when { font: 400 13px/1.2 var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mini { display: flex; gap: 3px; }
+.mini i { width: 8px; height: 8px; border-radius: 2px; background: var(--line); }
+.mini i.d { background: var(--done); } .mini i.g { background: var(--doing); }
+.chev { transition: transform 0.2s; color: var(--muted); font-size: 14px; }
+details[open] .chev { transform: rotate(90deg); }
+.body { padding: 0 18px 18px; display: grid; gap: 14px; }
+.body .why { margin: 0; max-width: 66ch; }
+.hl { background: var(--bg); border-left: 3px solid var(--saffron); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 15px; }
+ul.tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+ul.tasks li { display: grid; grid-template-columns: 22px 72px 1fr; gap: 10px; padding: 8px 6px; border-top: 1px solid var(--line); align-items: baseline; }
+ul.tasks li:first-child { border-top: 0; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--c); display: inline-block; transform: translateY(1px); }
+li[data-status="later"] .dot, li[data-status="next"] .dot { background: transparent; border: 2px solid var(--c); }
+.id { font: 500 13px/1.4 var(--mono); color: var(--muted); }
+.txt { min-width: 0; }
+.txt b { font-weight: 600; }
+.txt span { display: block; color: var(--muted); font-size: 14px; }
+[data-status="done"] { --c: var(--done); }
+[data-status="doing"] { --c: var(--doing); }
+[data-status="next"] { --c: var(--next); }
+[data-status="later"] { --c: var(--later); }
+.empty { color: var(--muted); padding: 24px 0; }
+
+/* legend + footer */
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.foot { display: grid; gap: 10px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 20px; }
+.foot p { margin: 0; max-width: 72ch; }
+@media (max-width: 560px) {
+  details.card > summary { grid-template-columns: 1fr; }
+  .meta { justify-items: start; grid-auto-flow: column; justify-content: start; align-items: center; }
+  ul.tasks li { grid-template-columns: 18px 1fr; }
+  ul.tasks li .id { grid-column: 2; }
+  ul.tasks li .txt { grid-column: 2; }
+  .search { width: 100%; }
+  .side { width: 100%; }
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="../" aria-label="Open Inference Fabric home">
+      <svg viewBox="0 0 132 100" role="img" aria-label="OIF mark">
+        <rect x="26" y="12" width="15" height="76" rx="7.5" fill="var(--teal)"/>
+        <rect x="54" y="12" width="15" height="76" rx="7.5" fill="var(--saffron)"/>
+        <rect x="8" y="27" width="76" height="21" fill="var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" fill="var(--ink)"/>
+        <rect x="8" y="53" width="76" height="21" fill="var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" fill="var(--ink)"/>
+        <rect x="51" y="29" width="21" height="17" fill="var(--bg)"/><rect x="54" y="28" width="15" height="19" fill="var(--saffron)"/>
+        <rect x="23" y="55" width="21" height="17" fill="var(--bg)"/><rect x="26" y="54" width="15" height="19" fill="var(--teal)"/>
+        <circle cx="96" cy="37.5" r="7.5" fill="var(--ink)"/><circle cx="113" cy="37.5" r="5" fill="var(--ink)"/><circle cx="125" cy="37.5" r="3" fill="var(--ink)"/>
+        <circle cx="96" cy="63.5" r="7.5" fill="var(--ink)"/><circle cx="113" cy="63.5" r="5" fill="var(--ink)"/><circle cx="125" cy="63.5" r="3" fill="var(--ink)"/>
+      </svg>
+      <span>open inference <span class="f">fabric</span></span>
+    </a>
+    <h1>From bare metal to tokens, on NVIDIA and AMD</h1>
+    <p class="lede">Open Inference Fabric puts both GPU vendors behind <strong>one scheduler, one serving stack, one benchmark tool and one set of dashboards</strong>, installed with one command and removed just as cleanly. This page shows what is built, what is being proven now and what comes next.</p>
+    <div class="now" id="now"></div>
+  </header>
+
+  <div class="controls" role="toolbar" aria-label="Filter the roadmap">
+    <div class="chips" id="chips"></div>
+    <div class="side">
+      <input class="search" id="q" type="search" placeholder="Search tasks (e.g. AMD, quota)" aria-label="Search tasks">
+      <button class="ghost" id="toggle" type="button">Expand all</button>
+    </div>
+  </div>
+
+  <div class="legend" aria-hidden="true">
+    <span data-status="done"><i class="dot"></i> Done</span>
+    <span data-status="doing"><i class="dot"></i> In progress</span>
+    <span data-status="next"><i class="dot"></i> Up next</span>
+    <span data-status="later"><i class="dot"></i> Later</span>
+  </div>
+
+  <main class="projects" id="projects"></main>
+
+  <footer class="foot">
+    <p>Status as of 15 November 2026, taken from the project's task list. Every "done" item passed its own test on real GPUs: a lab of five virtual machines (three control-plane nodes, one NVIDIA RTX A6000 worker, one AMD Radeon PRO W7900 worker), and now a single server with both GPUs.</p>
+    <p>Source, install guides and the full task list: <a href="https://github.com/openinferencefabric/oif" target="_blank" rel="noopener">github.com/openinferencefabric/oif</a>. Contributions to the projects OIF builds on: <a href="../upstream/">upstream tracker</a>. <a href="../">Home</a>.</p>
+  </footer>
+</div>
+
+<script>
+const S = { done: "Done", doing: "In progress", next: "Up next", later: "Later" };
+const P = [
+  { id: "orchestration", eyebrow: "Project 1", name: "Orchestration platform",
+    about: "One Kubernetes cluster where NVIDIA's Run:ai and its KAI scheduler share NVIDIA and AMD GPUs by project and quota.",
+    ms: [
+      { name: "Run:ai on NVIDIA", when: "Oct 2026", sum: "A clean Ubuntu server becomes a GPU cluster with one command.",
+        why: "The base everything else stands on: Kubernetes, the NVIDIA GPU Operator, Run:ai with its scheduler, dashboards, and an uninstall that returns the host to its original state.",
+        tasks: [
+          ["done", "T-101", "The oif installer", "install, status, plan, check and uninstall, with every host change recorded"],
+          ["done", "T-102", "Host preparation", "packages, kernel settings, container runtime, NVIDIA driver"],
+          ["done", "T-103", "Kubernetes 1.35", "kubeadm, Calico networking, local storage, MetalLB"],
+          ["done", "T-104", "NVIDIA GPU Operator", "device plugin, feature discovery, DCGM metrics"],
+          ["done", "T-105", "Run:ai, open source", "control plane, cluster and KAI scheduler; projects with GPU quotas"],
+          ["done", "T-106", "Dashboards", "Prometheus and Grafana with Fleet and Scheduling views"],
+          ["done", "T-107", "Clean uninstall", "install, uninstall and reinstall leave no trace on the host"],
+          ["done", "T-108", "NVIDIA GPU fractions", "half a GPU per workload through Run:ai"]
+        ] },
+      { name: "Add AMD GPUs", when: "Oct – Nov 2026", sum: "The same cluster schedules AMD GPUs next to NVIDIA's.",
+        why: "Run:ai and KAI are NVIDIA-first. OIF adds the AMD GPU Operator and small, tested patches so AMD GPUs count in quotas, show in the UI and can be shared.",
+        hl: "A pod on a server with both GPUs must only land where its own vendor's GPU is free. The scheduler fix (KAI patch 0006) has unit tests; its proof on real hardware is running now.",
+        tasks: [
+          ["done", "S-2", "Quotas count AMD GPUs", "a project with quota 0 waits even when the AMD GPU is free"],
+          ["done", "T-111", "AMD GPU Operator", "in-kernel driver, device plugin, node labeller"],
+          ["done", "T-112", "One metric schema for both vendors", "oif:gpu_* rules, unit-tested"],
+          ["done", "T-113", "Quota per vendor", "1 NVIDIA + 1 AMD GPU inside one project"],
+          ["done", "T-114", "Both vendors on the same panels", "Fleet dashboard"],
+          ["done", "T-115", "Run:ai shows AMD GPUs", "patched cluster-sync, operator and web UI"],
+          ["doing", "T-116", "Vendor-aware placement on a mixed server", "scheduler patch done; hardware proof in progress"],
+          ["done", "T-142", "AMD memory cap, upstream review", "changes made and posted; waiting on the maintainer"],
+          ["done", "T-143", "Driver survives kernel updates", "NVIDIA modules follow the newest kernel"],
+          ["done", "T-144", "Dead code removed", "audit after the coding guidelines were tightened"]
+        ] },
+      { name: "Multi-node hybrid cluster", when: "Oct – Nov 2026", sum: "Production shape: one vendor per server, highly available control plane.",
+        why: "Real fleets have NVIDIA servers and AMD servers. OIF installs across nodes over SSH, survives losing a control-plane node, and keeps every job on one vendor.",
+        hl: "A control-plane node was powered off with nobody acting: workloads, quotas and dashboards kept working.",
+        tasks: [
+          ["done", "T-119", "Five-VM GPU lab", "3 control-plane, 2 GPU workers, GPUs passed through"],
+          ["done", "T-120", "Install across nodes", "one node list, oif's own cluster key, per-node stages"],
+          ["done", "T-121", "Highly available Kubernetes", "kube-vip address, three control-plane nodes"],
+          ["done", "T-122", "GPUs on their nodes", "both operators, inventory over the cluster"],
+          ["done", "T-123", "Node pool per vendor", "Run:ai pools nvidia and amd, quota per pool"],
+          ["done", "T-124", "Platform survives a node loss", "Run:ai, database and metrics replicated"],
+          ["done", "T-125", "One job, one vendor", "admission policy refuses a pod asking for both"],
+          ["done", "S-7", "AMD GPU fractions: go", "spike on what KAI needs for AMD sharing"],
+          ["done", "T-126", "AMD GPU fractions", "KAI rebuilt with AMD support, half an AMD GPU per pod"],
+          ["done", "T-127", "AMD fractions in the UI", "templates and a usable form"],
+          ["done", "S-8", "Kernel VRAM cap for AMD", "Linux dmem cgroup stops a pod at its share"],
+          ["done", "T-139", "Hard VRAM cap for AMD fractions", "fractiond with OIF's AMD backend"],
+          ["done", "T-128", "Hardening after external review", "failure paths, image refresh, lab checks"],
+          ["done", "T-129", "Pinned to one vendor's pool", "webhook pins each GPU pod to its vendor"],
+          ["done", "T-137", "Scheduling dashboard per pool", "quota and use per project and pool"],
+          ["done", "T-138", "Run:ai Overview counts GPUs", "metrics path fixed"],
+          ["done", "T-140", "Vendor and size picker", "NVIDIA / AMD / no GPU in every workload form"]
+        ] },
+      { name: "Topology and intent", when: "Nov 2026", sum: "Jobs that ask for GPUs, not a vendor; packed inside fast interconnect domains.",
+        why: "A user should be able to say “2 GPUs for this model” and let the platform pick the vendor with room, keeping a job's GPUs inside one high-bandwidth domain.",
+        tasks: [
+          ["done", "S-9", "Spike: KAI topology", "KAI's own topology support carries the domains"],
+          ["done", "T-130", "Topology discovery", "each GPU node labelled with its accelerator domain"],
+          ["done", "T-131", "AcceleratorDomain view", "kubectl get acceleratordomains: GPUs and use per domain"],
+          ["done", "T-132", "Domain-aware packing", "Run:ai packs workloads by domain"],
+          ["done", "T-133", "AIJob", "a job that names no vendor; the controller picks one with room"],
+          ["done", "T-134", "Placement defaults", "PlacementPolicy per project or cluster"],
+          ["done", "T-135", "Status and dashboards", "vendor, domain and cross-vendor counters in Grafana"],
+          ["done", "T-136", "Guides", "the vendor-agnostic path, start to finish"],
+          ["done", "T-141", "Patched scheduler on every cluster", "mixed servers get the vendor fix too"]
+        ] }
+    ] },
+  { id: "release", eyebrow: "Release", name: "v0.1: proven from a clean OS",
+    about: "The whole of Project 1 installed on a fresh server with both GPUs, checked, removed and installed again.",
+    ms: [
+      { name: "End-to-end on a clean server", when: "Now", sum: "Single server, NVIDIA and AMD GPU side by side, fresh Ubuntu.",
+        why: "The final gate before tagging v0.1. It also covers the cases the lab could not: one server with both vendors.",
+        hl: "First run found and fixed one bug (two controllers waited for a multi-node label); the install then finished, and a second install found nothing left to do.",
+        tasks: [
+          ["doing", "T-901", "End-to-end test from a clean OS", "install done; checks on the mixed server, uninstall and reinstall next"],
+          ["next", "T-902", "Guides with screenshots", "install and comparison guides on the guides site"],
+          ["next", "T-903", "Tag v0.1.0", "after Project 1; v0.2.0 after Project 2"]
+        ] }
+    ] },
+  { id: "serving", eyebrow: "Project 2", name: "Serving and a fair benchmark",
+    about: "Serve models with NVIDIA Dynamo on both vendors and compare them apples to apples: same model, same engine version and flags, same benchmark profile.",
+    ms: [
+      { name: "Dynamo on NVIDIA", when: "Started Nov 2026", sum: "Dynamo's platform runs under Run:ai's scheduler.",
+        why: "Dynamo deployments are scheduled by KAI inside a Run:ai project, so serving uses the same quotas as training.",
+        tasks: [
+          ["done", "S-4", "Dynamo under Run:ai's KAI", "Dynamo 1.6.1 with its bundled scheduler off"],
+          ["done", "T-201", "Dynamo platform in the installer", "operator and CRDs, pinned"],
+          ["next", "T-202", "Qwen3-0.6B with vLLM on the A6000", "chat through the Dynamo frontend"],
+          ["next", "T-203", "Same model with SGLang", ""],
+          ["next", "T-204", "Same model with TensorRT-LLM", "NVIDIA-only reference"],
+          ["next", "T-205", "Benchmarks as Kubernetes Jobs", "AIPerf runner, profiles, Grafana annotations"],
+          ["next", "T-206", "Serving dashboard", "request rate, time to first token, KV cache, queue"]
+        ] },
+      { name: "Dynamo on AMD", when: "Started Nov 2026", sum: "A ROCm build of Dynamo and the first benchmark report.",
+        why: "Dynamo has no official ROCm build. OIF builds one from an AMD-authored upstream pull request and keeps it until it lands upstream.",
+        hl: "On the W7900: 330 benchmark points, 0 request errors. Dynamo matched plain vLLM's throughput (Qwen3-8B 0.0%, Qwen3-0.6B +0.5% median).",
+        tasks: [
+          ["done", "S-1", "Dynamo on ROCm", "worker registers, chat works, AIPerf without errors"],
+          ["done", "T-211", "Dynamo vLLM image for ROCm", "vLLM 0.33.0, published to the project's registry"],
+          ["done", "B-1", "oif bench: Dynamo against plain vLLM", "HTML report with a noise verdict per point"],
+          ["next", "B-1a", "One benchmark per GPU", "a lock so two runs never collide"],
+          ["next", "S-5", "SGLang on the W7900", "proves whether SGLang's ROCm build serves on this GPU"],
+          ["next", "T-212", "Dynamo SGLang image for ROCm", "if S-5 passes"],
+          ["next", "T-213", "Same model on the W7900 by model name", "one Dynamo frontend"],
+          ["next", "T-214", "Same benchmark profiles on the W7900", ""],
+          ["later", "B-2", "Hardware configurations", "discover GPUs per node; CUDA and ROCm stacks side by side"],
+          ["later", "B-3", "Workload catalogue", "prefill, decode, agentic coding, long documents, reasoning, chat"],
+          ["later", "B-4", "Traffic-mix knee", "the highest rate that still meets latency targets"],
+          ["later", "B-5", "Quality benchmarks", "accuracy suites through the same endpoint"],
+          ["later", "B-6", "Benchmarks through the platform", "the same cases as Run:ai workloads"]
+        ] },
+      { name: "Latest engines on both vendors", when: "Later", sum: "Newest vLLM and SGLang releases, same version for CUDA and ROCm.",
+        why: "Vendor defaults lag behind engine releases. Overlays keep the Dynamo runtime pinned and swap in the newest engine for both vendors.",
+        tasks: [
+          ["later", "T-221", "Overlay build", "same engine version for CUDA and ROCm"],
+          ["later", "T-222", "Compatibility check per overlay", "results in a public table"],
+          ["later", "T-223", "One serving profile for both vendors", "dtype, context length, batching, caching"],
+          ["later", "T-224", "Benchmark matrix", "{A6000, W7900} × {vLLM, SGLang} × {default, latest}"]
+        ] }
+    ] },
+  { id: "gateway", eyebrow: "Project 3", name: "Unified API and AI gateway",
+    about: "One OpenAI-compatible API in front of every model on both vendors, with keys, token budgets and usage per team; then a self-service API to deploy and benchmark.",
+    ms: [
+      { name: "AI gateway", when: "Later", sum: "One endpoint, routed by model name, metered per team.",
+        why: "Teams should call a model, not a vendor. The gateway routes, enforces budgets and reports usage.",
+        tasks: [
+          ["later", "S-6", "Gateway choice", "agentgateway or Agent Router, both on the Gateway API Inference Extension"],
+          ["later", "T-301", "Gateway installed by oif", "its own address and certificate"],
+          ["later", "T-302", "One route per model", "/v1/models lists what is served"],
+          ["later", "T-303", "Vendor policy per model", "pinned, preferred with fail-over, or split"],
+          ["later", "T-304", "API keys per team", "mapped to a Run:ai project"],
+          ["later", "T-305", "Token limits and budgets", "clear 429 when a budget runs out"],
+          ["later", "T-306", "Usage and cost dashboard", "per key, model and vendor"],
+          ["later", "T-307", "Gateway overhead measured", "AIPerf through the gateway and direct"]
+        ] },
+      { name: "Self-service API", when: "Later", sum: "Deploy, serve and benchmark through one API.",
+        why: "The same keys deploy a model into the team's project, under its quota, and run benchmarks on it.",
+        tasks: [
+          ["later", "T-311", "API design", "OpenAPI: environments, deployments, benchmark runs"],
+          ["later", "T-312", "Deploy and remove a model", "Dynamo deployment, route and pool in one call"],
+          ["later", "T-313", "Benchmarks through the API", "results as JSON and in the report"],
+          ["later", "T-314", "Small web UI", "or Run:ai templates where they are enough"],
+          ["later", "T-315", "Placement policies", "by vendor, free capacity, latency or cost per token"]
+        ] },
+      { name: "Agents and tools", when: "Optional", sum: "MCP tool servers behind the same gateway and keys.",
+        why: "Both gateway candidates support MCP, so tools can share the same keys and budgets.",
+        tasks: [["later", "T-321", "MCP tool servers behind the gateway", "same keys as the models"]] }
+    ] }
+];
+
+// a milestone's status follows its tasks: all done, any in progress, any up next, else later
+function msStatus(m) {
+  const s = m.tasks.map(t => t[0]);
+  if (s.every(x => x === "done")) return "done";
+  if (s.includes("doing")) return "doing";
+  if (s.includes("done") || s.includes("next")) return "next";
+  return "later";
+}
+const all = P.flatMap(p => p.ms.flatMap(m => m.tasks));
+const count = st => all.filter(t => t[0] === st).length;
+let filter = "all", query = "";
+
+function renderNow() {
+  const total = all.length, d = count("done"), g = count("doing"), n = count("next"), l = count("later");
+  const pct = x => (100 * x / total).toFixed(1) + "%";
+  document.getElementById("now").innerHTML = `
+    <div class="stat"><span class="k">Built and tested</span><span class="v">${d} of ${total}</span>
+      <span class="s">tasks done</span>
+      <div class="bar" role="img" aria-label="${d} done, ${g} in progress, ${n} up next, ${l} later">
+        <span style="width:${pct(d)};background:var(--done)"></span><span style="width:${pct(g)};background:var(--doing)"></span>
+        <span style="width:${pct(n)};background:var(--next)"></span><span style="width:${pct(l)};background:var(--later);opacity:.45"></span></div></div>
+    <div class="stat"><span class="k">Now</span><span class="v">v0.1 gate</span><span class="s">clean-server test with both GPUs on one machine</span></div>
+    <div class="stat"><span class="k">Next</span><span class="v">Serving</span><span class="s">Dynamo models on both vendors, compared fairly</span></div>
+    <div class="stat"><span class="k">Then</span><span class="v">One API</span><span class="s">gateway with keys, budgets and usage per team</span></div>`;
+}
+
+function renderChips() {
+  const opts = [["all", "All", all.length], ["done", S.done, count("done")], ["doing", S.doing, count("doing")], ["next", S.next, count("next")], ["later", S.later, count("later")]];
+  const el = document.getElementById("chips");
+  el.innerHTML = opts.map(([k, label, n]) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${filter === k}">${label}<span class="n">${n}</span></button>`).join("");
+  el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => { filter = b.dataset.f; renderChips(); renderProjects(); }));
+}
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function matches(t) {
+  if (filter !== "all" && t[0] !== filter) return false;
+  if (!query) return true;
+  return (t[1] + " " + t[2] + " " + t[3]).toLowerCase().includes(query);
+}
+
+function renderProjects() {
+  const out = [];
+  for (const p of P) {
+    const ms = p.ms.map(m => ({ m, tasks: m.tasks.filter(matches) })).filter(x => x.tasks.length);
+    if (!ms.length) continue;
+    const narrowed = filter !== "all" || query;
+    out.push(`<section class="project" id="${p.id}" aria-labelledby="h-${p.id}">
+      <div class="phead"><span class="eyebrow">${p.eyebrow}</span><h2 id="h-${p.id}">${esc(p.name)}</h2><p>${esc(p.about)}</p></div>
+      <div class="thread">${ms.map(({ m, tasks }) => {
+        const st = msStatus(m), open = narrowed || st === "doing";
+        const done = m.tasks.filter(t => t[0] === "done").length;
+        return `<div class="ms" data-status="${st}"><span class="knot" aria-hidden="true"></span>
+          <details class="card" ${open ? "open" : ""}>
+            <summary><div class="title"><h3>${esc(m.name)}</h3><span class="sum">${esc(m.sum)}</span></div>
+              <div class="meta"><span class="pill">${S[st]}</span><span class="when">${esc(m.when)} · ${done}/${m.tasks.length} <span class="chev" aria-hidden="true">▸</span></span>
+              <span class="mini" aria-hidden="true">${m.tasks.map(t => `<i class="${t[0] === "done" ? "d" : t[0] === "doing" ? "g" : ""}"></i>`).join("")}</span></div></summary>
+            <div class="body"><p class="why">${esc(m.why)}</p>${m.hl ? `<div class="hl">${esc(m.hl)}</div>` : ""}
+              <ul class="tasks">${tasks.map(t => `<li data-status="${t[0]}"><i class="dot" title="${S[t[0]]}"></i><span class="id">${t[1]}</span>
+                <span class="txt"><b>${esc(t[2])}</b>${t[3] ? `<span>${esc(t[3])}</span>` : ""}</span></li>`).join("")}</ul></div>
+          </details></div>`;
+      }).join("")}</div></section>`);
+  }
+  document.getElementById("projects").innerHTML = out.join("") || `<p class="empty">No task matches “${esc(query)}”. Try a shorter word, or choose All.</p>`;
+  updateToggle();
+}
+
+function updateToggle() {
+  const d = [...document.querySelectorAll("details.card")];
+  document.getElementById("toggle").textContent = d.length && d.every(x => x.open) ? "Collapse all" : "Expand all";
+}
+document.getElementById("toggle").addEventListener("click", () => {
+  const d = [...document.querySelectorAll("details.card")], open = !d.every(x => x.open);
+  d.forEach(x => x.open = open); updateToggle();
+});
+document.getElementById("projects").addEventListener("toggle", updateToggle, true);
+document.getElementById("q").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); renderProjects(); });
+
+renderNow(); renderChips(); renderProjects();
+if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
+</script>
+
+</body>
+</html>
