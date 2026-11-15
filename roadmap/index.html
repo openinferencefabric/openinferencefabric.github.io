@@ -13,17 +13,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../site.css">
 <style>
 html { padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px); }
 body { margin: 0; }
 [hidden] { display: none !important; }
 /* Layout: a woven timeline. One vertical thread runs down the page; each milestone is a knot on it, open to its tasks. */
 :root {
-  --bg: #FFFFFF;
-  --panel: #F4F7F8;
-  --line: #DCE4E7;
+  --bg: #F3F5F6;
+  --panel: #FFFFFF;
+  --line: #D9DFE3;
   --ink: #16202A;
-  --muted: #55636E;
+  --muted: #56636E;
   --teal: #0E7C86;
   --saffron: #E39A2D;
   --saffron-ink: #9A5B05;
@@ -37,32 +38,27 @@ body { margin: 0; }
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #121A22; --panel: #18232D; --line: #2A3946; --ink: #E6EBEE; --muted: #9AA8B3;
+    --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0;
     --teal: #2BA7B1; --saffron: #F0AE48; --saffron-ink: #F0AE48;
     --done: #2BA7B1; --doing: #F0AE48; --next: #8FA6E8; --later: #8593A0; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #121A22; --panel: #18232D; --line: #2A3946; --ink: #E6EBEE; --muted: #9AA8B3;
+  --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0;
   --teal: #2BA7B1; --saffron: #F0AE48; --saffron-ink: #F0AE48;
   --done: #2BA7B1; --doing: #F0AE48; --next: #8FA6E8; --later: #8593A0; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body {
   background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body);
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 72px; display: grid; gap: 40px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 24px max(20px, env(safe-area-inset-right)) 32px max(20px, env(safe-area-inset-left)); display: grid; gap: 40px; }
 h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
 a { color: var(--teal); }
 a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; border-radius: 4px; }
 
 /* header */
 .top { display: grid; gap: 20px; }
-.brand { color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; }
-.brand svg { width: 52px; height: auto; flex: none; }
-.brand .f { color: var(--teal); }
 h1 { font-size: clamp(32px, 5.4vw, 52px); font-weight: 700; letter-spacing: -0.02em; max-width: 18ch; }
 .lede { font-size: 18px; color: var(--muted); max-width: 62ch; margin: 0; }
 .lede strong { color: var(--ink); font-weight: 600; }
@@ -153,22 +149,25 @@ li[data-status="later"] .dot, li[data-status="next"] .dot { background: transpar
 
 </head>
 <body>
+<!-- site-head -->
+<header class="site-head"><div class="site-in">
+    <a class="site-brand" href="../" aria-label="Open Inference Fabric home"><svg viewBox="0 0 132 100" aria-hidden="true"><rect x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/><circle cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#stack">The stack</a>
+      <a href="../#architecture">How it works</a>
+      <a class="duo" href="../#amd"><i></i>NVIDIA + AMD</a>
+      <a href="../roadmap/" aria-current="page">Roadmap</a>
+      <a href="../upstream/">Upstream work</a>
+      <a href="../#contribute">Contribute</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
+    </nav>
+</div></header>
+<!-- /site-head -->
+
 <div class="wrap">
   <header class="top">
-    <a class="brand" href="../" aria-label="Open Inference Fabric home">
-      <svg viewBox="0 0 132 100" role="img" aria-label="OIF mark">
-        <rect x="26" y="12" width="15" height="76" rx="7.5" fill="var(--teal)"/>
-        <rect x="54" y="12" width="15" height="76" rx="7.5" fill="var(--saffron)"/>
-        <rect x="8" y="27" width="76" height="21" fill="var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" fill="var(--ink)"/>
-        <rect x="8" y="53" width="76" height="21" fill="var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" fill="var(--ink)"/>
-        <rect x="51" y="29" width="21" height="17" fill="var(--bg)"/><rect x="54" y="28" width="15" height="19" fill="var(--saffron)"/>
-        <rect x="23" y="55" width="21" height="17" fill="var(--bg)"/><rect x="26" y="54" width="15" height="19" fill="var(--teal)"/>
-        <circle cx="96" cy="37.5" r="7.5" fill="var(--ink)"/><circle cx="113" cy="37.5" r="5" fill="var(--ink)"/><circle cx="125" cy="37.5" r="3" fill="var(--ink)"/>
-        <circle cx="96" cy="63.5" r="7.5" fill="var(--ink)"/><circle cx="113" cy="63.5" r="5" fill="var(--ink)"/><circle cx="125" cy="63.5" r="3" fill="var(--ink)"/>
-      </svg>
-      <span>open inference <span class="f">fabric</span></span>
-    </a>
-    <h1>From bare metal to tokens, on NVIDIA and AMD</h1>
+    <p class="page-eyebrow">Roadmap</p>
+    <h1>What is built, what comes next</h1>
     <p class="lede">Open Inference Fabric puts both GPU vendors behind <strong>one scheduler, one serving stack, one benchmark tool and one set of dashboards</strong>, installed with one command and removed just as cleanly. This page shows what is built, what is being proven now and what comes next.</p>
     <div class="now" id="now"></div>
   </header>
@@ -190,11 +189,21 @@ li[data-status="later"] .dot, li[data-status="next"] .dot { background: transpar
 
   <main class="projects" id="projects"></main>
 
-  <footer class="foot">
+  <div class="foot">
     <p>Status as of 15 November 2026, taken from the project's task list. Every "done" item passed its own test on real GPUs: a lab of five virtual machines (three control-plane nodes, one NVIDIA RTX A6000 worker, one AMD Radeon PRO W7900 worker), and now a single server with both GPUs.</p>
     <p>Source, install guides and the full task list: <a href="https://github.com/openinferencefabric/oif" target="_blank" rel="noopener">github.com/openinferencefabric/oif</a>. Contributions to the projects OIF builds on: <a href="../upstream/">upstream tracker</a>. <a href="../">Home</a>.</p>
-  </footer>
+  </div>
 </div>
+<!-- site-foot -->
+<footer class="site-foot"><div class="site-in">
+    <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="mailto:contact@openinferencefabric.us.ci">contact@openinferencefabric.us.ci</a>
+    <a href="https://github.com/openinferencefabric">GitHub</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
+    <span class="tm">NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
+</div></footer>
+<!-- /site-foot -->
 
 <script>
 const S = { done: "Done", doing: "In progress", next: "Up next", later: "Later" };
@@ -224,7 +233,7 @@ const P = [
           ["done", "T-113", "Quota per vendor", "1 NVIDIA + 1 AMD GPU inside one project"],
           ["done", "T-114", "Both vendors on the same panels", "Fleet dashboard"],
           ["done", "T-115", "Run:ai shows AMD GPUs", "patched cluster-sync, operator and web UI"],
-          ["doing", "T-116", "Vendor-aware placement on a mixed server", "scheduler patch done; hardware proof in progress"],
+          ["done", "T-116", "Vendor-aware placement on a mixed server", "proven on a server with both GPUs: a pod never gets the other vendor's free GPU"],
           ["done", "T-142", "AMD memory cap, upstream review", "changes made and posted; waiting on the maintainer"],
           ["done", "T-143", "Driver survives kernel updates", "NVIDIA modules follow the newest kernel"],
           ["done", "T-144", "Dead code removed", "audit after the coding guidelines were tightened"]
@@ -272,7 +281,7 @@ const P = [
         why: "The final gate before tagging v0.1. It also covers the cases the lab could not: one server with both vendors.",
         hl: "First run found and fixed one bug (two controllers waited for a multi-node label); the install then finished, and a second install found nothing left to do.",
         tasks: [
-          ["doing", "T-901", "End-to-end test from a clean OS", "install done; checks on the mixed server, uninstall and reinstall next"],
+          ["doing", "T-901", "End-to-end test from a clean OS", "install, checks on the mixed server and a clean uninstall done; reinstall with an interrupted run next"],
           ["next", "T-902", "Guides with screenshots", "install and comparison guides on the guides site"],
           ["next", "T-903", "Tag v0.1.0", "after Project 1; v0.2.0 after Project 2"]
         ] }

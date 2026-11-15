@@ -14,6 +14,7 @@
 <link rel="apple-touch-icon" href="img/oif-icon-light-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
 <style>
 /* Layout: one column of sections on a quiet paper ground; the brand weave carries the colour. */
 :root {
@@ -34,14 +35,7 @@ html, body { margin: 0; }
 body { background: var(--bg); color: var(--fg); font: 16px/1.6 var(--body); }
 a { color: var(--teal); text-underline-offset: 3px; }
 a:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
-.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
-header.top { padding-block: 22px; display: flex; align-items: center; gap: 12px; }
-header.top svg { width: 56px; height: auto; }
-header.top b { font: 700 20px/1 var(--display); letter-spacing: -0.01em; }
-header.top nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; font-size: 15px; }
-header.top nav a { color: var(--fg); text-decoration: none; }
-header.top nav a:hover { color: var(--teal); }
-header.top nav a.ext { border: 1px solid var(--line); border-radius: 999px; padding: 0 10px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
 h1, h2, h3 { font-family: var(--display); letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
 .hero { padding-block: 48px 56px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; }
 .hero h1 { font-size: clamp(36px, 5.4vw, 60px); font-weight: 800; line-height: 1.02; }
@@ -98,14 +92,12 @@ td code, .mono { font-family: var(--mono); font-size: 14px; }
 .join div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
 .join h3 { font-size: 22px; color: var(--teal); }
 .join p { margin: 6px 0 0; color: var(--muted); }
-footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 20px; }
 @media (max-width: 820px) {
   .hero { grid-template-columns: 1fr; padding-block: 28px 40px; }
   .hero .mark { display: none; }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .shots, .join { grid-template-columns: 1fr; }
   .layer { grid-template-columns: 1fr; gap: 2px; }
-  header.top nav { display: none; }
 }
 </style>
 </head>
@@ -123,20 +115,22 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   </symbol>
 </defs></svg>
 
-<div class="wrap">
-  <header class="top">
-    <svg role="img" aria-label="Open Inference Fabric logo"><use href="#weave"/></svg>
-    <b>open inference fabric</b>
-    <nav aria-label="Main">
+<!-- site-head -->
+<header class="site-head"><div class="site-in">
+    <a class="site-brand" href="./" aria-label="Open Inference Fabric home"><svg viewBox="0 0 132 100" aria-hidden="true"><rect x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/><circle cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav class="site-nav" aria-label="Main">
       <a href="#stack">The stack</a>
       <a href="#architecture">How it works</a>
-      <a href="#amd">NVIDIA + AMD</a>
-      <a href="#roadmap">Roadmap</a>
-      <a href="#upstream">Upstream work</a>
+      <a class="duo" href="#amd"><i></i>NVIDIA + AMD</a>
+      <a href="roadmap/">Roadmap</a>
+      <a href="upstream/">Upstream work</a>
       <a href="#contribute">Contribute</a>
-      <a class="ext" href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
     </nav>
-  </header>
+</div></header>
+<!-- /site-head -->
+
+<div class="wrap">
 
   <div class="hero">
     <div>
@@ -166,8 +160,8 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   <div class="stats">
     <div class="stat"><b>19</b><span>tested install and deployment guides</span></div>
     <div class="stat"><b>24</b><span>architecture decision records</span></div>
-    <div class="stat"><b>8</b><span>upstream pull requests</span></div>
-    <div class="stat"><b>21</b><span>upstream issues with lab evidence</span></div>
+    <div class="stat"><b>7</b><span>upstream pull requests</span></div>
+    <div class="stat"><b>20</b><span>upstream issues with lab evidence</span></div>
   </div>
 </div></section>
 
@@ -312,14 +306,15 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   </div>
 </div></section>
 
-<div class="wrap">
-  <footer>
+<!-- site-foot -->
+<footer class="site-foot"><div class="site-in">
     <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="mailto:contact@openinferencefabric.us.ci">contact@openinferencefabric.us.ci</a>
     <a href="https://github.com/openinferencefabric">GitHub</a>
     <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
     <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
-    <span>NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
-  </footer>
-</div>
+    <span class="tm">NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
+</div></footer>
+<!-- /site-foot -->
 </body>
 </html>
