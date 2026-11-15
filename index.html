@@ -73,6 +73,26 @@ th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--li
 th { font: 500 13px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 td code, .mono { font-family: var(--mono); font-size: 14px; }
 .state { display: inline-block; font: 500 12px var(--mono); padding: 2px 8px; border-radius: 999px; background: var(--tint); color: var(--teal); white-space: nowrap; }
+.arch { margin: 28px 0 0; }
+.arch-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.arch svg { display: block; width: 100%; min-width: 760px; height: auto; }
+.arch text { fill: var(--fg); font: 14px var(--body); }
+.arch .t { font: 700 16px var(--display); letter-spacing: -0.01em; }
+.arch .s { fill: var(--muted); font-size: 12.5px; }
+.arch .m { font: 500 12.5px var(--mono); }
+.arch .e { fill: var(--teal); font: 500 11.5px var(--mono); letter-spacing: 0.08em; }
+.arch .p { fill: var(--muted); font: 500 11px var(--mono); }
+.arch .lane { fill: var(--surface); stroke: var(--line); }
+.arch .box { fill: var(--bg); stroke: var(--line); stroke-width: 1.5; }
+.arch .box.plan { fill: none; stroke: var(--muted); stroke-dasharray: 6 5; }
+.arch .box.nv { fill: color-mix(in srgb, var(--teal) 12%, var(--surface)); stroke: var(--teal); }
+.arch .box.amd { fill: color-mix(in srgb, var(--saffron) 16%, var(--surface)); stroke: var(--saffron); }
+.arch .bar-nv { fill: var(--teal); } .arch .bar-amd { fill: var(--saffron); }
+.arch .cp { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+.arch .pill { fill: none; stroke: var(--line); }
+.arch .ln { fill: none; stroke: var(--muted); stroke-width: 1.6; marker-end: url(#arch-ah); }
+.arch .ln.d { stroke-dasharray: 5 5; }
+.arch figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; }
 .join { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
 .join div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
 .join h3 { font-size: 22px; color: var(--teal); }
@@ -108,6 +128,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
     <b>open inference fabric</b>
     <nav aria-label="Main">
       <a href="#what">What it is</a>
+      <a href="#architecture">Architecture</a>
       <a href="#amd">AMD in Run:ai</a>
       <a href="roadmap/">Roadmap</a>
       <a href="#upstream">Upstream</a>
@@ -136,17 +157,107 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   <p class="lede"><code class="mono">sudo ./oif install</code> builds the platform layer by layer. Every change it makes to a host is recorded, and <code class="mono">oif uninstall</code> takes it back out.</p>
   <div class="stack">
     <div class="layer"><b>Kubernetes</b><span>Upstream kubeadm Kubernetes 1.35, hardened, with a highly available control plane</span></div>
-    <div class="layer"><b>GPUs</b><span>NVIDIA GPU Operator and AMD GPU Operator side by side, one vendor per node</span></div>
+    <div class="layer"><b>GPUs</b><span>NVIDIA GPU Operator and AMD GPU Operator side by side, in separate servers or in one</span></div>
     <div class="layer"><b>Orchestration</b><span>Open-source NVIDIA Run:ai 3.0 with the KAI Scheduler: projects, quotas, node pools and fractional GPUs</span></div>
-    <div class="layer"><b>Serving</b><span>NVIDIA Dynamo with vLLM, under Run:ai's quotas <span class="state">in progress</span></span></div>
+    <div class="layer"><b>Serving</b><span>NVIDIA Dynamo with vLLM on both vendors (an OIF ROCm build for AMD), under Run:ai's quotas <span class="state">in progress</span></span></div>
     <div class="layer"><b>Observability</b><span>Prometheus and Grafana dashboards that show both GPU vendors on one screen; AIPerf benchmarks</span></div>
   </div>
   <div class="stats">
-    <div class="stat"><b>15</b><span>tested install and deployment guides</span></div>
-    <div class="stat"><b>23</b><span>architecture decision records</span></div>
-    <div class="stat"><b>4</b><span>pull requests to Run:ai and KAI</span></div>
-    <div class="stat"><b>12</b><span>upstream issues with lab evidence</span></div>
+    <div class="stat"><b>19</b><span>tested install and deployment guides</span></div>
+    <div class="stat"><b>24</b><span>architecture decision records</span></div>
+    <div class="stat"><b>8</b><span>upstream pull requests</span></div>
+    <div class="stat"><b>21</b><span>upstream issues with lab evidence</span></div>
   </div>
+</div></section>
+
+<section id="architecture"><div class="wrap">
+  <div class="eyebrow">Architecture</div>
+  <h2>Two ways in, one set of GPUs</h2>
+  <p class="lede">Requests enter through one OpenAI-compatible endpoint and reach a Dynamo worker on either vendor. Jobs describe what they need, a model and a number of GPUs, and OIF picks the vendor; Run:ai and the KAI Scheduler then place them. Both land on the same GPU nodes: NVIDIA, AMD, or both in one server.</p>
+  <figure class="arch">
+    <div class="arch-scroll">
+    <svg viewBox="0 0 1000 800" role="img" aria-labelledby="arch-t arch-d">
+      <title id="arch-t">Open Inference Fabric architecture</title>
+      <desc id="arch-d">Left, the serving path: clients and the oif bench load generator call the Dynamo frontend's OpenAI-compatible endpoint; a router (planned) picks an NVIDIA worker or an AMD worker, both Dynamo with vLLM. Right, the job path: an AIJob with a PlacementPolicy, the oif-aijob controller that picks vendor and accelerator domain, Run:ai projects, quotas and node pools, and the KAI Scheduler with OIF patches, which also schedules the Dynamo workers. KAI binds pods to NVIDIA GPU nodes, mixed nodes with both vendors, or AMD GPU nodes, next to a one- or three-node control plane. Underneath: Ubuntu 26.04, Kubernetes 1.35, containerd, Calico, MetalLB, local-path storage and kube-vip, with Prometheus and Grafana collecting metrics from both vendors.</desc>
+      <defs>
+        <marker id="arch-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker>
+      </defs>
+
+      <!-- serving path -->
+      <rect class="lane" x="0" y="0" width="490" height="392" rx="10"/>
+      <text class="e" x="20" y="28">REQUESTS · SERVING</text>
+      <rect class="pill" x="372" y="13" width="98" height="21" rx="10.5"/><text class="p" x="421" y="28" text-anchor="middle">in progress</text>
+      <rect class="box" x="20" y="44" width="215" height="58" rx="7"/>
+      <text class="t" x="36" y="68">Clients &amp; agents</text><text class="s" x="36" y="88">apps · SDKs · users</text>
+      <rect class="box" x="255" y="44" width="215" height="58" rx="7"/>
+      <text class="t" x="271" y="68">oif bench</text><text class="s" x="271" y="88">AIPerf on the same API</text>
+      <path class="ln" d="M127 102V124"/><path class="ln" d="M362 102V124"/>
+      <rect class="box" x="20" y="128" width="450" height="58" rx="7"/>
+      <text class="t" x="36" y="152">Dynamo frontend</text><text class="s" x="36" y="172">one OpenAI-compatible endpoint for every model</text>
+      <path class="ln" d="M245 186V208"/>
+      <rect class="box plan" x="20" y="212" width="450" height="58" rx="7"/>
+      <text class="t" x="36" y="236">Dynamo router</text><text class="s" x="36" y="256">picks the NVIDIA or AMD backend by model name</text>
+      <rect class="pill" x="388" y="226" width="70" height="21" rx="10.5"/><text class="p" x="423" y="241" text-anchor="middle">planned</text>
+      <path class="ln" d="M127 270V294"/><path class="ln" d="M362 270V294"/>
+      <rect class="box nv" x="20" y="298" width="215" height="78" rx="7"/>
+      <text class="t" x="36" y="322">NVIDIA worker</text><text x="36" y="344">Dynamo + vLLM · CUDA</text><text class="s" x="36" y="364">e.g. RTX A6000</text>
+      <rect class="box amd" x="255" y="298" width="215" height="78" rx="7"/>
+      <text class="t" x="271" y="322">AMD worker</text><text x="271" y="344">Dynamo + vLLM · ROCm</text><text class="s" x="271" y="364">e.g. Radeon PRO W7900</text>
+
+      <!-- job path -->
+      <rect class="lane" x="510" y="0" width="490" height="392" rx="10"/>
+      <text class="e" x="530" y="28">JOBS · ORCHESTRATION</text>
+      <rect class="box" x="530" y="44" width="450" height="58" rx="7"/>
+      <text class="t" x="546" y="68">AIJob · PlacementPolicy</text><text class="s" x="546" y="88">a model and a GPU count; the vendor is optional</text>
+      <path class="ln" d="M755 102V124"/>
+      <rect class="box" x="530" y="128" width="450" height="58" rx="7"/>
+      <text class="t" x="546" y="152">oif-aijob controller</text><text class="s" x="546" y="172">picks vendor and accelerator domain, writes a plain Job</text>
+      <path class="ln" d="M755 186V208"/>
+      <rect class="box" x="530" y="212" width="450" height="58" rx="7"/>
+      <text class="t" x="546" y="236">Run:ai</text><text class="s" x="546" y="256">projects · quotas · node pools per vendor</text>
+      <path class="ln" d="M755 270V294"/>
+      <rect class="box" x="530" y="298" width="450" height="78" rx="7"/>
+      <text class="t" x="546" y="322">KAI Scheduler, with OIF patches</text><text x="546" y="344">gang · bin-packing · topology domains</text><text class="s" x="546" y="364">a pod gets one vendor's GPUs, on mixed nodes too</text>
+      <path class="ln d" d="M470 337H526"/><text class="s" x="498" y="329" text-anchor="middle">pods</text>
+
+      <!-- GPU nodes -->
+      <rect class="lane" x="0" y="412" width="1000" height="180" rx="10"/>
+      <path class="ln" d="M755 376V400H375V452"/><path class="ln" d="M610 400V452"/><path class="ln" d="M755 400H855V452"/>
+      <text class="e" x="20" y="440">GPU NODES · ONE SERVER OR A CLUSTER</text>
+      <rect class="box" x="20" y="456" width="220" height="116" rx="7"/>
+      <text class="t" x="36" y="480">Control plane</text><text class="s" x="36" y="500">1 node, or 3 for HA</text>
+      <rect class="cp" x="36" y="516" width="56" height="38" rx="5"/><text class="m" x="64" y="540" text-anchor="middle">cp1</text>
+      <rect class="cp" x="102" y="516" width="56" height="38" rx="5"/><text class="m" x="130" y="540" text-anchor="middle">cp2</text>
+      <rect class="cp" x="168" y="516" width="56" height="38" rx="5"/><text class="m" x="196" y="540" text-anchor="middle">cp3</text>
+      <rect class="box nv" x="260" y="456" width="230" height="116" rx="7"/>
+      <text class="t" x="276" y="480">NVIDIA GPU nodes</text><text class="m" x="276" y="502">nvidia.com/gpu</text><text class="s" x="276" y="524">NVIDIA GPU Operator · DCGM</text><text class="s" x="276" y="544">node pool nvidia</text>
+      <rect class="box" x="510" y="456" width="200" height="116" rx="7"/>
+      <clipPath id="arch-mix"><rect x="510" y="456" width="200" height="116" rx="7"/></clipPath>
+      <g clip-path="url(#arch-mix)"><rect class="bar-nv" x="510" y="456" width="100" height="7"/><rect class="bar-amd" x="610" y="456" width="100" height="7"/></g>
+      <text class="t" x="526" y="484">Mixed node</text><text class="m" x="526" y="506">both resources</text><text class="s" x="526" y="528">both vendors in one server</text><text class="s" x="526" y="548">a pod never mixes vendors</text>
+      <rect class="box amd" x="730" y="456" width="250" height="116" rx="7"/>
+      <text class="t" x="746" y="480">AMD GPU nodes</text><text class="m" x="746" y="502">amd.com/gpu</text><text class="s" x="746" y="524">AMD GPU Operator · exporter</text><text class="s" x="746" y="544">node pool amd</text>
+
+      <!-- foundation -->
+      <rect class="lane" x="0" y="612" width="1000" height="140" rx="10"/>
+      <path class="ln d" d="M855 572V646"/><text class="s" x="866" y="606">metrics</text>
+      <text class="e" x="20" y="640">FOUNDATION · OBSERVABILITY</text>
+      <text x="20" y="670">Ubuntu 26.04 · Kubernetes 1.35 (kubeadm) · containerd</text>
+      <text x="20" y="694">Calico · MetalLB · local-path storage · kube-vip for HA</text>
+      <text x="20" y="718">NVIDIA driver 615 from Ubuntu · in-kernel amdgpu</text>
+      <text class="s" x="20" y="740">oif install records every host change; oif uninstall reverses it</text>
+      <rect class="box" x="560" y="650" width="420" height="86" rx="7"/>
+      <text class="t" x="576" y="674">Prometheus · Grafana</text><text class="s" x="576" y="696">DCGM · AMD metrics · KAI and Run:ai · Dynamo · AIPerf</text><text class="m" x="576" y="720">oif:gpu_* {vendor, node, gpu}</text>
+
+      <!-- legend -->
+      <rect class="box" x="0" y="772" width="22" height="14" rx="3"/><text class="s" x="30" y="784">built</text>
+      <rect class="box plan" x="80" y="772" width="22" height="14" rx="3"/><text class="s" x="110" y="784">planned</text>
+      <rect class="box nv" x="180" y="772" width="22" height="14" rx="3"/><text class="s" x="210" y="784">NVIDIA</text>
+      <rect class="box amd" x="270" y="772" width="22" height="14" rx="3"/><text class="s" x="300" y="784">AMD</text>
+    </svg>
+    </div>
+    <figcaption>NVIDIA's strand is teal and AMD's saffron, as in the logo. GPU models are examples from the lab, not requirements. Details in <a href="https://github.com/openinferencefabric/oif/blob/main/docs/ARCHITECTURE.md">ARCHITECTURE.md</a>.</figcaption>
+  </figure>
 </div></section>
 
 <section id="amd"><div class="wrap">
@@ -172,12 +283,14 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   <h2>Work goes back to the projects we build on</h2>
   <p class="lede">OIF patches are proposed upstream with lab evidence, so everyone running Run:ai, the KAI Scheduler or ROCm benefits. Every issue, pull request, discussion and comment, with live status, is on the <a href="upstream/">upstream tracker</a>; the plan behind them is in <a href="https://github.com/openinferencefabric/oif/blob/main/docs/UPSTREAM.md">UPSTREAM.md</a>.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Pull request</th><th>Change</th><th>State</th></tr></thead>
+    <thead><tr><th>Open pull request</th><th>Change</th><th>State</th></tr></thead>
     <tbody>
-      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3950">run-ai #3950</a></td><td>cluster-sync: count AMD GPUs (<code>amd.com/gpu</code>) in the node inventory</td><td><span class="state">in review</span></td></tr>
-      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3948">run-ai #3948</a></td><td>frontend: AMD icon for workloads on ROCm images</td><td><span class="state">in review</span></td></tr>
-      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3949">run-ai #3949</a></td><td>go-operator: report GPU fractions unavailable when the daemons have no target nodes</td><td><span class="state">in review</span></td></tr>
-      <tr><td><a href="https://github.com/kai-scheduler/KAI-Scheduler/pull/2557">KAI #2557</a></td><td>binder: do not modify the configured reservation pod resources</td><td><span class="state">in review</span></td></tr>
+      <tr><td><a href="https://github.com/kai-scheduler/KAI-Scheduler/pull/2594">KAI #2594</a></td><td>scheduler: honour a required topology level above the job's lowest common domain</td><td><span class="state">open</span></td></tr>
+      <tr><td><a href="https://github.com/kai-scheduler/KAI-Scheduler/pull/2557">KAI #2557</a></td><td>binder: do not modify the configured reservation pod resources</td><td><span class="state">open</span></td></tr>
+      <tr><td><a href="https://github.com/kai-scheduler/gpu-fractioning/pull/175">gpu-fractioning #175</a></td><td>fractiond: limit AMD GPU memory with the dmem cgroup</td><td><span class="state">open</span></td></tr>
+      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3949">run-ai #3949</a></td><td>go-operator: report GPU fractions unavailable when the daemons have no target nodes</td><td><span class="state">open</span></td></tr>
+      <tr><td><a href="https://github.com/dsx-ai-factory/run-ai/pull/3948">run-ai #3948</a></td><td>frontend: AMD icon for workloads on ROCm images</td><td><span class="state">open</span></td></tr>
+      <tr><td><a href="https://github.com/kubernetes-sigs/kwok/pull/1808">kwok #1808</a></td><td>docs: an AMD GPU nodes example</td><td><span class="state">open</span></td></tr>
     </tbody>
   </table></div>
   <p style="margin-top:16px"><a class="btn" href="upstream/">All upstream contributions →</a></p>
@@ -188,7 +301,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
   <h2>Help build it</h2>
   <div class="join">
     <div><h3>Test</h3><p>Run the guides on NVIDIA, AMD or mixed GPU servers and <a href="https://github.com/openinferencefabric/oif/issues/new/choose">tell us what breaks</a>.</p></div>
-    <div><h3>Review</h3><p>Read and test the upstream pull requests above. Reviews help them land for everyone.</p></div>
+    <div><h3>Review</h3><p>Read and test the open upstream pull requests above. Reviews help them land for everyone.</p></div>
     <div><h3>Contribute</h3><p>Go, Kubernetes, ROCm, CUDA or docs: start with <a href="https://github.com/openinferencefabric/oif/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p></div>
   </div>
 </div></section>
