@@ -1,9 +1,7 @@
 {
  "failed": [],
- "generated": "2026-11-13T05:11:48Z",
- "new": [
-  "https://github.com/kubernetes-sigs/kwok/pull/1808"
- ],
+ "generated": "2026-11-15T19:35:07Z",
+ "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
    "closed_reason": null,
@@ -440,7 +438,6 @@
   "https://github.com/kubernetes-sigs/kwok/pull/1808": {
    "closed_reason": null,
    "comments": 6,
-   "kind": "pr",
    "labels": [
     "ok-to-test",
     "kind/documentation",
