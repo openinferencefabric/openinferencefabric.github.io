@@ -20,7 +20,6 @@
 :root {
   --bg: #F3F5F6; --surface: #FFFFFF; --fg: #16202A; --muted: #56636E; --line: #D9DFE3;
   --teal: #0E7C86; --saffron: #E39A2D; --ink: #16202A; --tint: #E3F0F1;
-  --g: var(--bg); --i: var(--ink); --t: var(--teal); --s: var(--saffron);
   --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
@@ -102,22 +101,10 @@ td code, .mono { font-family: var(--mono); font-size: 14px; }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <symbol id="weave" viewBox="0 0 132 100">
-    <rect x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--t)"/>
-    <rect x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--s)"/>
-    <rect x="8" y="27" width="76" height="21" style="fill:var(--g)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--i)"/>
-    <rect x="8" y="53" width="76" height="21" style="fill:var(--g)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--i)"/>
-    <rect x="51" y="29" width="21" height="17" style="fill:var(--g)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--s)"/>
-    <rect x="23" y="55" width="21" height="17" style="fill:var(--g)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--t)"/>
-    <circle cx="96" cy="37.5" r="7.5" style="fill:var(--i)"/><circle cx="113" cy="37.5" r="5" style="fill:var(--i)"/><circle cx="125" cy="37.5" r="3" style="fill:var(--i)"/>
-    <circle cx="96" cy="63.5" r="7.5" style="fill:var(--i)"/><circle cx="113" cy="63.5" r="5" style="fill:var(--i)"/><circle cx="125" cy="63.5" r="3" style="fill:var(--i)"/>
-  </symbol>
-</defs></svg>
 
 <!-- site-head -->
 <header class="site-head"><div class="site-in">
-    <a class="site-brand" href="./" aria-label="Open Inference Fabric home"><svg viewBox="0 0 132 100" aria-hidden="true"><rect x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/><circle cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <a class="site-brand" href="./" aria-label="Open Inference Fabric home"><svg class="wv" viewBox="0 0 132 100" aria-hidden="true"><rect class="wv-x wv-warp" x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect class="wv-x wv-warp s" x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><g class="wv-x wv-weft"><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-weft b"><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-cross"><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/></g><g class="wv-x wv-cross b"><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/></g><circle class="wv-x wv-tok r1 t1" cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t2" cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t3" cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t1" cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t2" cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t3" cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
     <nav class="site-nav" aria-label="Main">
       <a href="#stack">The stack</a>
       <a href="#architecture">How it works</a>
@@ -142,7 +129,11 @@ td code, .mono { font-family: var(--mono); font-size: 14px; }
         <a class="btn" href="https://github.com/openinferencefabric/oif/blob/main/docs/PROJECT-BRIEF.md">Project brief</a>
       </div>
     </div>
-    <div class="mark" aria-hidden="true"><svg><use href="#weave"/></svg></div>
+    <div class="mark">
+<!-- hero-mark -->
+<svg class="wv wv-loop" viewBox="0 0 132 100" role="img" aria-label="Open Inference Fabric logo"><rect class="wv-x wv-warp" x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect class="wv-x wv-warp s" x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><g class="wv-x wv-weft"><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-weft b"><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-cross"><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/></g><g class="wv-x wv-cross b"><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/></g><circle class="wv-x wv-tok r1 t1" cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t2" cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t3" cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t1" cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t2" cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t3" cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg>
+<!-- /hero-mark -->
+</div>
   </div>
 </div>
 

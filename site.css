@@ -34,3 +34,24 @@
   .site-nav::-webkit-scrollbar { display: none; }
 }
 .page-eyebrow { font: 500 13px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin: 0 0 12px; }
+/* The animated mark (brand/make_animated_mark.py in the oif repo): threads drop in, the ink weaves them, the crossings
+   lock, tokens leave the cloth; .wv-loop keeps the tokens flowing. Still with prefers-reduced-motion. */
+.wv .wv-x { transform-box: fill-box; }
+.wv .wv-warp { transform-origin: 50% 0; animation: wv-drop .55s cubic-bezier(.2,.8,.2,1) both; }
+.wv .wv-warp.s { transform-origin: 50% 100%; animation-delay: .12s; }
+.wv .wv-weft { transform-origin: 0 50%; animation: wv-weave .6s cubic-bezier(.3,.7,.2,1) .5s both; }
+.wv .wv-weft.b { animation-delay: .68s; }
+.wv .wv-cross { transform-origin: 50% 50%; animation: wv-lock .3s cubic-bezier(.2,1.6,.4,1) 1.15s both; }
+.wv .wv-cross.b { animation-delay: 1.27s; }
+.wv .wv-tok { transform-origin: 50% 50%; animation: wv-out .45s cubic-bezier(.2,.8,.2,1) both; }
+.wv .t1 { animation-delay: 1.45s; } .wv .t2 { animation-delay: 1.58s; } .wv .t3 { animation-delay: 1.71s; }
+.wv .r2.t1 { animation-delay: 1.52s; } .wv .r2.t2 { animation-delay: 1.65s; } .wv .r2.t3 { animation-delay: 1.78s; }
+.wv.wv-loop .wv-tok { animation-name: wv-out, wv-flow; animation-duration: .45s, 2.4s; animation-iteration-count: 1, infinite; animation-timing-function: cubic-bezier(.2,.8,.2,1), ease-in-out; animation-fill-mode: both, none; }
+.wv.wv-loop .t1 { animation-delay: 1.45s, 2.6s; } .wv.wv-loop .t2 { animation-delay: 1.58s, 2.8s; } .wv.wv-loop .t3 { animation-delay: 1.71s, 3s; }
+.wv.wv-loop .r2.t1 { animation-delay: 1.52s, 2.7s; } .wv.wv-loop .r2.t2 { animation-delay: 1.65s, 2.9s; } .wv.wv-loop .r2.t3 { animation-delay: 1.78s, 3.1s; }
+@keyframes wv-drop { from { transform: scaleY(0); } to { transform: none; } }
+@keyframes wv-weave { from { transform: scaleX(0); } to { transform: none; } }
+@keyframes wv-lock { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes wv-out { from { transform: translateX(-14px) scale(.3); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes wv-flow { 0%, 55%, 100% { transform: none; } 25% { transform: translateX(2px) scale(1.14); } }
+@media (prefers-reduced-motion: reduce) { .wv .wv-x { animation: none !important; } }
