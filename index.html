@@ -172,13 +172,13 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
 
 <section id="architecture"><div class="wrap">
   <div class="eyebrow">Architecture</div>
-  <h2>Two ways in, one set of GPUs</h2>
+  <h2>Two ways in, one set of accelerators</h2>
   <p class="lede">Requests enter through one OpenAI-compatible endpoint and reach a Dynamo worker on either vendor. Jobs describe what they need, a model and a number of GPUs, and OIF picks the vendor; Run:ai and the KAI Scheduler then place them. Both land on the same GPU nodes: NVIDIA, AMD, or both in one server.</p>
   <figure class="arch">
     <div class="arch-scroll">
-    <svg viewBox="0 0 1000 800" role="img" aria-labelledby="arch-t arch-d">
+    <svg viewBox="0 0 1000 856" role="img" aria-labelledby="arch-t arch-d">
       <title id="arch-t">Open Inference Fabric architecture</title>
-      <desc id="arch-d">Left, the serving path: clients and the oif bench load generator call the Dynamo frontend's OpenAI-compatible endpoint; a router (planned) picks an NVIDIA worker or an AMD worker, both Dynamo with vLLM. Right, the job path: an AIJob with a PlacementPolicy, the oif-aijob controller that picks vendor and accelerator domain, Run:ai projects, quotas and node pools, and the KAI Scheduler with OIF patches, which also schedules the Dynamo workers. KAI binds pods to NVIDIA GPU nodes, mixed nodes with both vendors, or AMD GPU nodes, next to a one- or three-node control plane. Underneath: Ubuntu 26.04, Kubernetes 1.35, containerd, Calico, MetalLB, local-path storage and kube-vip, with Prometheus and Grafana collecting metrics from both vendors.</desc>
+      <desc id="arch-d">Left, the serving path: clients and the oif bench load generator call the Dynamo frontend's OpenAI-compatible endpoint; a router (planned) picks an NVIDIA worker or an AMD worker, both Dynamo with vLLM. Right, the job path: an AIJob with a PlacementPolicy, the oif-aijob controller that picks vendor and accelerator domain, Run:ai projects, quotas and node pools, and the KAI Scheduler with OIF patches, which also schedules the Dynamo workers. KAI binds pods to NVIDIA GPU nodes, mixed nodes with both vendors, or AMD GPU nodes, next to a one- or three-node control plane; a placeholder marks accelerators planned next, such as Google TPUs and custom XPUs from Broadcom or Marvell. Underneath: Ubuntu 26.04, Kubernetes 1.35, containerd, Calico, MetalLB, local-path storage and kube-vip, with Prometheus and Grafana collecting metrics from both vendors.</desc>
       <defs>
         <marker id="arch-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker>
       </defs>
@@ -221,9 +221,9 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
       <path class="ln d" d="M470 337H526"/><text class="s" x="498" y="329" text-anchor="middle">pods</text>
 
       <!-- GPU nodes -->
-      <rect class="lane" x="0" y="412" width="1000" height="180" rx="10"/>
+      <rect class="lane" x="0" y="412" width="1000" height="236" rx="10"/>
       <path class="ln" d="M755 376V400H375V452"/><path class="ln" d="M610 400V452"/><path class="ln" d="M755 400H855V452"/>
-      <text class="e" x="20" y="440">GPU NODES · ONE SERVER OR A CLUSTER</text>
+      <text class="e" x="20" y="440">ACCELERATOR NODES · ONE SERVER OR A CLUSTER</text>
       <rect class="box" x="20" y="456" width="220" height="116" rx="7"/>
       <text class="t" x="36" y="480">Control plane</text><text class="s" x="36" y="500">1 node, or 3 for HA</text>
       <rect class="cp" x="36" y="516" width="56" height="38" rx="5"/><text class="m" x="64" y="540" text-anchor="middle">cp1</text>
@@ -237,10 +237,14 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
       <text class="t" x="526" y="484">Mixed node</text><text class="m" x="526" y="506">both resources</text><text class="s" x="526" y="528">both vendors in one server</text><text class="s" x="526" y="548">a pod never mixes vendors</text>
       <rect class="box amd" x="730" y="456" width="250" height="116" rx="7"/>
       <text class="t" x="746" y="480">AMD GPU nodes</text><text class="m" x="746" y="502">amd.com/gpu</text><text class="s" x="746" y="524">AMD GPU Operator · exporter</text><text class="s" x="746" y="544">node pool amd</text>
+      <rect class="box plan" x="20" y="588" width="960" height="44" rx="7"/>
+      <text class="t" x="36" y="616">Next accelerators</text><text class="s" x="200" y="615">e.g. Google TPU, custom XPUs from Broadcom or Marvell: one more vendor resource, the same AIJob</text>
+      <rect class="pill" x="890" y="600" width="70" height="21" rx="10.5"/><text class="p" x="925" y="615" text-anchor="middle">planned</text>
 
       <!-- foundation -->
+      <g transform="translate(0 56)">
       <rect class="lane" x="0" y="612" width="1000" height="140" rx="10"/>
-      <path class="ln d" d="M855 572V646"/><text class="s" x="866" y="606">metrics</text>
+      <path class="ln d" d="M855 592V646"/><text class="s" x="866" y="607">metrics</text>
       <text class="e" x="20" y="640">FOUNDATION · OBSERVABILITY</text>
       <text x="20" y="670">Ubuntu 26.04 · Kubernetes 1.35 (kubeadm) · containerd</text>
       <text x="20" y="694">Calico · MetalLB · local-path storage · kube-vip for HA</text>
@@ -254,6 +258,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
       <rect class="box plan" x="80" y="772" width="22" height="14" rx="3"/><text class="s" x="110" y="784">planned</text>
       <rect class="box nv" x="180" y="772" width="22" height="14" rx="3"/><text class="s" x="210" y="784">NVIDIA</text>
       <rect class="box amd" x="270" y="772" width="22" height="14" rx="3"/><text class="s" x="300" y="784">AMD</text>
+      </g>
     </svg>
     </div>
     <figcaption>NVIDIA's strand is teal and AMD's saffron, as in the logo. GPU models are examples from the lab, not requirements. Details in <a href="https://github.com/openinferencefabric/oif/blob/main/docs/ARCHITECTURE.md">ARCHITECTURE.md</a>.</figcaption>
@@ -312,7 +317,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
     <a href="https://github.com/openinferencefabric">GitHub</a>
     <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
     <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
-    <span>NVIDIA, Run:ai, AMD and Radeon are trademarks of their owners; this project is not affiliated with them.</span>
+    <span>NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
   </footer>
 </div>
 </body>
