@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-15T19:35:07Z",
+ "generated": "2026-11-16T05:32:13Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -371,27 +371,31 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-02T06:37:01Z",
+    "at": "2026-11-16T05:29:51Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557#issuecomment-6570793323"
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557#issuecomment-6908218217"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "fix(binder): do not modify the configured reservation pod resources",
-   "updated": "2026-11-12T12:12:14Z"
+   "updated": "2026-11-16T05:29:51Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [],
-   "last_comment": null,
+   "last_comment": {
+    "at": "2026-11-16T05:29:52Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594#issuecomment-6908218612"
+   },
    "reply_waiting": false,
    "state": "open",
    "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
-   "updated": "2026-11-12T11:24:50Z"
+   "updated": "2026-11-16T05:29:53Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
@@ -409,17 +413,17 @@
   },
   "https://github.com/kai-scheduler/gpu-fractioning/pull/175": {
    "closed_reason": null,
-   "comments": 3,
+   "comments": 4,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-13T02:00:17Z",
+    "at": "2026-11-16T05:29:54Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6841571283"
+    "url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6908219007"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
-   "updated": "2026-11-13T02:12:41Z"
+   "updated": "2026-11-16T05:29:54Z"
   },
   "https://github.com/kubernetes-sigs/kwok/issues/1802": {
    "closed_reason": null,
@@ -437,7 +441,7 @@
   },
   "https://github.com/kubernetes-sigs/kwok/pull/1808": {
    "closed_reason": null,
-   "comments": 6,
+   "comments": 7,
    "labels": [
     "ok-to-test",
     "kind/documentation",
@@ -446,14 +450,14 @@
     "size/L"
    ],
    "last_comment": {
-    "at": "2026-11-13T03:37:27Z",
-    "author": "wzshiming",
-    "url": "https://github.com/kubernetes-sigs/kwok/pull/1808#issuecomment-6843050455"
+    "at": "2026-11-16T05:29:56Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kubernetes-sigs/kwok/pull/1808#issuecomment-6908219479"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "docs: add AMD GPU nodes example",
-   "updated": "2026-11-13T03:37:31Z"
+   "updated": "2026-11-16T05:29:56Z"
   }
  }
 }
