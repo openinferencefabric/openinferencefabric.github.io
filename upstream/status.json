@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-16T05:32:13Z",
+ "generated": "2026-11-16T13:45:50Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -322,28 +322,28 @@
    "updated": "2026-11-01T12:02:50Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2554": {
-   "closed_reason": null,
+   "closed_reason": "completed",
    "comments": 0,
    "labels": [],
    "last_comment": null,
    "reply_waiting": false,
-   "state": "open",
+   "state": "closed",
    "title": "Binder modifies the configured reservation-pod resources on every GPU reservation",
-   "updated": "2026-11-01T12:02:43Z"
+   "updated": "2026-11-16T10:34:16Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555": {
-   "closed_reason": null,
-   "comments": 3,
+   "closed_reason": "not_planned",
+   "comments": 4,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-13T04:00:54Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6843448607"
+    "at": "2026-11-16T12:00:43Z",
+    "author": "gshaibi",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2555#issuecomment-6915818323"
    },
-   "reply_waiting": false,
-   "state": "open",
+   "reply_waiting": true,
+   "state": "closed",
    "title": "Fraction pods get runtimeClassName nvidia even when they can only run on AMD GPU nodes",
-   "updated": "2026-11-13T04:00:55Z"
+   "updated": "2026-11-16T12:00:43Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556": {
    "closed_reason": null,
@@ -371,22 +371,33 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557": {
    "closed_reason": null,
-   "comments": 3,
-   "labels": [],
+   "comments": 8,
+   "labels": [
+    "backport v0.14",
+    "backport v0.16",
+    "backport v0.18",
+    "backport v0.19"
+   ],
    "last_comment": {
-    "at": "2026-11-16T05:29:51Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557#issuecomment-6908218217"
+    "at": "2026-11-16T10:34:47Z",
+    "author": "KaiPilotBot",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557#issuecomment-6914001497"
    },
-   "reply_waiting": false,
-   "state": "open",
+   "reply_waiting": true,
+   "state": "merged",
    "title": "fix(binder): do not modify the configured reservation pod resources",
-   "updated": "2026-11-16T05:29:51Z"
+   "updated": "2026-11-16T10:34:47Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
    "closed_reason": null,
    "comments": 3,
-   "labels": [],
+   "labels": [
+    "backport v0.12",
+    "backport v0.14",
+    "backport v0.16",
+    "backport v0.18",
+    "backport v0.19"
+   ],
    "last_comment": {
     "at": "2026-11-16T05:29:52Z",
     "author": "manmohanbrahma",
@@ -395,7 +406,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
-   "updated": "2026-11-16T05:29:53Z"
+   "updated": "2026-11-16T13:39:04Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
@@ -457,7 +468,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "docs: add AMD GPU nodes example",
-   "updated": "2026-11-16T05:29:56Z"
+   "updated": "2026-11-16T10:53:52Z"
   }
  }
 }
