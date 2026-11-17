@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-16T13:45:50Z",
+ "generated": "2026-11-17T14:36:16Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -30,7 +30,9 @@
   "https://github.com/ROCm/rocm-systems/issues/14860": {
    "closed_reason": null,
    "comments": 1,
-   "labels": [],
+   "labels": [
+    "status: triage"
+   ],
    "last_comment": {
     "at": "2026-11-13T04:09:31Z",
     "author": "manmohanbrahma",
@@ -39,7 +41,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[Feature]: hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit",
-   "updated": "2026-11-13T04:09:32Z"
+   "updated": "2026-11-16T21:49:55Z"
   },
   "https://github.com/ROCm/rocm-systems/issues/14861": {
    "closed_reason": null,
@@ -156,22 +158,23 @@
    "updated": "2026-11-11T17:17:54Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3943": {
-   "closed_reason": null,
-   "comments": 1,
+   "closed_reason": "completed",
+   "comments": 2,
    "labels": [
     "bug",
     "area/workloads",
+    "issue/approved",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-01T15:59:44Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3943#issuecomment-6560336091"
+    "at": "2026-11-16T19:08:20Z",
+    "author": "rotembubrunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3943#issuecomment-6926278240"
    },
-   "reply_waiting": false,
-   "state": "open",
+   "reply_waiting": true,
+   "state": "closed",
    "title": "[bug] global.replicaCount gives cluster-redis unreplicated copies: workspace logins loop and Jupyter never loads",
-   "updated": "2026-11-11T12:10:54Z"
+   "updated": "2026-11-17T07:04:53Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3944": {
    "closed_reason": "completed",
@@ -360,14 +363,14 @@
    "updated": "2026-11-04T18:53:48Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2593": {
-   "closed_reason": null,
+   "closed_reason": "completed",
    "comments": 0,
    "labels": [],
    "last_comment": null,
    "reply_waiting": false,
-   "state": "open",
+   "state": "closed",
    "title": "Topology: required level is never satisfied when all of a job's nodes share a domain below it (e.g. a one-node node pool)",
-   "updated": "2026-11-05T20:49:35Z"
+   "updated": "2026-11-16T14:01:14Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557": {
    "closed_reason": null,
@@ -390,7 +393,7 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
    "closed_reason": null,
-   "comments": 3,
+   "comments": 9,
    "labels": [
     "backport v0.12",
     "backport v0.14",
@@ -399,14 +402,14 @@
     "backport v0.19"
    ],
    "last_comment": {
-    "at": "2026-11-16T05:29:52Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594#issuecomment-6908218612"
+    "at": "2026-11-16T14:01:50Z",
+    "author": "KaiPilotBot",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594#issuecomment-6918571914"
    },
-   "reply_waiting": false,
-   "state": "open",
+   "reply_waiting": true,
+   "state": "merged",
    "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
-   "updated": "2026-11-16T13:39:04Z"
+   "updated": "2026-11-16T14:01:50Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
