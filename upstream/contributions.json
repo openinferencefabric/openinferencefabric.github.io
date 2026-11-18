@@ -129,7 +129,9 @@
               {"url": "https://github.com/ROCm/device-metrics-exporter/issues/722#issuecomment-6843611398", "date": "2026-11-13", "note": "Ping to the assigned engineer a week later; offer to test any build or config"}]},
     {"url": "https://github.com/ROCm/rocm-systems/issues/14860", "kind": "issue", "ref": "A2", "date": "2026-11-02",
      "summary": "hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit: apps inside a cap still see the whole GPU.",
-     "ours": [{"url": "https://github.com/ROCm/rocm-systems/issues/14860#issuecomment-6843610810", "date": "2026-11-13", "note": "Follow-up with new evidence: dmem caps are heading into Kubernetes (gpu-fractioning#175); asked for routing to the clr/rocr-runtime owners"}]},
+     "ours": [{"url": "https://github.com/ROCm/rocm-systems/issues/14860#issuecomment-6843610810", "date": "2026-11-13", "note": "Follow-up with new evidence: dmem caps are heading into Kubernetes (gpu-fractioning#175); asked for routing to the clr/rocr-runtime owners"},
+              {"url": "https://github.com/ROCm/rocm-systems/pull/16042#issuecomment-6993678154", "date": "2026-11-19", "note": "On AMD's fix PR: thanks, Linux 6.15 (not 6.14) correction, offer to test inside a Kubernetes pod with fractiond caps"}],
+     "links": [{"label": "AMD fix PR #16042", "url": "https://github.com/ROCm/rocm-systems/pull/16042"}]},
     {"url": "https://github.com/ROCm/rocm-systems/issues/14861", "kind": "issue", "ref": "A3", "date": "2026-11-02",
      "summary": "Per-process compute busy time for KFD queues, for per-container GPU utilisation."}
    ]
