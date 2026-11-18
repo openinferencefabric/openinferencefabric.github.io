@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-18T19:19:49Z",
+ "generated": "2026-11-18T19:39:29Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -141,21 +141,21 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3942": {
    "closed_reason": "reopened",
-   "comments": 5,
+   "comments": 6,
    "labels": [
     "area/installation",
     "community",
     "team/infra"
    ],
    "last_comment": {
-    "at": "2026-11-18T07:28:26Z",
-    "author": "ishaiboro",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-6972065933"
+    "at": "2026-11-18T19:38:40Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-6989463895"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "[feature] A setting to replace the New cluster wizard when clusters are installed by other tooling",
-   "updated": "2026-11-18T07:28:26Z"
+   "updated": "2026-11-18T19:38:40Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3943": {
    "closed_reason": "completed",
