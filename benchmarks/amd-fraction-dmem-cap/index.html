@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AMD GPU fractions in KAI · Open Inference Fabric</title>
+<meta name="description" content="An AMD backend for KAI gpu-fractioning caps each fractional pod's GPU memory with the Linux dmem cgroup. What the cap costs, measured on a Radeon PRO W7900 and an RTX A6000.">
+<meta property="og:title" content="AMD GPU fractions in KAI: a hard memory cap at no performance cost">
+<meta property="og:description" content="An AMD backend for KAI gpu-fractioning caps each fractional pod's GPU memory with the Linux dmem cgroup. What the cap costs, measured on a Radeon PRO W7900 and an RTX A6000.">
+<meta property="og:url" content="https://openinferencefabric.us.ci/benchmarks/amd-fraction-dmem-cap/">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<link rel="canonical" href="https://openinferencefabric.us.ci/benchmarks/amd-fraction-dmem-cap/">
+<link rel="icon" href="../../img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../site.css">
+<style>
+/* Layout: a single reading column for the verdict and notes; charts and tables break wider on a lab-report grid */
+:root {
+  --bg: #F3F5F6; --surface: #ffffff;
+  --l-teal: #0E7C86; --l-saffron: #E39A2D; --l-ink: #16202A; --ink: #14171c; --ink-2: #4a515c; --ink-3: #6f7682;
+  --rule: #dde1e6; --grid: #e8ebee; --chip: #eef1f4;
+  --amd: #2a78d6; --nv: #eb6834; --good: #1a7f37; --good-bg: #e6f4ea; --warn: #9a6700; --warn-bg: #fff4d6;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --line: var(--rule); --muted: var(--ink-3); --teal: var(--l-teal); --saffron: var(--l-saffron);
+  --display: var(--f-display); --body: var(--f-body); --mono: var(--f-mono);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --l-teal: #2BA7B1; --l-saffron: #F0AE48; --l-ink: #E6EBEE;
+  --bg: #121418; --surface: #1a1d22; --ink: #eceef1; --ink-2: #b4bac3; --ink-3: #8b929c;
+  --rule: #2d3239; --grid: #252a30; --chip: #232830;
+  --amd: #3987e5; --nv: #d95926; --good: #4ac26b; --good-bg: #16301f; --warn: #d4a72c; --warn-bg: #33290f; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --l-teal: #2BA7B1; --l-saffron: #F0AE48; --l-ink: #E6EBEE;
+  --bg: #121418; --surface: #1a1d22; --ink: #eceef1; --ink-2: #b4bac3; --ink-3: #8b929c;
+  --rule: #2d3239; --grid: #252a30; --chip: #232830;
+  --amd: #3987e5; --nv: #d95926; --good: #4ac26b; --good-bg: #16301f; --warn: #d4a72c; --warn-bg: #33290f; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 400 17px/1.55 var(--f-body); margin: 0 }
+.wrap { max-width: 1160px; margin: 0 auto; display: grid; gap: 48px; padding-block: 8px 40px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)) }
+.col { max-width: none }
+.wrap p, .notes li { text-align: justify; hyphens: auto }
+.wrap p.eyebrow, .panel p.sub { text-align: left; hyphens: manual }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em }
+h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; line-height: 1.08 }
+h2 { font-size: 24px; font-weight: 700 }
+h3 { font-size: 16px; font-weight: 700 }
+p { margin: 0 }
+.eyebrow { font: 600 12px/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3) }
+.lede { font-size: 19px; color: var(--ink-2); margin-top: 14px }
+section { display: grid; gap: 18px }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums }
+a { color: var(--amd) }
+
+.verdict { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--good); border-radius: 6px; padding: 22px 24px; display: grid; gap: 18px }
+.verdict .answer { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap }
+.pill { font: 600 13px/1 var(--f-mono); padding: 6px 10px; border-radius: 99px; background: var(--good-bg); color: var(--good); white-space: nowrap }
+.pill.warn { background: var(--warn-bg); color: var(--warn) }
+.verdict .answer strong { font: 700 21px/1.3 var(--f-display) }
+.deltas { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px }
+.delta { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--rule) }
+.delta .lab { font-size: 14px; color: var(--ink-2) }
+.delta .row { display: flex; gap: 14px; align-items: baseline; font: 600 20px/1.2 var(--f-mono); font-variant-numeric: tabular-nums }
+.delta .row span small { font: 400 12px var(--f-body); color: var(--ink-3); margin-left: 4px }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: 0 }
+.sw.amd { background: var(--amd) } .sw.nv { background: var(--nv) }
+
+.legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--ink-2) }
+.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 14px 8px; min-width: 0 }
+.panel h3 { font-size: 15px } .panel .sub { font-size: 13px; color: var(--ink-3); margin-top: 2px }
+svg { display: block; width: 100%; height: auto; overflow: visible }
+svg text { font-family: var(--f-mono); font-size: 11px; fill: var(--ink-3) }
+svg .val { fill: var(--ink-2); font-size: 10.5px }
+svg .zero { stroke: var(--ink-3); stroke-width: 1 }
+svg .gl { stroke: var(--grid); stroke-width: 1 }
+.hit { fill: transparent; cursor: default }
+.tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 8px 10px; font: 13px/1.4 var(--f-body); box-shadow: 0 4px 16px rgb(0 0 0 / 0.14); z-index: 20; max-width: 260px }
+.tip b { font-family: var(--f-mono); font-weight: 600 }
+
+.cards2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 18px 20px; display: grid; gap: 10px; min-width: 0; align-content: start }
+.card .head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap }
+.card pre { margin: 0; font: 12px/1.5 var(--f-mono); color: var(--ink-2); background: var(--chip); border-radius: 4px; padding: 10px 12px; white-space: pre-wrap; word-break: break-word }
+
+.tbl { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--rule); vertical-align: top }
+tr:last-child td { border-bottom: 0 }
+th { font: 600 12px/1.3 var(--f-mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); background: var(--chip) }
+td.k { color: var(--ink-2); white-space: nowrap }
+td.num, th.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap }
+td.same { color: var(--ink-3) }
+.grp td { background: var(--chip); font-weight: 600; font-size: 13px }
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap }
+.tabs button { font: 600 14px var(--f-body); border: 1px solid var(--rule); background: var(--surface); color: var(--ink-2); border-radius: 6px; padding: 7px 14px; cursor: pointer }
+.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink) }
+.tabs button:focus-visible { outline: 2px solid var(--amd); outline-offset: 2px }
+
+ul.notes { margin: 0; padding-left: 20px; display: grid; gap: 10px; color: var(--ink-2) }
+.foot { font-size: 13.5px; color: var(--ink-3); border-top: 1px solid var(--rule); padding-top: 16px }
+@media (max-width: 520px) { body { font-size: 16px } .verdict { padding: 18px } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+</head>
+<body>
+<!-- site-head -->
+<header class="site-head"><div class="site-in">
+    <a class="site-brand" href="../../" aria-label="Open Inference Fabric home"><svg class="wv" viewBox="0 0 132 100" aria-hidden="true"><rect class="wv-x wv-warp" x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect class="wv-x wv-warp s" x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><g class="wv-x wv-weft"><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-weft b"><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-cross"><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/></g><g class="wv-x wv-cross b"><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/></g><circle class="wv-x wv-tok r1 t1" cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t2" cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t3" cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t1" cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t2" cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t3" cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../../#stack">The stack</a>
+      <a href="../../#architecture">How it works</a>
+      <a class="duo" href="../../#amd"><i></i>NVIDIA + AMD</a>
+      <a href="../../roadmap/">Roadmap</a>
+      <a href="../../upstream/">Upstream work</a>
+      <a href="../../benchmarks/" aria-current="page">Benchmarks</a>
+      <a href="../../#contribute">Contribute</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
+    </nav>
+</div></header>
+<!-- /site-head -->
+
+<div class="wrap">
+  <div class="col">
+    <p class="page-eyebrow">Benchmark · KAI gpu-fractioning · 3 November 2026</p>
+    <h1 style="margin-top:12px">AMD GPU fractions in KAI: a hard memory cap at no performance cost</h1>
+    <p class="lede">We added an AMD backend to <span class="mono">fractiond</span>, the node agent of KAI Scheduler's gpu-fractioning, that caps each fractional pod's GPU memory with the Linux dmem cgroup. This benchmark checks what the cap costs: vLLM on a Radeon PRO W7900, with the same run on an RTX A6000 under NVIDIA's gpu-fractioning as the reference.</p>
+  </div>
+
+  <section class="verdict" aria-label="Answer">
+    <div class="answer"><span class="pill">No measurable cost</span><strong>A capped half-GPU pod serves as fast as the whole GPU.</strong></div>
+    <p style="color:var(--ink-2)">Change of a capped 0.5 pod against the same vLLM on the whole GPU, worst case over concurrency 1, 8 and 32:</p>
+    <div class="deltas" id="deltas"></div>
+    <p style="color:var(--ink-2);font-size:15px">The one number that moved is time to first token at concurrency 32 (<b class="mono">+17%</b> on the W7900, <b class="mono">+9%</b> on the A6000). It moved on both GPUs, from a single run each; see the notes before reading it as a cost.</p>
+  </section>
+
+  <section>
+    <div class="col" style="display:grid;gap:8px">
+      <h2>Capped 0.5 pod against the whole GPU</h2>
+      <p style="color:var(--ink-2)">Each bar is the change from scenario A (whole GPU) to scenario B (one 0.5 pod with its memory capped). Zero means no difference. Lower is better for the time metrics, higher for throughput.</p>
+    </div>
+    <div class="legend"><span><i class="sw amd"></i>Radeon PRO W7900 · OIF fractiond, dmem cap</span><span><i class="sw nv"></i>RTX A6000 · NVIDIA gpu-fractioning</span></div>
+    <div class="panels" id="overhead"></div>
+  </section>
+
+  <section>
+    <div class="col" style="display:grid;gap:8px">
+      <h2>The cap holds where it should</h2>
+      <p style="color:var(--ink-2)">Scenario D: a 0.5 pod whose vLLM asks for 0.9 of the GPU memory it sees.</p>
+    </div>
+    <div class="cards2">
+      <div class="card">
+        <div class="head"><h3><i class="sw amd"></i>W7900 · dmem cap</h3><span class="pill">Refused at the cap</span></div>
+        <p>ROCm reports the whole 45 GiB, so vLLM tries to take 0.9 of it. The kernel stops the pod at its 22.5 GiB cap (23,032 MiB) and vLLM exits with an out-of-memory error.</p>
+        <pre>torch.OutOfMemoryError: HIP out of memory. Tried to allocate 1.37 GiB.
+GPU 0 has a total capacity of 44.98 GiB of which 22.56 GiB is free.
+Of the allocated memory 21.73 GiB is allocated by PyTorch</pre>
+        <p style="font-size:14px;color:var(--ink-3)">The neighbour's memory is safe. Until ROCm reports the cap to the app, set vLLM's <span class="mono">--gpu-memory-utilization</span> to the pod's share (0.45 here).</p>
+      </div>
+      <div class="card">
+        <div class="head"><h3><i class="sw nv"></i>A6000 · CUDA memory limit</h3><span class="pill">Fits its share</span></div>
+        <p>The driver shows the container only its share, so 0.9 of what vLLM sees is 0.9 of 24 GiB. The pod starts inside its limit; no setting needed.</p>
+        <pre>nvi-greedy sees 24570 MiB, in use 22925 MiB
+started inside its share: the limit is transparent</pre>
+        <p style="font-size:14px;color:var(--ink-3)">This is the one functional gap: AMD enforces the share as hard as NVIDIA, but does not yet hide the rest of the GPU from the app (ROCm/rocm-systems#14860).</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="col" style="display:grid;gap:8px">
+      <h2>Two capped pods sharing one GPU</h2>
+      <p style="color:var(--ink-2)">Scenario C: two 0.5 pods benchmarked at the same time. Throughput is at concurrency 32 per pod; time per token at concurrency 1.</p>
+    </div>
+    <div class="panels" id="sharing" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"></div>
+    <p class="col" style="color:var(--ink-2);font-size:15px">Both GPUs behave the same way. One pod waits for the other at low load (time per token up 1.7× on the W7900, 2.1× on the A6000), and two pods together deliver about 1.7× one engine's throughput. That gain comes from 64 requests in flight instead of 32: one vLLM engine with a 0.6B model does not fill either GPU at concurrency 32.</p>
+  </section>
+
+  <section>
+    <h2>Hardware and software</h2>
+    <div class="tbl"><table id="stack"></table></div>
+  </section>
+
+  <section>
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap">
+      <h2>All results</h2>
+      <div class="tabs" role="group" aria-label="GPU">
+        <button type="button" id="t-W7900" aria-pressed="true" data-gpu="W7900">W7900</button>
+        <button type="button" id="t-A6000" aria-pressed="false" data-gpu="A6000">A6000</button>
+      </div>
+    </div>
+    <div class="tbl"><table id="results"></table></div>
+    <p style="font-size:14px;color:var(--ink-3)">Times in milliseconds; throughput in output tokens per second. TTFT time to first token, TPOT time per output token, latency end-to-end request time. Every run completed all requests with 0 failures.</p>
+  </section>
+
+  <section class="col">
+    <h2>Notes for reading the numbers</h2>
+    <ul class="notes">
+      <li><b>Why the cap costs nothing.</b> dmem charges GPU memory when the driver creates a buffer, and checks the pod's limit only at that moment. vLLM allocates its weights and KV cache once at startup, and PyTorch reuses that memory, so during serving nothing passes through the cap. Kernel launches and memory reads never touch it.</li>
+      <li><b>Time to first token at concurrency 32</b> rose on both GPUs (+17% W7900, +9% A6000) while time per token and throughput did not. With one run per scenario this is within what batching at a burst of 32 prompts can vary; three repeats would settle it.</li>
+      <li><b>Throughput at concurrency 1 and 8</b> includes each run's first request, which pays vLLM's warm-up (4–5 s, visible as the p99 time to first token). Compare time per token there; throughput is clean at concurrency 32.</li>
+      <li><b>Scenario C at concurrency 1 and 8</b>: each pod moved through the concurrency levels at its own pace, so those steps did not overlap exactly. The concurrency 32 steps overlapped for most of their run.</li>
+      <li><b>W7900 against A6000</b> is a comparison of each stack with itself. The A6000 is faster in absolute terms here (time per token 3.0 against 4.4 ms at concurrency 1), which reflects the more mature CUDA build of vLLM; it is not part of the fractioning question.</li>
+      <li><b>Memory for the 0.5 pods</b> is the same on both: 0.45 of the W7900 (ROCm reports the whole GPU) and 0.9 of the A6000's 24 GiB share (CUDA reports the share).</li>
+    </ul>
+  </section>
+
+  <p class="foot">Scripts, raw vLLM results for every run, logs and console output: <a href="https://github.com/manmohanbrahma/gpu-benchmark/tree/main/amd-fraction-dmem-cap">github.com/manmohanbrahma/gpu-benchmark/tree/main/amd-fraction-dmem-cap</a>. The AMD backend: <a href="https://github.com/openinferencefabric/gpu-fractioning">github.com/openinferencefabric/gpu-fractioning</a>. Proposed upstream as <a href="https://github.com/kai-scheduler/gpu-fractioning/issues/173">kai-scheduler/gpu-fractioning#173</a>. Platform: <a href="https://github.com/openinferencefabric/oif">Open Inference Fabric</a>.</p>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<!-- site-foot -->
+<footer class="site-foot"><div class="site-in">
+    <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="mailto:manmohan@openinferencefabric.us.ci">manmohan@openinferencefabric.us.ci</a>
+    <a href="https://github.com/openinferencefabric">GitHub</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
+    <span class="tm">NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
+</div></footer>
+<!-- /site-foot -->
+
+<script>
+const D = {"W7900":{"A-whole":{"1":{"median_ttft_ms":33.2,"p99_ttft_ms":4126.56,"mean_ttft_ms":334.09,"median_tpot_ms":4.43,"p99_tpot_ms":4.52,"mean_tpot_ms":4.44,"median_e2el_ms":595.94,"p99_e2el_ms":4687.73,"output_throughput":142.59,"max_output_tokens_per_s":219.0,"duration":14.36,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":156.2,"p99_ttft_ms":337.75,"mean_ttft_ms":159.39,"median_tpot_ms":10.24,"p99_tpot_ms":11.35,"mean_tpot_ms":10.13,"median_e2el_ms":1489.54,"p99_e2el_ms":1586.93,"output_throughput":2817.47,"max_output_tokens_per_s":3516.0,"duration":11.63,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":97.29,"p99_ttft_ms":4023.49,"mean_ttft_ms":581.48,"median_tpot_ms":7.53,"p99_tpot_ms":9.6,"mean_tpot_ms":7.77,"median_e2el_ms":1048.78,"p99_e2el_ms":5242.25,"output_throughput":652.51,"max_output_tokens_per_s":1009.0,"duration":12.55,"completed":64,"failed":0,"total_output_tokens":8192}},"B-half":{"1":{"median_ttft_ms":33.77,"p99_ttft_ms":4117.97,"mean_ttft_ms":333.6,"median_tpot_ms":4.43,"p99_tpot_ms":4.51,"mean_tpot_ms":4.44,"median_e2el_ms":596.56,"p99_e2el_ms":4681.98,"output_throughput":142.6,"max_output_tokens_per_s":221.0,"duration":14.36,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":182.16,"p99_ttft_ms":393.6,"mean_ttft_ms":177.16,"median_tpot_ms":10.25,"p99_tpot_ms":11.39,"mean_tpot_ms":10.14,"median_e2el_ms":1506.02,"p99_e2el_ms":1642.13,"output_throughput":2777.61,"max_output_tokens_per_s":3179.0,"duration":11.8,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":101.62,"p99_ttft_ms":3964.34,"mean_ttft_ms":579.24,"median_tpot_ms":7.45,"p99_tpot_ms":9.4,"mean_tpot_ms":7.68,"median_e2el_ms":1046.46,"p99_e2el_ms":5155.69,"output_throughput":658.01,"max_output_tokens_per_s":997.0,"duration":12.45,"completed":64,"failed":0,"total_output_tokens":8192}},"C-pod1":{"1":{"median_ttft_ms":32.61,"p99_ttft_ms":36.45,"mean_ttft_ms":32.78,"median_tpot_ms":7.8,"p99_tpot_ms":11.37,"mean_tpot_ms":7.83,"median_e2el_ms":1023.35,"p99_e2el_ms":1480.81,"output_throughput":124.58,"max_output_tokens_per_s":215.0,"duration":16.44,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":180.92,"p99_ttft_ms":336.7,"mean_ttft_ms":176.7,"median_tpot_ms":10.73,"p99_tpot_ms":21.09,"mean_tpot_ms":11.95,"median_e2el_ms":1528.77,"p99_e2el_ms":2789.45,"output_throughput":2392.46,"max_output_tokens_per_s":3317.0,"duration":13.7,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":59.6,"p99_ttft_ms":82.83,"mean_ttft_ms":60.76,"median_tpot_ms":7.34,"p99_tpot_ms":7.55,"mean_tpot_ms":7.37,"median_e2el_ms":994.81,"p99_e2el_ms":1021.68,"output_throughput":1025.49,"max_output_tokens_per_s":1031.0,"duration":7.99,"completed":64,"failed":0,"total_output_tokens":8192}},"C-pod2":{"1":{"median_ttft_ms":35.32,"p99_ttft_ms":4068.24,"mean_ttft_ms":331.33,"median_tpot_ms":7.6,"p99_tpot_ms":11.4,"mean_tpot_ms":7.82,"median_e2el_ms":1001.53,"p99_e2el_ms":5515.59,"output_throughput":96.64,"max_output_tokens_per_s":215.0,"duration":21.19,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":198.75,"p99_ttft_ms":410.59,"mean_ttft_ms":195.01,"median_tpot_ms":10.74,"p99_tpot_ms":19.74,"mean_tpot_ms":11.95,"median_e2el_ms":1532.52,"p99_e2el_ms":2733.24,"output_throughput":2384.26,"max_output_tokens_per_s":3550.0,"duration":13.74,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":88.26,"p99_ttft_ms":4010.06,"mean_ttft_ms":576.67,"median_tpot_ms":7.73,"p99_tpot_ms":9.36,"mean_tpot_ms":7.89,"median_e2el_ms":1069.52,"p99_e2el_ms":5197.47,"output_throughput":647.44,"max_output_tokens_per_s":1009.0,"duration":12.65,"completed":64,"failed":0,"total_output_tokens":8192}}},"A6000":{"A-whole":{"1":{"median_ttft_ms":21.83,"p99_ttft_ms":703.61,"mean_ttft_ms":71.66,"median_tpot_ms":3.02,"p99_tpot_ms":3.03,"mean_tpot_ms":3.02,"median_e2el_ms":405.04,"p99_e2el_ms":1088.62,"output_throughput":281.11,"max_output_tokens_per_s":319.0,"duration":7.29,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":115.42,"p99_ttft_ms":264.62,"mean_ttft_ms":117.65,"median_tpot_ms":8.36,"p99_tpot_ms":8.85,"mean_tpot_ms":8.12,"median_e2el_ms":1162.65,"p99_e2el_ms":1276.5,"output_throughput":3510.59,"max_output_tokens_per_s":3837.0,"duration":9.33,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":47.09,"p99_ttft_ms":5337.91,"mean_ttft_ms":624.77,"median_tpot_ms":4.22,"p99_tpot_ms":19.71,"mean_tpot_ms":4.9,"median_e2el_ms":594.55,"p99_e2el_ms":5852.37,"output_throughput":819.69,"max_output_tokens_per_s":1775.0,"duration":9.99,"completed":64,"failed":0,"total_output_tokens":8192}},"B-half":{"1":{"median_ttft_ms":22.17,"p99_ttft_ms":705.59,"mean_ttft_ms":72.33,"median_tpot_ms":3.03,"p99_tpot_ms":3.04,"mean_tpot_ms":3.03,"median_e2el_ms":406.87,"p99_e2el_ms":1091.39,"output_throughput":279.83,"max_output_tokens_per_s":318.0,"duration":7.32,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":125.36,"p99_ttft_ms":221.36,"mean_ttft_ms":117.59,"median_tpot_ms":8.33,"p99_tpot_ms":8.83,"mean_tpot_ms":8.15,"median_e2el_ms":1174.9,"p99_e2el_ms":1259.36,"output_throughput":3505.56,"max_output_tokens_per_s":3777.0,"duration":9.35,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":52.92,"p99_ttft_ms":5276.09,"mean_ttft_ms":626.24,"median_tpot_ms":4.24,"p99_tpot_ms":19.12,"mean_tpot_ms":4.88,"median_e2el_ms":597.12,"p99_e2el_ms":5794.91,"output_throughput":819.14,"max_output_tokens_per_s":1754.0,"duration":10.0,"completed":64,"failed":0,"total_output_tokens":8192}},"C-pod1":{"1":{"median_ttft_ms":19.09,"p99_ttft_ms":34.15,"mean_ttft_ms":20.7,"median_tpot_ms":6.33,"p99_tpot_ms":6.35,"mean_tpot_ms":5.93,"median_e2el_ms":822.99,"p99_e2el_ms":827.89,"output_throughput":165.45,"max_output_tokens_per_s":282.0,"duration":12.38,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":133.19,"p99_ttft_ms":161.31,"mean_ttft_ms":112.15,"median_tpot_ms":7.4,"p99_tpot_ms":16.01,"mean_tpot_ms":9.14,"median_e2el_ms":1094.19,"p99_e2el_ms":2175.43,"output_throughput":3068.68,"max_output_tokens_per_s":4017.0,"duration":10.68,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":35.27,"p99_ttft_ms":59.51,"mean_ttft_ms":36.09,"median_tpot_ms":4.13,"p99_tpot_ms":4.25,"mean_tpot_ms":4.14,"median_e2el_ms":560.4,"p99_e2el_ms":586.9,"output_throughput":1799.93,"max_output_tokens_per_s":1842.0,"duration":4.55,"completed":64,"failed":0,"total_output_tokens":8192}},"C-pod2":{"1":{"median_ttft_ms":33.24,"p99_ttft_ms":697.68,"mean_ttft_ms":80.44,"median_tpot_ms":6.36,"p99_tpot_ms":6.37,"mean_tpot_ms":5.89,"median_e2el_ms":840.76,"p99_e2el_ms":1500.5,"output_throughput":154.47,"max_output_tokens_per_s":258.0,"duration":13.26,"completed":16,"failed":0,"total_output_tokens":2048},"32":{"median_ttft_ms":151.26,"p99_ttft_ms":280.0,"mean_ttft_ms":142.78,"median_tpot_ms":8.72,"p99_tpot_ms":15.93,"mean_tpot_ms":10.25,"median_e2el_ms":1256.54,"p99_e2el_ms":2181.93,"output_throughput":2807.61,"max_output_tokens_per_s":3644.0,"duration":11.67,"completed":256,"failed":0,"total_output_tokens":32768},"8":{"median_ttft_ms":63.21,"p99_ttft_ms":5333.28,"mean_ttft_ms":634.6,"median_tpot_ms":4.23,"p99_tpot_ms":19.69,"mean_tpot_ms":4.91,"median_e2el_ms":611.69,"p99_e2el_ms":5849.09,"output_throughput":811.56,"max_output_tokens_per_s":1749.0,"duration":10.09,"completed":64,"failed":0,"total_output_tokens":8192}}}};
+const G = ["W7900", "A6000"], COL = { W7900: "var(--amd)", A6000: "var(--nv)" }, CONC = [1, 8, 32];
+const pct = (b, a) => (b / a - 1) * 100;
+const fmt = (v, d = 1) => v.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const sgn = v => (v > 0 ? "+" : v < 0 ? "−" : "±") + fmt(Math.abs(v)) + "%";
+const tip = document.getElementById("tip");
+function showTip(e, html) { tip.innerHTML = html; tip.hidden = false; moveTip(e); }
+function moveTip(e) { const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = e.clientX + 14, y = e.clientY + 14; if (x + w > innerWidth - 8) x = e.clientX - w - 14; if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+  tip.style.left = x + "px"; tip.style.top = y + "px"; }
+function hideTip() { tip.hidden = true; }
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; }
+function bar(svg, x, y0, y1, w, fill) {   // a bar from the baseline y0 to y1 with a 4px rounded data end
+  const top = Math.min(y0, y1), h = Math.max(Math.abs(y1 - y0), 1), r = Math.min(4, h, w / 2), up = y1 <= y0;
+  const d = up
+    ? `M${x},${y0} V${top + r} Q${x},${top} ${x + r},${top} H${x + w - r} Q${x + w},${top} ${x + w},${top + r} V${y0} Z`
+    : `M${x},${y0} V${top + h - r} Q${x},${top + h} ${x + r},${top + h} H${x + w - r} Q${x + w},${top + h} ${x + w},${top + h - r} V${y0} Z`;
+  return el("path", { d, fill }, svg);
+}
+
+// verdict tiles: worst-case change over the three concurrency levels
+const METRICS = [
+  { key: "median_tpot_ms", label: "Time per output token (median)" },
+  { key: "median_e2el_ms", label: "End-to-end latency (median)" },
+  { key: "output_throughput", label: "Throughput at concurrency 32", only: [32] },
+];
+const deltas = document.getElementById("deltas");
+for (const m of METRICS) {
+  const worst = g => { const v = (m.only || CONC).map(c => pct(D[g]["B-half"][c][m.key], D[g]["A-whole"][c][m.key])); return v.reduce((a, b) => Math.abs(b) > Math.abs(a) ? b : a); };
+  deltas.insertAdjacentHTML("beforeend", `<div class="delta"><span class="lab">${m.label}</span><div class="row">
+    <span><i class="sw amd"></i>${sgn(worst("W7900"))}<small>W7900</small></span><span><i class="sw nv"></i>${sgn(worst("A6000"))}<small>A6000</small></span></div></div>`);
+}
+
+// overhead panels: change B vs A per metric, concurrency groups, one bar per GPU
+const PANELS = [
+  { key: "median_tpot_ms", title: "Time per output token", sub: "median, change vs whole GPU" },
+  { key: "median_e2el_ms", title: "End-to-end latency", sub: "median, change vs whole GPU" },
+  { key: "median_ttft_ms", title: "Time to first token", sub: "median, change vs whole GPU" },
+  { key: "output_throughput", title: "Throughput", sub: "output tokens/s, change vs whole GPU", only: [32] },
+];
+const LO = -5, HI = 20, W = 260, H = 190, PL = 34, PR = 6, PT = 10, PB = 26;
+const ys = v => PT + (HI - v) / (HI - LO) * (H - PT - PB);
+for (const p of PANELS) {
+  const div = document.createElement("div"); div.className = "panel";
+  div.innerHTML = `<h3>${p.title}</h3><p class="sub">${p.sub}</p>`;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": p.title + ": change of a capped 0.5 pod against the whole GPU" });
+  for (const t of [-5, 0, 5, 10, 15, 20]) {
+    if (t !== 0) el("line", { x1: PL, x2: W - PR, y1: ys(t), y2: ys(t), class: "gl" }, svg);
+    el("text", { x: PL - 6, y: ys(t) + 3.5, "text-anchor": "end" }, svg).textContent = (t > 0 ? "+" : "") + t + "%";
+  }
+  const concs = p.only || CONC, gw = (W - PL - PR) / concs.length, bw = Math.min(22, gw / 4);
+  concs.forEach((c, i) => {
+    const cx = PL + gw * i + gw / 2;
+    el("text", { x: cx, y: H - 8, "text-anchor": "middle" }, svg).textContent = "conc. " + c;
+    G.forEach((g, j) => {
+      const a = D[g]["A-whole"][c][p.key], b = D[g]["B-half"][c][p.key], v = pct(b, a);
+      const x = cx + (j === 0 ? -bw - 1 : 1);
+      bar(svg, x, ys(0), ys(Math.max(LO, Math.min(HI, v))), bw, COL[g]);
+      const unit = p.key === "output_throughput" ? " tok/s" : " ms";
+      const hit = el("rect", { x: x - 2, y: PT, width: bw + 4, height: H - PT - PB, class: "hit" }, svg);
+      hit.addEventListener("mousemove", e => showTip(e, `<span class="sw ${j ? "nv" : "amd"}"></span>${g} · concurrency ${c}<br>whole <b>${fmt(a)}${unit}</b> → capped 0.5 <b>${fmt(b)}${unit}</b><br>change <b>${sgn(v)}</b>`));
+      hit.addEventListener("mouseleave", hideTip);
+      if (Math.abs(v) >= 4) el("text", { x: x + bw / 2, y: v > 0 ? ys(v) - 4 : ys(v) + 11, "text-anchor": "middle", class: "val" }, svg).textContent = sgn(v).replace(".0%", "%");
+    });
+  });
+  el("line", { x1: PL, x2: W - PR, y1: ys(0), y2: ys(0), class: "zero" }, svg);
+  div.appendChild(svg); document.getElementById("overhead").appendChild(div);
+}
+
+// sharing panels
+function hbars(title, sub, rows, max, unit, digits) {
+  const div = document.createElement("div"); div.className = "panel";
+  div.innerHTML = `<h3>${title}</h3><p class="sub">${sub}</p>`;
+  const rh = 22, gap = 8, LW = 128, W2 = 340, H2 = rows.length * (rh + gap) + 8;
+  const svg = el("svg", { viewBox: `0 0 ${W2} ${H2}`, role: "img", "aria-label": title });
+  const xs = v => LW + v / max * (W2 - LW - 64);
+  rows.forEach((r, i) => {
+    const y = 4 + i * (rh + gap);
+    if (r.group) { el("text", { x: 0, y: y + rh / 2 + 4, style: "fill:var(--ink);font-weight:600" }, svg).textContent = r.group; }
+    el("text", { x: LW - 8, y: y + rh / 2 + 4, "text-anchor": "end" }, svg).textContent = r.label;
+    let x0 = LW;
+    r.parts.forEach((v, k) => {
+      const w = xs(v) - LW, x = x0, last = k === r.parts.length - 1, rr = last ? Math.min(4, w / 2) : 0;
+      el("path", { d: `M${x},${y} H${x + w - rr} Q${x + w},${y} ${x + w},${y + rr} V${y + rh - rr} Q${x + w},${y + rh} ${x + w - rr},${y + rh} H${x} Z`, fill: r.color, "fill-opacity": k ? 0.62 : 1 }, svg);
+      x0 = x + w + (last ? 0 : 2);
+    });
+    const tot = r.parts.reduce((a, b) => a + b, 0);
+    el("text", { x: x0 + 6, y: y + rh / 2 + 4, class: "val" }, svg).textContent = fmt(tot, digits) + unit;
+    const hit = el("rect", { x: 0, y, width: W2, height: rh, class: "hit" }, svg);
+    hit.addEventListener("mousemove", e => showTip(e, r.tip)); hit.addEventListener("mouseleave", hideTip);
+  });
+  div.appendChild(svg); document.getElementById("sharing").appendChild(div);
+}
+const tr = [], tp = [];
+for (const g of G) {
+  const A = D[g]["A-whole"], B = D[g]["B-half"], C1 = D[g]["C-pod1"], C2 = D[g]["C-pod2"], col = COL[g];
+  tr.push({ group: g, label: "whole GPU", parts: [A[32].output_throughput], color: col, tip: `${g}: whole GPU, one vLLM at concurrency 32` },
+          { label: "one 0.5 pod", parts: [B[32].output_throughput], color: col, tip: `${g}: one capped 0.5 pod at concurrency 32` },
+          { label: "two 0.5 pods", parts: [C1[32].output_throughput, C2[32].output_throughput], color: col,
+            tip: `${g}: two 0.5 pods together<br>pod 1 <b>${fmt(C1[32].output_throughput, 0)}</b> + pod 2 <b>${fmt(C2[32].output_throughput, 0)}</b> tok/s` });
+  tp.push({ group: g, label: "alone", parts: [B[1].median_tpot_ms], color: col, tip: `${g}: one 0.5 pod alone, concurrency 1` },
+          { label: "sharing", parts: [(C1[1].median_tpot_ms + C2[1].median_tpot_ms) / 2], color: col,
+            tip: `${g}: each of two 0.5 pods while both serve<br>pod 1 <b>${fmt(C1[1].median_tpot_ms, 2)} ms</b>, pod 2 <b>${fmt(C2[1].median_tpot_ms, 2)} ms</b>` });
+}
+hbars("Throughput, concurrency 32", "output tokens/s; two pods stacked", tr, 6000, "", 0);
+hbars("Time per output token, concurrency 1", "median ms per pod; lower is better", tp, 8, " ms", 1);
+
+// hardware and software
+const STACK = [
+  ["GPU", "", ""],
+  ["Model", "AMD Radeon PRO W7900", "NVIDIA RTX A6000"],
+  ["Architecture", "RDNA 3 (Navi 31, gfx1100), 96 CUs", "Ampere (GA102), 84 SMs, 10,752 CUDA cores"],
+  ["Memory", "48 GB GDDR6 ECC, 384-bit, 864 GB/s", "48 GB GDDR6 ECC, 384-bit, 768 GB/s"],
+  ["Peak FP16 / FP32", "122.6 / 61.3 TFLOPS", "154.8 (tensor, dense) / 38.7 TFLOPS"],
+  ["Board power, bus", "295 W, PCIe 4.0 x16", "300 W, PCIe 4.0 x16"],
+  ["Released", "2023", "2020"],
+  ["Node (same host, one GPU per VM)", "", ""],
+  ["Host CPU", "AMD EPYC 9684X, 96 cores (GPU passed through to a KVM VM)", "same"],
+  ["GPU node VM", "48 vCPU, Ubuntu 26.04.1, kernel 7.0.0-38", "same"],
+  ["Driver", "amdgpu in kernel 7.0", "NVIDIA 615.71.09 (open modules)"],
+  ["Platform", "", ""],
+  ["Kubernetes", "1.35.9, Open Inference Fabric cluster (3 control nodes, 2 GPU nodes)", "same"],
+  ["Scheduler", "KAI v0.18.3 through Run:ai 3.0.20, with OIF's AMD patches", "KAI v0.18.3 through Run:ai 3.0.20, NvFractions"],
+  ["Device for a fraction", "oif-amd-share NRI plugin (/dev/kfd and the GPU's DRM nodes)", "NVIDIA container toolkit (CDI)"],
+  ["Memory cap", "fractiond --gpu-vendor=amd: dmem.max on the pod cgroup, enforced by the kernel", "Run:ai's gpu-fractioning fractiond: per-container limit, enforced by the driver"],
+  ["What the app sees", "the whole GPU (45 GiB)", "its share (24 GiB for 0.5)"],
+  ["Benchmark", "", ""],
+  ["Engine", "vLLM 0.19.1, rocm/vllm image for gfx110X (ROCm 7.13.0, PyTorch 2.10.0)", "vLLM 0.19.1, vllm/vllm-openai image (CUDA)"],
+  ["Model", "Qwen/Qwen3-0.6B, BF16, max model length 4096", "same"],
+  ["vLLM memory setting", "whole 0.9; 0.5 pods 0.45", "whole 0.9; 0.5 pods 0.9 (of the share)"],
+  ["Load", "vllm bench serve, random prompts, 512 in / 128 out, concurrency 1, 8, 32 (16, 64, 256 requests)", "same"],
+  ["Run", "one GPU at a time, 3 Nov 2026", "same"],
+];
+const st = document.getElementById("stack");
+st.innerHTML = `<thead><tr><th style="width:22%"></th><th><i class="sw amd"></i>W7900</th><th><i class="sw nv"></i>A6000</th></tr></thead><tbody>` +
+  STACK.map(([k, a, n]) => !a && !n ? `<tr class="grp"><td colspan="3">${k}</td></tr>`
+    : `<tr><td class="k">${k}</td><td>${a}</td><td class="${n === "same" ? "same" : ""}">${n}</td></tr>`).join("") + "</tbody>";
+
+// all results
+const SC = [["A-whole", "A · whole GPU"], ["B-half", "B · one 0.5 pod"], ["C-pod1", "C · 0.5 pod 1 of 2"], ["C-pod2", "C · 0.5 pod 2 of 2"]];
+function results(g) {
+  const rows = [];
+  for (const c of CONC) {
+    rows.push(`<tr class="grp"><td colspan="8">Concurrency ${c}</td></tr>`);
+    for (const [s, lab] of SC) {
+      const r = D[g][s][c];
+      rows.push(`<tr><td>${lab}</td><td class="num">${fmt(r.median_ttft_ms)}</td><td class="num">${fmt(r.p99_ttft_ms, 0)}</td><td class="num">${fmt(r.median_tpot_ms, 2)}</td>
+        <td class="num">${fmt(r.p99_tpot_ms, 2)}</td><td class="num">${fmt(r.median_e2el_ms, 0)}</td><td class="num">${fmt(r.output_throughput, 0)}</td><td class="num">${r.completed}/${r.completed + r.failed}</td></tr>`);
+    }
+  }
+  document.getElementById("results").innerHTML = `<thead><tr><th>Scenario</th><th class="num">TTFT med</th><th class="num">TTFT p99</th><th class="num">TPOT med</th><th class="num">TPOT p99</th><th class="num">Latency med</th><th class="num">Tok/s</th><th class="num">Done</th></tr></thead><tbody>${rows.join("")}</tbody>`;
+  for (const b of document.querySelectorAll(".tabs button")) b.setAttribute("aria-pressed", String(b.dataset.gpu === g));
+}
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => results(b.dataset.gpu)));
+results("W7900");
+</script>
+</body>
+</html>

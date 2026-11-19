@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Benchmarks · Open Inference Fabric</title>
+<meta name="description" content="Open Inference Fabric benchmarks on NVIDIA and AMD GPUs: what each layer of the stack costs or gains, with the data and scripts to rerun it.">
+<meta property="og:title" content="Open Inference Fabric benchmarks">
+<meta property="og:description" content="What each layer of the stack costs or gains on NVIDIA and AMD GPUs, with the data and scripts to rerun it.">
+<meta property="og:url" content="https://openinferencefabric.us.ci/benchmarks/">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<link rel="canonical" href="https://openinferencefabric.us.ci/benchmarks/">
+<link rel="icon" href="../img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../site.css">
+<style>
+/* Layout: a short intro, then one card per report; each card leads with its question and the measured answer. */
+:root {
+  --bg: #F3F5F6;
+  --panel: #FFFFFF;
+  --line: #D9DFE3;
+  --ink: #16202A;
+  --muted: #56636E;
+  --teal: #0E7C86;
+  --saffron: #E39A2D;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0;
+    --teal: #2BA7B1; --saffron: #F0AE48; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0;
+  --teal: #2BA7B1; --saffron: #F0AE48; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 24px max(20px, env(safe-area-inset-right)) 32px max(20px, env(safe-area-inset-left)); display: grid; gap: 36px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(32px, 5.4vw, 52px); font-weight: 700; letter-spacing: -0.02em; max-width: 20ch; }
+.lede { font-size: 18px; color: var(--muted); max-width: 64ch; margin: 16px 0 0; }
+.lede strong { color: var(--ink); font-weight: 600; }
+a { color: var(--teal); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; border-radius: 4px; }
+
+.reports { display: grid; gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 16px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: start; }
+.card h2 { font-size: clamp(22px, 3vw, 28px); font-weight: 700; letter-spacing: -0.01em; }
+.card h2 a { color: var(--ink); text-decoration: none; }
+.card h2 a:hover { color: var(--teal); }
+.card p { margin: 10px 0 0; color: var(--muted); max-width: 60ch; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tag { font: 500 12px/1 var(--mono); border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; color: var(--muted); }
+.tag.amd { border-color: var(--saffron); }
+.tag.nv { border-color: var(--teal); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.kpi { border-top: 3px solid var(--line); padding-top: 10px; min-width: 0; }
+.kpi.hi { border-top-color: var(--teal); }
+.kpi .v { font: 700 26px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.kpi .k { font-size: 13.5px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+.open { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px; padding-top: 14px; border-top: 1px solid var(--line); }
+.open a.go { font-weight: 600; }
+.method { font-size: 15px; color: var(--muted); max-width: 72ch; margin: 0; }
+@media (max-width: 760px) { .card { grid-template-columns: 1fr; padding: 20px; } }
+</style>
+</head>
+<body>
+<!-- site-head -->
+<header class="site-head"><div class="site-in">
+    <a class="site-brand" href="../" aria-label="Open Inference Fabric home"><svg class="wv" viewBox="0 0 132 100" aria-hidden="true"><rect class="wv-x wv-warp" x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect class="wv-x wv-warp s" x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><g class="wv-x wv-weft"><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-weft b"><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-cross"><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/></g><g class="wv-x wv-cross b"><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/></g><circle class="wv-x wv-tok r1 t1" cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t2" cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t3" cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t1" cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t2" cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t3" cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#stack">The stack</a>
+      <a href="../#architecture">How it works</a>
+      <a class="duo" href="../#amd"><i></i>NVIDIA + AMD</a>
+      <a href="../roadmap/">Roadmap</a>
+      <a href="../upstream/">Upstream work</a>
+      <a href="../benchmarks/" aria-current="page">Benchmarks</a>
+      <a href="../#contribute">Contribute</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
+    </nav>
+</div></header>
+<!-- /site-head -->
+
+<main class="wrap">
+  <div>
+    <p class="page-eyebrow">Benchmarks</p>
+    <h1>What each layer costs, measured</h1>
+    <p class="lede">Every piece Open Inference Fabric adds to an inference stack, from a GPU fraction to the Dynamo frontend, gets the same test: <strong>does it change what the GPU delivers?</strong> Each report names its hardware, versions and repeats, and links the data and scripts to rerun it.</p>
+  </div>
+
+  <section class="reports" aria-label="Reports">
+    <article class="card">
+      <div>
+        <h2><a href="w7900-dynamo-vs-vllm/">Dynamo vs plain vLLM on the Radeon PRO W7900</a></h2>
+        <p>The same vLLM 0.33.0 ROCm engine served two ways: vLLM's own OpenAI server, and NVIDIA Dynamo's frontend with a vLLM worker, built by OIF for AMD GPUs.</p>
+        <div class="tags"><span class="tag amd">Radeon PRO W7900</span><span class="tag">Qwen3-0.6B · Qwen3-8B</span><span class="tag">7 Nov 2026</span></div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">±0.4%</div><div class="k">Output throughput</div></div>
+        <div class="kpi"><div class="v">≤1.4%</div><div class="k">Time per output token</div></div>
+        <div class="kpi hi"><div class="v">up to −40%</div><div class="k">Time to first token, small model under load</div></div>
+      </div>
+      <div class="open"><a class="go" href="w7900-dynamo-vs-vllm/">Read the report →</a><span>Quick profile, one repeat</span></div>
+    </article>
+
+    <article class="card">
+      <div>
+        <h2><a href="amd-fraction-dmem-cap/">AMD GPU fractions in KAI: a hard memory cap at no performance cost</a></h2>
+        <p>An AMD backend for KAI gpu-fractioning caps each fractional pod's GPU memory with the Linux dmem cgroup. A capped half-GPU pod against the whole GPU, with NVIDIA's gpu-fractioning on an RTX A6000 as the reference.</p>
+        <div class="tags"><span class="tag amd">Radeon PRO W7900</span><span class="tag nv">RTX A6000</span><span class="tag">Qwen3-0.6B</span><span class="tag">3 Nov 2026</span></div>
+      </div>
+      <div class="kpis">
+        <div class="kpi hi"><div class="v">−1.1%</div><div class="k">Time per token, capped 0.5 pod (W7900)</div></div>
+        <div class="kpi"><div class="v">−1.4%</div><div class="k">Throughput at 32 users (W7900)</div></div>
+        <div class="kpi"><div class="v">1.7×</div><div class="k">Two 0.5 pods together, both GPUs</div></div>
+      </div>
+      <div class="open"><a class="go" href="amd-fraction-dmem-cap/">Read the report →</a><a href="https://github.com/openinferencefabric/openinferencefabric.github.io/tree/main/benchmarks/amd-fraction-dmem-cap">Data and scripts</a></div>
+    </article>
+  </section>
+
+  <p class="method">How we measure: <a href="https://github.com/openinferencefabric/oif/blob/main/docs/BENCHMARK.md">docs/BENCHMARK.md</a> in the oif repo. Benchmarks run with <code>oif bench</code>: a fresh server per model and stack, one shared load client (AIPerf), images pinned by digest.</p>
+</main>
+
+<!-- site-foot -->
+<footer class="site-foot"><div class="site-in">
+    <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="mailto:manmohan@openinferencefabric.us.ci">manmohan@openinferencefabric.us.ci</a>
+    <a href="https://github.com/openinferencefabric">GitHub</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
+    <span class="tm">NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
+</div></footer>
+<!-- /site-foot -->
+</body>
+</html>

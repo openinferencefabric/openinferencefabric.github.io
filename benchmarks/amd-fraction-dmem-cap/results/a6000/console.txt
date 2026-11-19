@@ -1,0 +1,56 @@
+== GPU fractions, vLLM benchmark (nvidia), 2026-11-03 08:32:06 UTC
+node gpu-nvidia, namespace runai-team-c, model Qwen/Qwen3-0.6B, input 512 / output 128 tokens, concurrency 1 8 32
+node: kernel 7.0.0-38-generic; NVIDIA RTX A6000, 615.71.09, 49140 MiB
+
+pulling the vLLM image on gpu-nvidia (about 9.8 GB)
+waiting for the other benchmark on this host to finish (one GPU loaded at a time)
+memory limits by Run:ai's gpu-fractioning (fractiond running on gpu-nvidia)
+
+A. whole GPU, vLLM at 0.9 (the first start downloads the model)
+   nvi-whole sees 49140 MiB, in use 44632 MiB
+   A-whole concurrency 1: done (16 requests)
+   A-whole concurrency 8: done (64 requests)
+   A-whole concurrency 32: done (256 requests)
+
+B. one 0.5 pod with the hard cap, vLLM at 0.9
+   nvi-half sees 24570 MiB, in use 22925 MiB
+   B-half concurrency 1: done (16 requests)
+   B-half concurrency 8: done (64 requests)
+   B-half concurrency 32: done (256 requests)
+
+C. two 0.5 pods on the same GPU, benchmarked together
+   nvi-half  sees 24570 MiB, in use 22925 MiB
+   nvi-half2 sees 24570 MiB, in use 22925 MiB
+   C-pod1 concurrency 1: done (16 requests)
+   C-pod2 concurrency 1: done (16 requests)
+   C-pod1 concurrency 8: done (64 requests)
+   C-pod2 concurrency 8: done (64 requests)
+   C-pod1 concurrency 32: done (256 requests)
+   C-pod2 concurrency 32: done (256 requests)
+
+D. a 0.5 pod whose vLLM asks for 0.9 of the memory it sees
+   nvi-greedy sees 24570 MiB, in use 22925 MiB
+   started inside its share: the limit is transparent (vLLM sees only the share)
+
+results (median / p99 in ms; throughput in output tokens/s):
+   run         conc.     TTFT med/p99      TPOT med     latency med      tok/s
+   ---------------------------------------------------------------------------
+   A-whole     1           22 /   704           3.0             405        281
+   B-half      1           22 /   706           3.0             407        280
+   C-pod1      1           19 /    34           6.3             823        165
+   C-pod2      1           33 /   698           6.4             841        154
+   C-total     1                                                           320
+   A-whole     8           47 /  5338           4.2             595        820
+   B-half      8           53 /  5276           4.2             597        819
+   C-pod1      8           35 /    60           4.1             560       1800
+   C-pod2      8           63 /  5333           4.2             612        812
+   C-total     8                                                          2611
+   A-whole     32         115 /   265           8.4            1163       3511
+   B-half      32         125 /   221           8.3            1175       3506
+   C-pod1      32         133 /   161           7.4            1094       3069
+   C-pod2      32         151 /   280           8.7            1257       2808
+   C-total     32                                                         5876
+
+RESULT: done; the greedy pod fit inside its share
+results: <kit-dir>/bench-nvidia-20261103-1402
+cleanup: bench pods and the model cache on gpu-nvidia removed

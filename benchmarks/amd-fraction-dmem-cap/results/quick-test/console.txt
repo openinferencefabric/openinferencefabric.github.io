@@ -1,0 +1,33 @@
+== fractiond AMD backend quick test, 2026-11-03 07:19:57 UTC; node gpu-amd, namespace runai-team-c
+node: kernel 7.0.0-38-generic; dmem regions: drm/0000:03:00.0/vram 48301604864 
+dmem off before the test in: none (already enabled down to the pods)
+
+1. control, no plugin: a 0.25 pod asks for 30 GiB
+   ctl-a: start: gfx1100, VRAM 46064 MiB; share 0.25
+   ctl-a: allocated 30720 MiB of 30720 MiB asked
+   ctl-a dmem.max: drm/0000:03:00.0/vram max
+   ctl-a dmem.current: drm/0000:03:00.0/vram 30720 MiB
+
+2. fractiond --gpu-vendor=amd on gpu-amd
+   registered with NRI
+   a 0.25 pod asks for 30 GiB; a 0.5 neighbour asks for 20 GiB at the same time
+   cap-a: start: gfx1100, VRAM 46064 MiB; share 0.25
+   cap-a: HSA exception: MemoryRegion::BlockAllocator::alloc failed.
+   cap-a: allocation failed after 11264 MiB: HSA_STATUS_ERROR_OUT_OF_RESOURCES: The runtime failed to allocate the necessary resources. This error may also occur when the core runtime library needs to spawn threads or create internal OS-specific events.
+   cap-a: allocated 11264 MiB of 30720 MiB asked
+   cap-a dmem.max: drm/0000:03:00.0/vram 12075401216
+   cap-a dmem.current: drm/0000:03:00.0/vram 11264 MiB
+   nb-b: start: gfx1100, VRAM 46064 MiB; share 0.5
+   nb-b: allocated 20480 MiB of 20480 MiB asked
+   nb-b dmem.max: drm/0000:03:00.0/vram 24150802432
+   nb-b dmem.current: drm/0000:03:00.0/vram 20480 MiB
+   fractiond: {"time":"2026-11-03T07:23:37.626007856Z","level":"INFO","msg":"capped AMD GPU memory","container":"main","pod":"nb-b","gpu":"0000:03:00.0","fraction":0.5,"limitMiB":23032,"cgroupParent":"/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod52dc74c7_078d_4742_aec4_d40a3371681f.slice"} {"time":"2026-11-03T07:23:37.682100641Z","level":"INFO","msg":"capped AMD GPU memory","container":"main","pod":"cap-a","gpu":"0000:03:00.0","fraction":0.25,"limitMiB":11516,"cgroupParent":"/kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod06333326_ce20_4b59_bf73_1b253ac17b60.slice"} 
+
+verdict:
+   PASS control got 30720 MiB without the plugin
+   PASS the 0.25 pod was stopped at 11264 MiB by its cap of 11516 MiB
+   PASS the 0.5 neighbour got 20480 MiB alongside
+
+RESULT: PASS
+results: <kit-dir>/results-20261103-1249.txt
+cleanup: test pods, plugin, dmem settings fractiond added and /var/tmp/oif-gf on gpu-amd removed

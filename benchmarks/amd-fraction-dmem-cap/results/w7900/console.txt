@@ -1,0 +1,57 @@
+== AMD GPU fractions with a hard VRAM cap: vLLM benchmark, 2026-11-03 08:18:43 UTC
+node gpu-amd, namespace runai-team-c, model Qwen/Qwen3-0.6B, input 512 / output 128 tokens, concurrency 1 8 32
+node: kernel 7.0.0-38-generic; drm/0000:03:00.0/vram 48301604864 
+
+pulling the vLLM image on gpu-amd (about 10.6 GB)
+fractiond --gpu-vendor=amd registered with NRI on gpu-amd
+
+A. whole GPU, vLLM at 0.9 (the first start downloads the model)
+   q-whole 
+   A-whole concurrency 1: done (16 requests)
+   A-whole concurrency 8: done (64 requests)
+   A-whole concurrency 32: done (256 requests)
+
+B. one 0.5 pod with the hard cap, vLLM at 0.45
+   q-half 
+   B-half concurrency 1: done (16 requests)
+   B-half concurrency 8: done (64 requests)
+   B-half concurrency 32: done (256 requests)
+
+C. two 0.5 pods on the same GPU, benchmarked together
+   q-half  
+   q-half2 
+   C-pod1 concurrency 1: done (16 requests)
+   C-pod2 concurrency 1: done (16 requests)
+   C-pod1 concurrency 8: done (64 requests)
+   C-pod2 concurrency 8: done (64 requests)
+   C-pod1 concurrency 32: done (256 requests)
+   C-pod2 concurrency 32: done (256 requests)
+
+D. a 0.5 pod whose vLLM asks for 0.9 of the GPU
+   q-greedy pod cgroup gone
+   q-greedy: (EngineCore pid=410) ERROR 11-03 09:37:42 [core.py:1108] torch.OutOfMemoryError: HIP out of memory. Tried to allocate 1.37 GiB. GPU 0 has a total capacity of 44.98 GiB of which 22.56 GiB is free. Of the allocated memory 
+   q-greedy: (EngineCore pid=410) torch.OutOfMemoryError: HIP out of memory. Tried to allocate 1.37 GiB. GPU 0 has a total capacity of 44.98 GiB of which 22.56 GiB is free. Of the allocated memory 21.73 GiB is allocated by PyTorch, a
+   fractiond: q-half=23032 MiB q-half2=23032 MiB q-greedy=23032 MiB 
+
+results (median / p99 in ms; throughput in output tokens/s):
+   run         conc.     TTFT med/p99      TPOT med     latency med      tok/s
+   ---------------------------------------------------------------------------
+   A-whole     1           33 /  4127           4.4             596        143
+   B-half      1           34 /  4118           4.4             597        143
+   C-pod1      1           33 /    36           7.8            1023        125
+   C-pod2      1           35 /  4068           7.6            1002         97
+   C-total     1                                                           221
+   A-whole     8           97 /  4023           7.5            1049        653
+   B-half      8          102 /  3964           7.5            1046        658
+   C-pod1      8           60 /    83           7.3             995       1025
+   C-pod2      8           88 /  4010           7.7            1070        647
+   C-total     8                                                          1673
+   A-whole     32         156 /   338          10.2            1490       2817
+   B-half      32         182 /   394          10.2            1506       2778
+   C-pod1      32         181 /   337          10.7            1529       2392
+   C-pod2      32         199 /   411          10.7            1533       2384
+   C-total     32                                                         4777
+
+RESULT: done; the cap refused the greedy pod
+results: <kit-dir>/bench-20261103-1348
+cleanup: bench pods, plugin, dmem settings fractiond added, /var/tmp/oif-gf and the model cache on gpu-amd removed

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>W7900: Dynamo vs vLLM · Open Inference Fabric</title>
+<meta name="description" content="Dynamo frontend plus vLLM worker against vLLM's own server, same vLLM 0.33.0 ROCm engine, on a Radeon PRO W7900.">
+<meta property="og:title" content="Dynamo vs plain vLLM on the Radeon PRO W7900">
+<meta property="og:description" content="Dynamo frontend plus vLLM worker against vLLM's own server, same vLLM 0.33.0 ROCm engine, on a Radeon PRO W7900.">
+<meta property="og:url" content="https://openinferencefabric.us.ci/benchmarks/w7900-dynamo-vs-vllm/">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<link rel="canonical" href="https://openinferencefabric.us.ci/benchmarks/w7900-dynamo-vs-vllm/">
+<link rel="icon" href="../../img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../site.css">
+<style>
+/* Layout: one reading column of findings, then a full-width chart grid (model rows x workload columns), then the tables. */
+:root {
+  --bg: #f7f8f8; --surface: #ffffff; --ink: #16202a; --ink2: #4a5560; --muted: #7b8792;
+  --grid: #e3e7ea; --axis: #c3cad0; --ring: rgba(22,32,42,.10);
+  --teal: #0e7c86; --saffron: #e39a2d; --m-ink: #16202a;
+  --s1: #2a78d6; --s2: #eb6834;
+  --good: #006300;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --line: var(--grid); --display: var(--f-display); --body: var(--f-body); --mono: var(--f-mono);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f151b; --surface: #17202a; --ink: #e6ebee; --ink2: #b7c1c9; --muted: #8a96a0;
+  --grid: #26313b; --axis: #3a4651; --ring: rgba(255,255,255,.09);
+  --teal: #2ba7b1; --saffron: #f0ae48; --m-ink: #e6ebee; --s1: #3987e5; --s2: #d95926; --good: #0ca30c; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f151b; --surface: #17202a; --ink: #e6ebee; --ink2: #b7c1c9; --muted: #8a96a0;
+  --grid: #26313b; --axis: #3a4651; --ring: rgba(255,255,255,.09);
+  --teal: #2ba7b1; --saffron: #f0ae48; --m-ink: #e6ebee; --s1: #3987e5; --s2: #d95926; --good: #0ca30c; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--f-body); margin: 0 }
+.wrap { max-width: 1152px; margin: 0 auto; padding-block: 8px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+h1 { font: 700 clamp(26px, 4vw, 38px)/1.1 var(--f-display); margin: 6px 0 0; text-wrap: balance }
+h2 { font: 600 21px/1.25 var(--f-display); margin: 44px 0 10px; text-wrap: balance }
+h3 { font: 600 15px/1.3 var(--f-body); margin: 0 }
+p { max-width: 70ch; margin: 8px 0 }
+.lede { color: var(--ink2); font-size: 16px; max-width: 72ch }
+.meta { font: 12.5px/1.5 var(--f-mono); color: var(--muted); margin-top: 6px }
+.findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 22px }
+.finding { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 16px; min-width: 0 }
+.finding .k { font: 500 12px/1.3 var(--f-body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted) }
+.finding .v { font: 700 30px/1.15 var(--f-display); margin: 6px 0 4px }
+.finding p { font-size: 14px; color: var(--ink2); margin: 0 }
+.tw { overflow-x: auto; background: var(--surface); border: 1px solid var(--ring); border-radius: 10px }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap }
+th { color: var(--ink2); font-weight: 600; font-size: 12.5px }
+tr:last-child td { border-bottom: 0 }
+td.num, th.num { text-align: right; font-family: var(--f-mono); font-size: 12.5px }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 12px }
+.ctl button { font: 500 13.5px var(--f-body); color: var(--ink); background: var(--surface); border: 1px solid var(--axis);
+  border-radius: 999px; padding: 6px 14px; cursor: pointer }
+.ctl button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink) }
+.ctl button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px }
+.legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13.5px; color: var(--ink2); margin-left: auto }
+.legend span { display: inline-flex; align-items: center; gap: 7px }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 12px }
+.panel { background: var(--surface); border: 1px solid var(--ring); border-radius: 10px; padding: 12px 12px 6px; position: relative; min-width: 0 }
+.panel .sub { font-size: 12.5px; color: var(--muted); margin-top: 2px }
+.panel svg { display: block; width: 100%; height: auto; margin-top: 6px }
+.panel svg text { fill: var(--muted); font: 11px var(--f-mono) }
+.panel svg .dl { fill: var(--ink2); font: 500 11px var(--f-mono) }
+.tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--axis);
+  border-radius: 8px; padding: 7px 9px; font: 12px/1.45 var(--f-mono); box-shadow: 0 4px 14px rgba(0,0,0,.14); z-index: 3; min-width: 170px }
+.chip { display: inline-block; font: 500 12px/1 var(--f-body); padding: 4px 8px; border-radius: 999px; border: 1px solid var(--axis); color: var(--ink2) }
+.chip.better { color: var(--good); border-color: currentColor }
+ul { padding-left: 20px; max-width: 72ch } li { margin: 4px 0 }
+code { font: 12.5px var(--f-mono); background: var(--grid); padding: 1px 5px; border-radius: 4px }
+details summary { cursor: pointer; color: var(--ink2); margin: 10px 0 }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; align-items: start }
+.two > * { min-width: 0 }
+@media (prefers-reduced-motion: no-preference) { .ctl button { transition: background .15s, color .15s } }
+</style>
+</head>
+<body>
+<!-- site-head -->
+<header class="site-head"><div class="site-in">
+    <a class="site-brand" href="../../" aria-label="Open Inference Fabric home"><svg class="wv" viewBox="0 0 132 100" aria-hidden="true"><rect class="wv-x wv-warp" x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect class="wv-x wv-warp s" x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><g class="wv-x wv-weft"><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-weft b"><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-cross"><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/></g><g class="wv-x wv-cross b"><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/></g><circle class="wv-x wv-tok r1 t1" cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t2" cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t3" cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t1" cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t2" cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t3" cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../../#stack">The stack</a>
+      <a href="../../#architecture">How it works</a>
+      <a class="duo" href="../../#amd"><i></i>NVIDIA + AMD</a>
+      <a href="../../roadmap/">Roadmap</a>
+      <a href="../../upstream/">Upstream work</a>
+      <a href="../../benchmarks/" aria-current="page">Benchmarks</a>
+      <a href="../../#contribute">Contribute</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
+    </nav>
+</div></header>
+<!-- /site-head -->
+
+<div class="wrap">
+<p class="page-eyebrow">Benchmark · oif bench · 7 November 2026</p>
+<h1>Dynamo vs plain vLLM on the Radeon PRO W7900</h1>
+<p class="lede">Same vLLM 0.33.0 ROCm engine underneath, measured two ways on one GPU: vLLM's own OpenAI server, and NVIDIA Dynamo's frontend plus vLLM worker built by Open Inference Fabric for AMD GPUs. Quick profile, one repeat, 7 November 2026.</p>
+<div class="meta">GPU Radeon PRO W7900 (gfx1100, 48 GB) · torch 2.13.0 + ROCm 10.0 · vLLM 0.33.0 · Dynamo 1.7.0 · AIPerf 0.13.0 · 24 of 24 points, 0 errors</div>
+
+<div class="findings">
+  <div class="finding"><div class="k">Output throughput</div><div class="v">±0.4%</div>
+    <p>Dynamo matched vLLM at every point: from 0.0% to +0.4% on both models, both workloads, concurrency 1 to 32.</p></div>
+  <div class="finding"><div class="k">Time per output token</div><div class="v">≤1.4%</div>
+    <p>Generation speed per user was the same. The largest gap was 9.04 vs 9.17 ms (0.6B chat, 32 users).</p></div>
+  <div class="finding"><div class="k">Time to first token</div><div class="v">up to −40%</div>
+    <p>Dynamo returned the first token sooner when prompts are short or the model is small: 9 to 53 ms less at 8 and 32 users. No gain where prefill fills the GPU (8B, 512-token chat).</p></div>
+</div>
+
+<h2>What was compared</h2>
+<div class="two">
+  <div class="tw"><table>
+    <thead><tr><th>Stack</th><th>Image</th><th>Server</th></tr></thead>
+    <tbody>
+      <tr><td>vLLM</td><td><code>vllm/vllm-openai-rocm:v0.33.0</code></td><td><code>vllm serve</code></td></tr>
+      <tr><td>Dynamo + vLLM</td><td><code>ghcr.io/openinferencefabric/dynamo-vllm-rocm:d893564741-vllm0.33.0</code></td><td><code>dynamo.frontend</code> + <code>dynamo.vllm</code>, aggregated</td></tr>
+    </tbody></table></div>
+  <div>
+    <p>The Dynamo image is built <b>from</b> the vLLM image, so the engine, PyTorch and ROCm are the same files. Both servers got the same engine arguments (<code>--max-model-len 8192 --gpu-memory-utilization 0.90 --max-num-seqs 256</code>), the same AIPerf prompts with a fixed seed, and exact output lengths (<code>ignore_eos</code>). One server ran at a time, and the GPU cooled below 60 °C before each point. Plain containers, no Kubernetes in the request path.</p>
+  </div>
+</div>
+
+<h2>Curves by concurrency</h2>
+<div class="ctl" role="group" aria-label="Metric">
+  <button type="button" id="m-tput" data-m="tput" aria-pressed="true">Output throughput</button>
+  <button type="button" id="m-ttft" data-m="ttft" aria-pressed="false">Time to first token</button>
+  <button type="button" id="m-tpot" data-m="tpot" aria-pressed="false">Time per output token</button>
+  <button type="button" id="m-tpj" data-m="tpj" aria-pressed="false">Tokens per joule</button>
+  <div class="legend" aria-hidden="true">
+    <span><svg width="28" height="10"><line x1="1" y1="5" x2="27" y2="5" stroke="var(--s1)" stroke-width="2"/></svg>vLLM</span>
+    <span><svg width="28" height="10"><line x1="1" y1="5" x2="27" y2="5" stroke="var(--s2)" stroke-width="2" stroke-dasharray="6 4"/></svg>Dynamo + vLLM</span>
+  </div>
+</div>
+<div class="grid" id="charts"></div>
+
+<h2>Dynamo against vLLM at every point</h2>
+<p>Positive throughput means Dynamo served more tokens per second. Negative TTFT or TPOT means Dynamo was faster. With one repeat there is no measured noise band, so differences under about 2% read as equal.</p>
+<div class="tw" id="dtable"></div>
+
+<h2>Start-up, memory and power</h2>
+<div class="tw"><table>
+  <thead><tr><th>Model</th><th>Stack</th><th class="num">Ready in</th><th class="num">VRAM after start</th><th class="num">Run time (6 points)</th><th class="num">GPU power under load</th></tr></thead>
+  <tbody>
+    <tr><td>Qwen3-0.6B</td><td>vLLM</td><td class="num">157 s</td><td class="num">39.1 GB</td><td class="num">10 min 17 s</td><td class="num">197–239 W</td></tr>
+    <tr><td>Qwen3-0.6B</td><td>Dynamo + vLLM</td><td class="num">160 s</td><td class="num">39.1 GB</td><td class="num">11 min 14 s</td><td class="num">202–240 W</td></tr>
+    <tr><td>Qwen3-8B</td><td>vLLM</td><td class="num">167 s</td><td class="num">37.4 GB</td><td class="num">15 min 27 s</td><td class="num">240 W</td></tr>
+    <tr><td>Qwen3-8B</td><td>Dynamo + vLLM</td><td class="num">166 s</td><td class="num">37.4 GB</td><td class="num">15 min 24 s</td><td class="num">239–240 W</td></tr>
+  </tbody></table></div>
+<p>VRAM is the same because vLLM reserves 90% of the GPU for weights and KV cache in both cases. Run time includes start-up, warm-ups and cool-down waits, so the 57 s difference on 0.6B is not a speed result. The 8B model keeps the GPU at its 240 W limit at every concurrency; GPU busy was 97–100% throughout.</p>
+
+<h2>Reading the results</h2>
+<ul>
+  <li><b>Dynamo adds no measurable cost to generation on one GPU.</b> Throughput and time per output token stayed within 1.4% at all 12 paired points.</li>
+  <li><b>The first-token gain is consistent.</b> It shows up at 8 and 32 users for both models on short prompts, and for 0.6B on 512-token prompts. The next section explains where it comes from.</li>
+  <li><b>Where prefill dominates, both are equal.</b> Qwen3-8B with 512-token prompts at 8 and 32 users waits 0.65 to 1.05 s for the first token on both stacks: the GPU itself is the queue.</li>
+  <li><b>What this test does not cover.</b> Dynamo's main features (KV-aware routing across workers, prefill/decode disaggregation, the planner) need several GPUs. This run only answers whether the Dynamo layer costs anything on one card.</li>
+</ul>
+
+<h2>Why Dynamo gets the first token out sooner</h2>
+<p>Nothing in Open Inference Fabric's ROCm build changes how Dynamo handles a request: the build only packages Dynamo for AMD GPUs. The gain comes from how Dynamo divides the work around the same vLLM engine. Both stacks run vLLM's engine core (scheduler and GPU work) in its own process; what differs is the work done before a request reaches it and after tokens leave it.</p>
+<div class="tw"><table>
+  <thead><tr><th>Step for every request</th><th>vLLM's own server</th><th>Dynamo + vLLM</th></tr></thead>
+  <tbody>
+    <tr><td>Accept the HTTP request, parse the OpenAI JSON</td><td>Python (FastAPI) in vLLM's API server process</td><td>Rust frontend (<code>dynamo.frontend</code>), multithreaded</td></tr>
+    <tr><td>Apply the chat template</td><td>Python, in that same process</td><td>Rust (Dynamo preprocessor)</td></tr>
+    <tr><td>Tokenize the prompt</td><td>Python calling the Hugging Face tokenizer, same process</td><td>Rust, with a tokenizer cache</td></tr>
+    <tr><td>Hand the request to the engine</td><td>In process</td><td>Token IDs over Dynamo's TCP request plane to the <code>dynamo.vllm</code> worker, which passes them to vLLM as a <code>TokensPrompt</code></td></tr>
+    <tr><td>Prefill and decode on the GPU</td><td colspan="2">Identical: the same vLLM 0.33.0 engine core, arguments and kernels</td></tr>
+    <tr><td>Turn tokens back into text, stream to the client</td><td>Python incremental detokenizer and SSE, in the API server process</td><td>Worker sets <code>detokenize = False</code>; the Rust frontend detokenizes and streams</td></tr>
+  </tbody></table></div>
+<ul>
+  <li><b>Why it helps first-token time.</b> With vLLM's own server, one Python event loop does the per-request text work for every user: templating and tokenizing new requests while it also detokenizes and streams tokens for the requests already running. Under load a new request waits its turn in that loop before the scheduler sees it. Dynamo does that work in Rust on several threads, so a new request reaches vLLM's scheduler sooner. The saving is host-side time, which is why it grows with the number of users (8 and 32) and matters most when GPU prefill is short (128-token prompts, or the small 0.6B model).</li>
+  <li><b>Why throughput and time per token do not change.</b> Once a request is running, each decode step is GPU work done by the same engine core. Moving text handling out of the Python process does not make the GPU faster.</li>
+  <li><b>Why the gain disappears for 8B chat at 8 and 32 users.</b> There the first token waits 0.65–1.05 s for prefill of other users' 512-token prompts on the GPU; tens of milliseconds saved on the host are lost in that queue.</li>
+  <li><b>What we have not explained yet.</b> 8B decode with a single user was also 18 ms faster with Dynamo (59 vs 41 ms), where queueing in the Python loop should be small. Per-stage timings (frontend, queue, prefill) are planned with the full run before we claim more.</li>
+</ul>
+<p class="meta">Source: ai-dynamo/dynamo, components/src/dynamo/vllm (TokensPrompt, detokenize = False) and lib/llm/src/preprocessor (template, tokenize) on the OIF rocm branch.</p>
+
+<h2>Run quality</h2>
+<ul>
+  <li>24 of 24 points completed, 0 request errors, 0 server restarts.</li>
+  <li>Output length matched the request on 22 points. Qwen3-0.6B decode produced 1,012–1,017 tokens of the requested 1,024 (0.7–1.2% short) on both stacks equally, so the comparison holds.</li>
+  <li>One repeat: no run-to-run spread yet. The full profile (4 workloads, concurrency 1–64, 3 repeats) gives p90/p99 latencies and a noise verdict per point.</li>
+</ul>
+
+<details><summary>Table view of every point</summary><div class="tw" id="rawtable"></div></details>
+
+<h2>Reproduce</h2>
+<p>On a node with the GPU, from the <code>bench/oif-bench</code> branch of <a href="https://github.com/openinferencefabric/oif">openinferencefabric/oif</a>:</p>
+<p><code>sudo ./oif bench --profile quick --gpu 1 --models "Qwen/Qwen3-0.6B Qwen/Qwen3-8B"</code></p>
+<p class="meta">Method: docs/BENCHMARK.md · guide 18 · images pinned by digest in versions.env</p>
+</div>
+
+<!-- site-foot -->
+<footer class="site-foot"><div class="site-in">
+    <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="mailto:manmohan@openinferencefabric.us.ci">manmohan@openinferencefabric.us.ci</a>
+    <a href="https://github.com/openinferencefabric">GitHub</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
+    <span class="tm">NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
+</div></footer>
+<!-- /site-foot -->
+
+<script>
+const R = [
+ // model, workload, isl, osl, c, stack, tput, ttft, tpot, osl_avg, gpu, watts
+ ["Qwen3-0.6B","chat",512,256,1,"vllm",234.6,31.93,4.13,256.0,97.5,196.5],
+ ["Qwen3-0.6B","chat",512,256,8,"vllm",1313.5,61.58,5.79,255.9,97.6,236.9],
+ ["Qwen3-0.6B","chat",512,256,32,"vllm",3379.1,107.58,9.04,255.9,97.5,236.9],
+ ["Qwen3-0.6B","decode",128,1024,1,"vllm",232.2,28.46,4.25,1011.9,98.4,208.9],
+ ["Qwen3-0.6B","decode",128,1024,8,"vllm",1353.0,51.24,5.84,1016.3,99.2,238.7],
+ ["Qwen3-0.6B","decode",128,1024,32,"vllm",3502.8,95.5,9.02,1015.7,98.9,239.1],
+ ["Qwen3-0.6B","chat",512,256,1,"dynamo",234.9,31.04,4.13,256.0,97.4,202.1],
+ ["Qwen3-0.6B","chat",512,256,8,"dynamo",1313.6,48.75,5.83,255.9,98.0,237.7],
+ ["Qwen3-0.6B","chat",512,256,32,"dynamo",3391.5,65.12,9.17,255.9,98.4,238.7],
+ ["Qwen3-0.6B","decode",128,1024,1,"dynamo",232.8,26.09,4.24,1011.9,99.0,212.2],
+ ["Qwen3-0.6B","decode",128,1024,8,"dynamo",1354.0,42.61,5.86,1017.3,98.6,237.7],
+ ["Qwen3-0.6B","decode",128,1024,32,"dynamo",3505.6,64.37,9.03,1014.4,99.2,239.5],
+ ["Qwen3-8B","chat",512,256,1,"vllm",41.0,139.02,23.91,256.0,99.3,239.8],
+ ["Qwen3-8B","chat",512,256,8,"vllm",239.6,654.04,30.78,255.9,99.5,240.0],
+ ["Qwen3-8B","chat",512,256,32,"vllm",657.5,1027.4,45.02,256.0,99.4,239.7],
+ ["Qwen3-8B","decode",128,1024,1,"vllm",41.6,59.06,23.97,1024.0,99.7,240.2],
+ ["Qwen3-8B","decode",128,1024,8,"vllm",266.9,111.72,29.88,1024.0,99.4,239.7],
+ ["Qwen3-8B","decode",128,1024,32,"vllm",806.5,222.38,39.47,1023.9,99.6,240.0],
+ ["Qwen3-8B","chat",512,256,1,"dynamo",41.0,138.13,23.92,256.0,99.4,240.0],
+ ["Qwen3-8B","chat",512,256,8,"dynamo",240.0,652.88,30.76,256.0,99.8,240.4],
+ ["Qwen3-8B","chat",512,256,32,"dynamo",659.1,1045.61,44.63,256.0,99.1,239.0],
+ ["Qwen3-8B","decode",128,1024,1,"dynamo",41.6,41.42,23.99,1024.0,99.6,239.9],
+ ["Qwen3-8B","decode",128,1024,8,"dynamo",267.3,85.34,29.85,1024.0,99.5,239.9],
+ ["Qwen3-8B","decode",128,1024,32,"dynamo",809.9,169.03,39.35,1023.9,99.6,240.1]
+].map(r => ({model:r[0], wl:r[1], isl:r[2], osl:r[3], c:r[4], stack:r[5], tput:r[6], ttft:r[7], tpot:r[8], oslAvg:r[9], gpu:r[10], w:r[11], tpj:r[6]/r[11]}));
+const MODELS = ["Qwen3-0.6B","Qwen3-8B"], WLS = ["chat","decode"], C = [1,8,32];
+const STACKS = [{k:"vllm", n:"vLLM", col:"var(--s1)", dash:""}, {k:"dynamo", n:"Dynamo + vLLM", col:"var(--s2)", dash:"6 4"}];
+const MET = {tput:["Output throughput","tokens/s"], ttft:["Time to first token, p50","ms"], tpot:["Time per output token, p50","ms"], tpj:["Output tokens per joule","tok/J"]};
+const $ = id => document.getElementById(id);
+const get = (m, w, s, c) => R.find(r => r.model === m && r.wl === w && r.stack === s && r.c === c);
+const fmt = v => v == null ? "–" : v === 0 ? "0" : (Math.abs(v) >= 1000 ? Math.round(v).toLocaleString("en-US") : Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2));
+function niceMax(v) { const e = Math.pow(10, Math.floor(Math.log10(v))); for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m * e >= v) return m * e; return 10 * e; }
+let metric = "tput";
+function draw() {
+  const [label, unit] = MET[metric]; let html = "";
+  for (const m of MODELS) for (const w of WLS) {
+    const ex = get(m, w, "vllm", 1);
+    const vals = R.filter(r => r.model === m && r.wl === w).map(r => r[metric]);
+    const ymax = niceMax(Math.max(...vals) * 1.08);
+    const W = 440, H = 220, L = 50, Rr = 112, T = 14, B = 26;
+    const x = i => L + i * (W - L - Rr) / (C.length - 1), y = v => T + (H - T - B) * (1 - v / ymax);
+    let g = "";
+    for (let i = 0; i <= 4; i++) { const v = ymax * i / 4; g += `<line x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)" stroke-width="1"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`; }
+    C.forEach((c, i) => g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${c}</text>`);
+    g += `<line x1="${L}" x2="${W - Rr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--axis)"/>`;
+    const ends = [];
+    for (const s of STACKS) {
+      const pts = C.map((c, i) => [x(i), y(get(m, w, s.k, c)[metric])]);
+      g += `<polyline fill="none" stroke="${s.col}" stroke-width="2" stroke-linejoin="round" stroke-dasharray="${s.dash}" points="${pts.map(p => p.join(",")).join(" ")}"/>`;
+      g += pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${s.col}" stroke="var(--surface)" stroke-width="2"/>`).join("");
+      ends.push({y: pts[pts.length - 1][1], v: get(m, w, s.k, 32)[metric], n: s.k === "vllm" ? "vLLM" : "Dynamo"});
+    }
+    ends.sort((a, b) => a.y - b.y); if (ends[1].y - ends[0].y < 14) { const mid = (ends[0].y + ends[1].y) / 2; ends[0].y = mid - 7; ends[1].y = mid + 8; }
+    ends.forEach(e => g += `<text class="dl" x="${W - Rr + 6}" y="${e.y + 4}">${e.n} ${fmt(e.v)}</text>`);
+    g += `<line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--axis)" visibility="hidden"/><rect class="hit" x="${L - 20}" y="0" width="${W - L - Rr + 40}" height="${H}" fill="transparent"/>`;
+    html += `<div class="panel" data-m="${m}" data-w="${w}"><h3>${m} · ${w}</h3><div class="sub">${ex.isl} in / ${ex.osl} out tokens · ${label} (${unit}) by concurrent users</div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label} for ${m} ${w}">${g}</svg><div class="tip" hidden></div></div>`;
+  }
+  $("charts").innerHTML = html;
+  document.querySelectorAll(".panel").forEach(pn => {
+    const svg = pn.querySelector("svg"), tip = pn.querySelector(".tip"), cross = pn.querySelector(".cross"), m = pn.dataset.m, w = pn.dataset.w;
+    const W = 440, L = 50, Rr = 112;
+    svg.addEventListener("mousemove", e => {
+      const r = svg.getBoundingClientRect(), vx = (e.clientX - r.left) * W / r.width;
+      const i = Math.max(0, Math.min(C.length - 1, Math.round((vx - L) / ((W - L - Rr) / (C.length - 1))))), xx = L + i * (W - L - Rr) / (C.length - 1);
+      cross.setAttribute("x1", xx); cross.setAttribute("x2", xx); cross.setAttribute("visibility", "visible");
+      const a = get(m, w, "vllm", C[i]), b = get(m, w, "dynamo", C[i]);
+      tip.innerHTML = `<b>${C[i]} concurrent users</b><br><span style="color:var(--s1)">■</span> vLLM ${fmt(a[metric])} ${unit}<br><span style="color:var(--s2)">■</span> Dynamo ${fmt(b[metric])} ${unit}`;
+      tip.hidden = false; const pr = pn.getBoundingClientRect();
+      tip.style.left = Math.min(e.clientX - pr.left + 12, pr.width - 185) + "px"; tip.style.top = (e.clientY - pr.top + 14) + "px";
+    });
+    svg.addEventListener("mouseleave", () => { tip.hidden = true; cross.setAttribute("visibility", "hidden"); });
+  });
+}
+document.querySelectorAll(".ctl button").forEach(b => b.addEventListener("click", () => {
+  metric = b.dataset.m; document.querySelectorAll(".ctl button").forEach(x => x.setAttribute("aria-pressed", x === b)); draw();
+}));
+draw();
+const pct = (a, b) => (b - a) / a * 100, sg = (v, d = 1) => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(d);
+let rows = "";
+for (const m of MODELS) for (const w of WLS) for (const c of C) {
+  const a = get(m, w, "vllm", c), b = get(m, w, "dynamo", c);
+  const dT = pct(a.tput, b.tput), dF = b.ttft - a.ttft, dFp = pct(a.ttft, b.ttft), dP = pct(a.tpot, b.tpot);
+  const reading = dFp <= -10 ? `<span class="chip better">Faster first token</span>` : `<span class="chip">Same</span>`;
+  rows += `<tr><td>${m}</td><td>${w}</td><td class="num">${c}</td><td class="num">${fmt(a.tput)}</td><td class="num">${fmt(b.tput)}</td><td class="num">${sg(dT)}%</td>
+    <td class="num">${fmt(a.ttft)}</td><td class="num">${fmt(b.ttft)}</td><td class="num">${sg(dF)} ms (${sg(dFp, Math.abs(dFp) < 1 ? 1 : 0)}%)</td><td class="num">${sg(dP)}%</td><td>${reading}</td></tr>`;
+}
+$("dtable").innerHTML = `<table><thead><tr><th>Model</th><th>Workload</th><th class="num">Users</th><th class="num">vLLM tok/s</th><th class="num">Dynamo tok/s</th><th class="num">Δ throughput</th><th class="num">vLLM TTFT ms</th><th class="num">Dynamo TTFT ms</th><th class="num">Δ TTFT</th><th class="num">Δ TPOT</th><th>Reading</th></tr></thead><tbody>${rows}</tbody></table>`;
+$("rawtable").innerHTML = `<table><thead><tr><th>Model</th><th>Workload</th><th class="num">Users</th><th>Stack</th><th class="num">tok/s</th><th class="num">TTFT p50 ms</th><th class="num">TPOT p50 ms</th><th class="num">Speed per user tok/s</th><th class="num">Output tokens</th><th class="num">GPU busy %</th><th class="num">Power W</th><th class="num">tok/J</th></tr></thead><tbody>` +
+  R.map(r => `<tr><td>${r.model}</td><td>${r.wl}</td><td class="num">${r.c}</td><td>${r.stack === "vllm" ? "vLLM" : "Dynamo + vLLM"}</td><td class="num">${fmt(r.tput)}</td><td class="num">${fmt(r.ttft)}</td><td class="num">${fmt(r.tpot)}</td><td class="num">${fmt(1000 / r.tpot)}</td><td class="num">${r.oslAvg.toFixed(1)}</td><td class="num">${r.gpu}</td><td class="num">${r.w}</td><td class="num">${r.tpj.toFixed(2)}</td></tr>`).join("") + `</tbody></table>`;
+</script>
+</body>
+</html>
