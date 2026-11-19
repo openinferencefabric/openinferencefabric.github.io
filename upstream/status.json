@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-18T19:39:29Z",
+ "generated": "2026-11-19T14:30:11Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -350,17 +350,17 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556": {
    "closed_reason": null,
-   "comments": 3,
+   "comments": 4,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-04T18:53:48Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-6639255329"
+    "at": "2026-11-19T13:55:32Z",
+    "author": "enoodle",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-7011166684"
    },
-   "reply_waiting": false,
+   "reply_waiting": true,
    "state": "open",
    "title": "feat: GPU fractions on AMD GPU nodes (amd.com/gpu)",
-   "updated": "2026-11-04T18:53:48Z"
+   "updated": "2026-11-19T13:55:32Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2593": {
    "closed_reason": "completed",
