@@ -12,7 +12,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGES = {"index.html": ("", "home"), "roadmap/index.html": ("../", "roadmap"), "upstream/index.html": ("../", "upstream"),
          "benchmarks/index.html": ("../", "benchmarks"),
          "benchmarks/w7900-dynamo-vs-vllm/index.html": ("../../", "benchmarks"),
-         "benchmarks/amd-fraction-dmem-cap/index.html": ("../../", "benchmarks")}
+         "benchmarks/amd-fraction-dmem-cap/index.html": ("../../", "benchmarks"),
+         "code-map/index.html": ("../", "code-map")}
 
 # (label, target, key); target "#x" is a section of the home page, a path is a page of this site
 NAV = [
@@ -22,6 +23,7 @@ NAV = [
     ("Roadmap", "roadmap/", "roadmap"),
     ("Upstream work", "upstream/", "upstream"),
     ("Benchmarks", "benchmarks/", "benchmarks"),
+    ("Code map", "code-map/", "code-map"),
     ("Contribute", "#contribute", "contribute"),
     ("GitHub ↗", "https://github.com/openinferencefabric/oif", "github"),
 ]

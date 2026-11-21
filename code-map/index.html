@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Code map · Open Inference Fabric</title>
+<meta name="description" content="A knowledge graph of the Open Inference Fabric repository: code, guides, decisions and lab evidence, and how they connect.">
+<meta property="og:title" content="Open Inference Fabric code map">
+<meta property="og:description" content="The oif repository as a knowledge graph: code, guides, decisions and lab evidence, and how they connect.">
+<meta property="og:url" content="https://openinferencefabric.us.ci/code-map/">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<link rel="canonical" href="https://openinferencefabric.us.ci/code-map/">
+<link rel="icon" href="../img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../site.css">
+<style>
+/* Layout: intro and snapshot facts, the graph full width, then the hubs and the caveats. */
+:root {
+  --bg: #F3F5F6; --panel: #FFFFFF; --line: #D9DFE3; --ink: #16202A; --muted: #56636E;
+  --teal: #0E7C86; --saffron: #E39A2D;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0;
+    --teal: #2BA7B1; --saffron: #F0AE48; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0;
+  --teal: #2BA7B1; --saffron: #F0AE48; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 24px max(20px, env(safe-area-inset-right)) 32px max(20px, env(safe-area-inset-left)); display: grid; gap: 32px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(32px, 5.4vw, 52px); font-weight: 700; letter-spacing: -0.02em; max-width: 20ch; }
+h2 { font-size: clamp(20px, 2.6vw, 26px); font-weight: 700; letter-spacing: -0.01em; }
+.eyebrow { font: 500 13px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
+.lede { font-size: 18px; color: var(--muted); max-width: 66ch; margin: 16px 0 0; }
+.lede strong { color: var(--ink); font-weight: 600; }
+a { color: var(--teal); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; border-radius: 4px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.kpi { border-top: 3px solid var(--line); padding-top: 10px; min-width: 0; }
+.kpi.hi { border-top-color: var(--teal); }
+.kpi .v { font: 700 28px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.kpi .k { font-size: 13.5px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+.frame { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.frame iframe { display: block; width: 100%; height: min(78vh, 820px); border: 0; background: #fff; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px; padding: 12px 16px; border-top: 1px solid var(--line); }
+.bar a.go { font-weight: 600; }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+ol, ul { margin: 12px 0 0; padding-left: 22px; color: var(--muted); }
+li { margin: 4px 0; }
+li b { color: var(--ink); font-weight: 600; }
+code { font: 400 14px/1.4 var(--mono); }
+.note { font-size: 15px; color: var(--muted); max-width: 78ch; margin: 0; }
+@media (max-width: 760px) { .cols { grid-template-columns: 1fr; } .frame iframe { height: 70vh; } }
+</style>
+</head>
+<body>
+<!-- site-head -->
+<header class="site-head"><div class="site-in">
+    <a class="site-brand" href="../" aria-label="Open Inference Fabric home"><svg class="wv" viewBox="0 0 132 100" aria-hidden="true"><rect class="wv-x wv-warp" x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect class="wv-x wv-warp s" x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><g class="wv-x wv-weft"><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-weft b"><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-cross"><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/></g><g class="wv-x wv-cross b"><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/></g><circle class="wv-x wv-tok r1 t1" cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t2" cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t3" cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t1" cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t2" cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t3" cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../#stack">The stack</a>
+      <a href="../#architecture">How it works</a>
+      <a class="duo" href="../#amd"><i></i>NVIDIA + AMD</a>
+      <a href="../roadmap/">Roadmap</a>
+      <a href="../upstream/">Upstream work</a>
+      <a href="../benchmarks/">Benchmarks</a>
+      <a href="../code-map/" aria-current="page">Code map</a>
+      <a href="../#contribute">Contribute</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
+    </nav>
+</div></header>
+<!-- /site-head -->
+<main class="wrap">
+  <section>
+    <p class="eyebrow">Code map · graphify · 21 November 2026</p>
+    <h1>The oif repository as a map</h1>
+    <p class="lede">Every installer stage, controller, benchmark script, guide, decision record and piece of lab evidence in
+      <a href="https://github.com/openinferencefabric/oif">openinferencefabric/oif</a>, and how they connect. Code is parsed
+      structurally; guides, decisions, evidence and screenshots are read for the concepts they name. <strong>Zoom, drag and
+      click a node</strong> to see its links; search by name in the graph's panel.</p>
+  </section>
+
+  <section class="kpis" aria-label="Snapshot">
+    <div class="kpi hi"><div class="v">3,615</div><div class="k">nodes: functions, stages, resources, concepts</div></div>
+    <div class="kpi"><div class="v">4,984</div><div class="k">connections between them</div></div>
+    <div class="kpi"><div class="v">230</div><div class="k">clusters found by community detection</div></div>
+    <div class="kpi"><div class="v">344</div><div class="k">files: 187 code, 137 docs, 20 screenshots</div></div>
+  </section>
+
+  <section class="frame" aria-label="Interactive code map">
+    <iframe src="graph.html" title="Interactive knowledge graph of the oif repository" loading="lazy"></iframe>
+    <div class="bar">
+      <a class="go" href="graph.html">Open full screen</a>
+      <a href="graph.json" download>Download graph.json</a>
+      <span class="note">Snapshot of branch <code>bench/b2-nvidia</code> at <code>831c40e</code>: the NVIDIA bench mode and the CUDA Dynamo build are in it before they reach <code>main</code>.</span>
+    </div>
+  </section>
+
+  <section class="cols">
+    <div>
+      <h2>Most connected</h2>
+      <ol>
+        <li><b>Changes to offer upstream</b>: 36 links</li>
+        <li><b>Project 1: Orchestration platform</b>: 31</li>
+        <li><b>Architecture decision records</b>: 30</li>
+        <li><b>Open Inference Fabric</b> (README): 29</li>
+        <li><b>Run:ai API client</b> <code>call()</code>: 24</li>
+        <li><b>PRD v0.2</b>: 21</li>
+        <li><b>oif-bench.sh</b> and <b>the benchmark method</b>: 18 each</li>
+        <li><b>Guide 10: multi-node hybrid cluster</b>: 17</li>
+      </ol>
+    </div>
+    <div>
+      <h2>Reading it</h2>
+      <ul>
+        <li>Each colour is a cluster: installer stages, Run:ai patches, AMD GPU fractions, the vendor pool webhook, oif bench and so on.</li>
+        <li>Links read from the source (imports, calls, citations) are solid; links inferred from meaning are marked as inferred.</li>
+        <li>Lab IP addresses, host names and credentials are not in the map.</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="note">Built with <a href="https://github.com/Graphify-Labs/graphify">graphify</a> 0.9.114. Known gaps in this snapshot:
+    289 inferred links point to concepts named differently in another document, 22 evidence logs were read a few lines short,
+    and the four Go image modules sit loosely connected to the rest. The map is rebuilt from the repository, so it changes as the code does.</p>
+</main>
+<!-- site-foot -->
+<footer class="site-foot"><div class="site-in">
+    <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="mailto:manmohan@openinferencefabric.us.ci">manmohan@openinferencefabric.us.ci</a>
+    <a href="https://github.com/openinferencefabric">GitHub</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
+    <span class="tm">NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
+</div></footer>
+<!-- /site-foot -->
+</body>
+</html>
