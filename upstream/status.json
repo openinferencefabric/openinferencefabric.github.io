@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-19T14:30:11Z",
+ "generated": "2026-11-22T13:25:56Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -137,25 +137,25 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[bug] GPU nodes counted as not ready when GPU fractioning has no target nodes",
-   "updated": "2026-11-02T10:00:44Z"
+   "updated": "2026-11-22T09:03:30Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3942": {
    "closed_reason": "reopened",
-   "comments": 6,
+   "comments": 8,
    "labels": [
     "area/installation",
     "community",
     "team/infra"
    ],
    "last_comment": {
-    "at": "2026-11-18T19:38:40Z",
+    "at": "2026-11-22T10:31:13Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-6989463895"
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-7077844941"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "[feature] A setting to replace the New cluster wizard when clusters are installed by other tooling",
-   "updated": "2026-11-18T19:38:40Z"
+   "updated": "2026-11-22T11:29:00Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3943": {
    "closed_reason": "completed",
