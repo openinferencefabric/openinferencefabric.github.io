@@ -13,6 +13,7 @@ PAGES = {"index.html": ("", "home"), "roadmap/index.html": ("../", "roadmap"), "
          "benchmarks/index.html": ("../", "benchmarks"),
          "benchmarks/w7900-dynamo-vs-vllm/index.html": ("../../", "benchmarks"),
          "benchmarks/amd-fraction-dmem-cap/index.html": ("../../", "benchmarks"),
+         "benchmarks/dynamo-ttft-deep-dive/index.html": ("../../", "benchmarks"),
          "code-map/index.html": ("../", "code-map")}
 
 # (label, target, key); target "#x" is a section of the home page, a path is a page of this site

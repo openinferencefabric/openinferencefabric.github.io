@@ -101,6 +101,18 @@ a:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; border
   <section class="reports" aria-label="Reports">
     <article class="card">
       <div>
+        <h2><a href="dynamo-ttft-deep-dive/">Why Dynamo's first token comes sooner than vLLM's own server</a></h2>
+        <p>The same benchmark on a Radeon PRO W7900 and an RTX A6000 in one machine, traced to the millisecond: the gap is the same on AMD and NVIDIA, and it sits in vLLM's single API process, not in the GPU or the engine.</p>
+        <div class="tags"><span class="tag amd">AMD W7900 · ROCm</span><span class="tag nv">NVIDIA A6000 · CUDA</span><span class="tag">vLLM 0.33.0</span><span class="tag">Dynamo 1.7.0</span></div>
+      </div>
+      <div class="kpis">
+        <div class="kpi hi"><div class="v">39 → 12 ms</div><div class="k">output path, vLLM against Dynamo, W7900, 16 users</div></div>
+        <div class="kpi hi"><div class="v">37 → 11 ms</div><div class="k">the same on the A6000</div></div>
+      </div>
+      <div class="open"><a class="go" href="dynamo-ttft-deep-dive/">Read the deep dive</a><a href="https://github.com/openinferencefabric/oif/tree/main/docs/evidence/B-2">Evidence and data</a></div>
+    </article>
+    <article class="card">
+      <div>
         <h2><a href="w7900-dynamo-vs-vllm/">Dynamo vs plain vLLM on the Radeon PRO W7900</a></h2>
         <p>The same vLLM 0.33.0 ROCm engine served two ways: vLLM's own OpenAI server, and NVIDIA Dynamo's frontend with a vLLM worker, built by OIF for AMD GPUs.</p>
         <div class="tags"><span class="tag amd">Radeon PRO W7900</span><span class="tag">Qwen3-0.6B · Qwen3-8B</span><span class="tag">7 Nov 2026</span></div>

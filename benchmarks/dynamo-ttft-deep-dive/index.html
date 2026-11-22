@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why Dynamo's first token comes sooner · Open Inference Fabric</title>
+<meta name="description" content="Dynamo serves vLLM's first token up to 2.5 times sooner than vLLM's own server at 8 to 32 users, on AMD and NVIDIA alike. We traced where the time goes: the output path in vLLM's single API process.">
+<meta property="og:title" content="Why Dynamo's first token comes sooner than vLLM's own server">
+<meta property="og:description" content="Traced on a Radeon PRO W7900 and an RTX A6000: the same gap on both, in vLLM's single API process, and vLLM's own options close it.">
+<meta property="og:url" content="https://openinferencefabric.us.ci/benchmarks/dynamo-ttft-deep-dive/">
+<meta property="og:image" content="https://openinferencefabric.github.io/img/oif-social-light-1280x640.png">
+<link rel="canonical" href="https://openinferencefabric.us.ci/benchmarks/dynamo-ttft-deep-dive/">
+<link rel="icon" href="../../img/oif-icon-light-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../img/oif-icon-light-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../../site.css">
+<style>
+/* Layout: the answer first (four numbers), then the gap on both GPUs, where the time goes, how the request flows,
+   what it means, what is open, and the method. Charts are inline SVG drawn from the data at the end of the page. */
+:root {
+  --bg: #F3F5F6; --panel: #FFFFFF; --line: #D9DFE3; --ink: #16202A; --muted: #56636E; --faint: #8B969F;
+  --teal: #0E7C86; --saffron: #E39A2D;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;           /* stacks: validated categorical slots 1-4 */
+  --hi: #6250d6; --core: #8A949C; --api: #C3CAD0;                       /* split: highlight + two neutrals */
+  --grid: #E6EAED;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0; --faint: #6D7A85;
+    --teal: #2BA7B1; --saffron: #F0AE48; color-scheme: dark;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --hi: #9085e9; --core: #6B7680; --api: #3E4852; --grid: #1F2932;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E141A; --panel: #151D25; --line: #26313B; --ink: #E6EBEE; --muted: #9AA6B0; --faint: #6D7A85;
+  --teal: #2BA7B1; --saffron: #F0AE48; color-scheme: dark;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --hi: #9085e9; --core: #6B7680; --api: #3E4852; --grid: #1F2932;
+}
+* { box-sizing: border-box; }
+html { padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body); }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 24px max(20px, env(safe-area-inset-right)) 40px max(20px, env(safe-area-inset-left)); display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(32px, 5.4vw, 52px); font-weight: 700; letter-spacing: -0.02em; max-width: 22ch; }
+h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 17px; font-weight: 600; }
+.eyebrow { font: 500 13px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px; }
+.lede { font-size: 18px; color: var(--muted); max-width: 68ch; margin: 16px 0 0; }
+.lede strong, p strong { color: var(--ink); font-weight: 600; }
+p { margin: 12px 0 0; max-width: 72ch; }
+.sub { color: var(--muted); }
+a { color: var(--teal); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; border-radius: 4px; }
+code { font: 400 14px/1.4 var(--mono); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.kpi { border-top: 3px solid var(--line); padding-top: 10px; min-width: 0; }
+.kpi.hi { border-top-color: var(--hi); }
+.kpi .v { font: 700 28px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.kpi .v small { font: 500 15px var(--body); color: var(--muted); }
+.kpi .k { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 16px 0 12px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+.seg button { font: 500 14px var(--body); color: var(--muted); background: none; border: 0; border-radius: 999px; padding: 6px 14px; cursor: pointer; min-height: 36px; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: var(--muted); margin: 0; padding: 0; list-style: none; }
+.legend li { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 14px; height: 4px; border-radius: 2px; display: inline-block; }
+.legend i.box { height: 12px; width: 12px; border-radius: 3px; }
+.multi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.chart { position: relative; min-width: 0; }
+.chart h3 { margin-bottom: 6px; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 10px; font-size: 13px; line-height: 1.45; box-shadow: 0 4px 14px rgba(0,0,0,.12); min-width: 170px; z-index: 2; display: none; }
+.tip b { font-weight: 600; }
+.tip .r { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.tip .r span:first-child { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+.tip i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.tip .n { font-variant-numeric: tabular-nums; }
+.axis text, .lab { font: 12px var(--body); fill: var(--muted); }
+.lab.ink { fill: var(--ink); font-weight: 500; }
+details { margin-top: 14px; }
+summary { cursor: pointer; color: var(--teal); font-size: 15px; }
+table { border-collapse: collapse; font-size: 14px; margin-top: 10px; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 5px 8px; border-bottom: 1px solid var(--line); }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--muted); font-weight: 500; }
+.tablewrap { overflow-x: auto; }
+.flow svg { width: 100%; height: auto; display: block; }
+.flow text { font: 13px var(--body); fill: var(--ink); }
+.flow .sm { font-size: 11.5px; fill: var(--muted); }
+.flow .proc { fill: var(--panel); stroke: var(--line); stroke-width: 1.5; }
+.flow .hot { fill: none; stroke: var(--hi); stroke-width: 2.5; }
+.flow .arrow { stroke: var(--faint); stroke-width: 1.5; fill: none; marker-end: url(#ah); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+ul.points { margin: 12px 0 0; padding-left: 20px; }
+ul.points li { margin: 8px 0; max-width: 68ch; }
+.note { font-size: 15px; color: var(--muted); }
+@media (max-width: 820px) { .multi, .two { grid-template-columns: 1fr; } .panel { padding: 16px; } }
+</style>
+</head>
+<body>
+<!-- site-head -->
+<header class="site-head"><div class="site-in">
+    <a class="site-brand" href="../../" aria-label="Open Inference Fabric home"><svg class="wv" viewBox="0 0 132 100" aria-hidden="true"><rect class="wv-x wv-warp" x="26" y="12" width="15" height="76" rx="7.5" style="fill:var(--teal)"/><rect class="wv-x wv-warp s" x="54" y="12" width="15" height="76" rx="7.5" style="fill:var(--saffron)"/><g class="wv-x wv-weft"><rect x="8" y="27" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="30" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-weft b"><rect x="8" y="53" width="76" height="21" style="fill:var(--bg)"/><rect x="8" y="56" width="76" height="15" rx="7.5" style="fill:var(--ink)"/></g><g class="wv-x wv-cross"><rect x="51" y="29" width="21" height="17" style="fill:var(--bg)"/><rect x="54" y="28" width="15" height="19" style="fill:var(--saffron)"/></g><g class="wv-x wv-cross b"><rect x="23" y="55" width="21" height="17" style="fill:var(--bg)"/><rect x="26" y="54" width="15" height="19" style="fill:var(--teal)"/></g><circle class="wv-x wv-tok r1 t1" cx="96" cy="37.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t2" cx="113" cy="37.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r1 t3" cx="125" cy="37.5" r="3" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t1" cx="96" cy="63.5" r="7.5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t2" cx="113" cy="63.5" r="5" style="fill:var(--ink)"/><circle class="wv-x wv-tok r2 t3" cx="125" cy="63.5" r="3" style="fill:var(--ink)"/></svg><b>open inference <span>fabric</span></b></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="../../#stack">The stack</a>
+      <a href="../../#architecture">How it works</a>
+      <a class="duo" href="../../#amd"><i></i>NVIDIA + AMD</a>
+      <a href="../../roadmap/">Roadmap</a>
+      <a href="../../upstream/">Upstream work</a>
+      <a href="../../benchmarks/" aria-current="page">Benchmarks</a>
+      <a href="../../code-map/">Code map</a>
+      <a href="../../#contribute">Contribute</a>
+      <a href="https://github.com/openinferencefabric/oif">GitHub ↗</a>
+    </nav>
+</div></header>
+<!-- /site-head -->
+<main class="wrap">
+  <section>
+    <p class="eyebrow">Benchmark · deep dive · 22 November 2026</p>
+    <h1>Why Dynamo's first token comes sooner than vLLM's own server</h1>
+    <p class="lede">In <a href="../w7900-dynamo-vs-vllm/">our W7900 benchmark</a> NVIDIA Dynamo served the same vLLM engine with
+      the first token up to 40% sooner, at the same throughput. We traced where that time goes, on an AMD Radeon PRO W7900
+      and an NVIDIA RTX A6000 in the same machine. <strong>The gap is the same on both GPUs, and it is not in the GPU or the
+      engine: it is in how vLLM's single API process hands each first token back to the user.</strong> vLLM's own options
+      close most of it.</p>
+  </section>
+
+  <section class="kpis" aria-label="The answer in four numbers">
+    <div class="kpi hi"><div class="v">39 → 12 <small>ms</small></div><div class="k">output path, plain vLLM against Dynamo, W7900 (AMD), chat with 16 users</div></div>
+    <div class="kpi hi"><div class="v">37 → 11 <small>ms</small></div><div class="k">the same on the A6000 (NVIDIA): the same cost on both GPUs</div></div>
+    <div class="kpi"><div class="v">±2%</div><div class="k">throughput and time between tokens, vLLM against Dynamo, both GPUs</div></div>
+    <div class="kpi"><div class="v">2 flags</div><div class="k">vLLM's <code>--api-server-count 4</code> and its Rust frontend close most of the gap</div></div>
+  </section>
+
+  <section class="panel" aria-labelledby="gap-h">
+    <h2 id="gap-h">The gap, on both GPUs</h2>
+    <p class="sub">Time to first token in milliseconds (median of the per-point p50s, 3 repeats), Qwen3-0.6B, from 1 to 64 simultaneous users.
+      Lower is better. The same vLLM 0.33.0 engine in all four; only the layer in front of it changes.</p>
+    <div class="ctl">
+      <div class="seg" role="group" aria-label="Workload"><button data-wl="chat" aria-pressed="true">Chat 512→256 tokens</button><button data-wl="short" aria-pressed="false">Short 128→128</button></div>
+      <ul class="legend" id="leg-a"></ul>
+    </div>
+    <div class="multi"><div class="chart" id="ca-W7900"></div><div class="chart" id="ca-A6000"></div></div>
+    <details><summary>Table view</summary><div class="tablewrap" id="ta"></div></details>
+  </section>
+
+  <section class="panel" aria-labelledby="split-h">
+    <h2 id="split-h">Where the time goes</h2>
+    <p class="sub">The mean time to first token split with vLLM's own timers: the <b>engine core</b> (queue and prefill on the GPU),
+      the <b>output path</b> (the first token's way from the engine core back through the output processor) and the
+      <b>API layer</b> (HTTP, chat template, tokenizing, the first streamed chunk). One traced repeat per point.</p>
+    <div class="ctl">
+      <div class="seg" role="group" aria-label="Point"><button data-pt="chat-16" aria-pressed="true">Chat, 16 users</button><button data-pt="chat-64" aria-pressed="false">Chat, 64</button><button data-pt="short-16" aria-pressed="false">Short, 16</button><button data-pt="short-64" aria-pressed="false">Short, 64</button></div>
+      <ul class="legend"><li><i class="box" style="background:var(--core)"></i>engine core</li><li><i class="box" style="background:var(--hi)"></i>output path</li><li><i class="box" style="background:var(--api)"></i>API layer</li></ul>
+    </div>
+    <div class="multi"><div class="chart" id="cb-W7900"></div><div class="chart" id="cb-A6000"></div></div>
+    <details><summary>Table view</summary><div class="tablewrap" id="tb"></div></details>
+  </section>
+
+  <section aria-labelledby="flow-h">
+    <h2 id="flow-h">How the first token travels</h2>
+    <p>The engine core runs the model and is the same in every stack. What differs is the process that turns the engine's
+      output into the response. In plain vLLM one Python process does everything for every user: HTTP, chat template,
+      tokenizing, and the <strong>output processor</strong> that receives each step's tokens from the engine core,
+      detokenizes them and streams them out. Dynamo moves HTTP and tokenizing into a Rust frontend and runs the output
+      processing in a worker process of its own.</p>
+    <div class="panel flow" role="img" aria-label="Request path. Plain vLLM: the client talks to one API process that does HTTP, template, tokenizing and the output processor, which exchanges messages with the engine core. Dynamo: the client talks to a Rust frontend for HTTP and tokenizing, which forwards to a worker process holding the output processor, which exchanges messages with the engine core.">
+      <svg viewBox="0 0 980 300">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--faint)"/></marker></defs>
+        <text x="0" y="22" style="font-weight:600">Plain vLLM</text>
+        <rect class="proc" x="0" y="40" width="110" height="70" rx="10"/><text x="55" y="80" text-anchor="middle">user</text>
+        <path class="arrow" d="M112,75 H178"/>
+        <rect class="proc" x="180" y="34" width="470" height="82" rx="10"/>
+        <text x="196" y="56" style="font-weight:600">one API process (Python)</text>
+        <text x="196" y="80" class="sm">HTTP · chat template · tokenize · streaming</text>
+        <rect class="hot" x="470" y="66" width="168" height="38" rx="8"/><text x="554" y="90" text-anchor="middle">output processor</text>
+        <path class="arrow" d="M652,75 H738"/><path class="arrow" d="M738,85 H652" style="marker-end:none;marker-start:url(#ah)"/>
+        <text x="695" y="66" text-anchor="middle" class="sm">ZMQ</text>
+        <rect class="proc" x="740" y="40" width="200" height="70" rx="10"/><text x="840" y="72" text-anchor="middle">engine core</text><text x="840" y="92" text-anchor="middle" class="sm">schedule · prefill · decode</text>
+
+        <text x="0" y="180" style="font-weight:600">Dynamo + vLLM</text>
+        <rect class="proc" x="0" y="198" width="110" height="70" rx="10"/><text x="55" y="238" text-anchor="middle">user</text>
+        <path class="arrow" d="M112,233 H178"/>
+        <rect class="proc" x="180" y="192" width="230" height="82" rx="10"/>
+        <text x="196" y="214" style="font-weight:600">frontend (Rust)</text>
+        <text x="196" y="238" class="sm">HTTP · template · tokenize</text><text x="196" y="256" class="sm">streaming, many threads</text>
+        <path class="arrow" d="M412,233 H448"/>
+        <rect class="proc" x="450" y="192" width="200" height="82" rx="10"/>
+        <text x="466" y="214" style="font-weight:600">worker (Python)</text>
+        <rect class="hot" x="462" y="226" width="176" height="38" rx="8"/><text x="550" y="250" text-anchor="middle">output processor</text>
+        <path class="arrow" d="M652,233 H738"/><path class="arrow" d="M738,243 H652" style="marker-end:none;marker-start:url(#ah)"/>
+        <text x="695" y="224" text-anchor="middle" class="sm">ZMQ</text>
+        <rect class="proc" x="740" y="198" width="200" height="70" rx="10"/><text x="840" y="230" text-anchor="middle">engine core</text><text x="840" y="250" text-anchor="middle" class="sm">the same engine</text>
+      </svg>
+    </div>
+    <p class="note">vLLM's API process is not maxed out: it uses 40 to 65% of one core even at 64 users. The cost is waiting
+      inside that one process, not a lack of CPU. Profiles put most of its samples in thread-pool workers next to the event
+      loop; contention for Python's global lock between them is our working explanation, not yet a measured one.</p>
+  </section>
+
+  <section class="two">
+    <div>
+      <h2>What it means</h2>
+      <ul class="points">
+        <li><strong>It is not an AMD or ROCm problem.</strong> The same milliseconds appear on CUDA and on ROCm, on the same
+          host CPU, because the API process is the same Python code on both. Asking for a ROCm fix would aim at the wrong place.</li>
+        <li><strong>If you run vLLM's own server,</strong> start it with <code>--api-server-count</code> above 1, or try its
+          experimental Rust frontend (<code>VLLM_USE_RUST_FRONTEND=1</code>). Both closed most of the gap here, on both GPUs.</li>
+        <li><strong>Dynamo's lead is a front-end lead.</strong> It shows with many users and a small, fast model, where the
+          GPU work per token is short. With one user it is small, and vLLM's Rust frontend was faster still.</li>
+        <li><strong>Throughput is not the story:</strong> tokens per second and time between tokens are equal within 2%.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Still open</h2>
+      <ul class="points">
+        <li>At 64 users plain vLLM on the A6000 is faster than at 32 (short prompts: 34 ms, below Dynamo's 39). The W7900 does
+          not show it. A guess, not checked: the faster GPU finishes the fixed-length answers in step, so new requests arrive
+          in waves and are prefilled together.</li>
+        <li>vLLM's Rust frontend at 64 users on the W7900: the engine core's own time jumps to 77 ms, as if requests are
+          handed over in bursts.</li>
+        <li>One small model (Qwen3-0.6B). With an 8B model the GPU's share grows and the gap should shrink; not traced yet.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="m-h">
+    <h2 id="m-h">Method and data</h2>
+    <p>One lab machine, both GPUs on the same host CPUs, run one after the other, never at the same time. vLLM 0.33.0 from
+      vLLM's own images (<code>vllm-openai-rocm</code>, <code>vllm-openai</code>); Dynamo 1.7.0 built by Open Inference Fabric
+      from one source commit for both GPUs, each on top of the matching vLLM image. Load from AIPerf 0.13.0 at a fixed
+      number of users, 60 seconds per point after a warm-up, exact output lengths, GPU cooled below 60 °C before each
+      point. Timings from 3 repeats; the time split from one traced repeat with py-spy, CPU sampling and vLLM's own
+      metrics. Every point checks that no other program uses the GPU; the runs here had none and no failed requests.</p>
+    <p>Stacks: <b>vLLM</b> (<code>vllm serve</code>), <b>vLLM ×4 API</b> (<code>--api-server-count 4</code>), <b>vLLM Rust
+      frontend</b> (<code>VLLM_USE_RUST_FRONTEND=1</code>), <b>Dynamo</b> (Rust frontend and a <code>dynamo.vllm</code> worker).</p>
+    <p>Everything to rerun it: <a href="https://github.com/openinferencefabric/oif/tree/main/bench">oif bench</a>,
+      <a href="https://github.com/openinferencefabric/oif/blob/main/docs/guides/18-oif-bench.md">the guide</a>, the evidence for the
+      <a href="https://github.com/openinferencefabric/oif/tree/main/docs/evidence/B-1b">W7900</a> and the
+      <a href="https://github.com/openinferencefabric/oif/tree/main/docs/evidence/B-2">A6000</a> (results, reports, time split,
+      profiles), and <a href="data.json" download>the numbers on this page</a>.</p>
+  </section>
+</main>
+<!-- site-foot -->
+<footer class="site-foot"><div class="site-in">
+    <span>Open Inference Fabric · Apache-2.0 · run by volunteers</span>
+    <a href="mailto:manmohan@openinferencefabric.us.ci">manmohan@openinferencefabric.us.ci</a>
+    <a href="https://github.com/openinferencefabric">GitHub</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    <a href="https://github.com/openinferencefabric/oif/blob/main/docs/SECURITY.md">Security</a>
+    <span class="tm">NVIDIA, Run:ai, AMD, Radeon, Google, Broadcom and Marvell are trademarks of their owners; this project is not affiliated with them.</span>
+</div></footer>
+<!-- /site-foot -->
+<script>
+const D = {"ttft":{"W7900":{"chat":{"vllm":[31.8,55.2,78.7,92.9,121.3],"vllm-api4":[31.3,41.9,54.2,71.2,81.6],"vllm-rs":[23.6,31.4,41.2,60.6,103.5],"dynamo-vllm":[28.6,35.7,45.1,57.6,72.3]},"short":{"vllm":[23.3,46.1,57.5,75.9,98.4],"vllm-api4":[23.7,35.9,39.3,55.1,58.5],"vllm-rs":[18.7,31.9,33.5,41.5,63.7],"dynamo-vllm":[22.5,34.4,36.5,50.7,62.7]}},"A6000":{"chat":{"vllm":[26.7,45.7,72.3,89.8,65.0],"vllm-api4":[26.6,31.8,42.8,57.6,54.1],"vllm-rs":[17.6,21.1,28.2,38.2,60.5],"dynamo-vllm":[24.5,27.0,37.4,36.4,54.2]},"short":{"vllm":[17.7,36.1,47.8,59.5,34.0],"vllm-api4":[17.8,24.0,29.5,45.9,53.8],"vllm-rs":[12.8,16.1,18.7,25.0,35.8],"dynamo-vllm":[16.8,21.8,21.7,24.6,39.2]}}},"tput":{"W7900":{"chat":{"vllm":[232,1323,2315,3322,4417],"vllm-api4":[232,1329,2353,3358,4451],"vllm-rs":[234,1343,2370,3437,4503],"dynamo-vllm":[232,1335,2361,3416,4455]},"short":{"vllm":[287,1583,2926,4886,7056],"vllm-api4":[286,1609,3010,5033,7108],"vllm-rs":[290,1630,3048,5126,7424],"dynamo-vllm":[288,1615,3018,4949,7158]}},"A6000":{"chat":{"vllm":[324,1908,3007,4245,5390],"vllm-api4":[324,1928,3069,4317,5391],"vllm-rs":[328,1945,3097,4357,5450],"dynamo-vllm":[325,1931,3070,4335,5366]},"short":{"vllm":[327,2174,3771,6094,9191],"vllm-api4":[327,2229,3911,6253,9219],"vllm-rs":[330,2266,3985,6434,9450],"dynamo-vllm":[327,2231,3943,6364,9015]}}},"split":{"W7900":{"chat-1":{"vllm":[20.6,8.0,3.4,32.0],"vllm-api4":[20.5,7.6,2.7,30.7],"vllm-rs":[20.7,2.1,0.7,23.6],"dynamo-vllm":[20.7,2.2,5.9,28.8]},"chat-8":{"vllm":[27.3,26.5,7.1,60.9],"vllm-api4":[27.3,18.7,4.2,50.1],"vllm-rs":[25.8,13.8,0.8,40.4],"dynamo-vllm":[27.0,12.0,6.8,45.7]},"chat-16":{"vllm":[27.6,38.7,13.1,79.4],"vllm-api4":[28.0,21.3,5.5,54.9],"vllm-rs":[26.0,16.5,0.7,43.2],"dynamo-vllm":[26.4,11.5,9.4,47.3]},"chat-32":{"vllm":[33.0,47.4,15.0,95.3],"vllm-api4":[34.4,27.4,7.7,69.5],"vllm-rs":[39.7,20.4,0.6,60.7],"dynamo-vllm":[35.7,16.0,11.1,62.9]},"chat-64":{"vllm":[39.1,50.6,14.5,104.3],"vllm-api4":[45.7,30.2,8.2,84.2],"vllm-rs":[77.4,26.3,0,103.6],"dynamo-vllm":[48.2,17.2,16.0,81.4]},"short-1":{"vllm":[16.6,4.6,2.2,23.4],"vllm-api4":[16.7,4.6,2.3,23.5],"vllm-rs":[16.3,1.5,0.8,18.6],"dynamo-vllm":[16.4,1.7,4.1,22.3]},"short-8":{"vllm":[19.9,23.6,5.7,49.1],"vllm-api4":[18.7,15.4,3.0,37.2],"vllm-rs":[19.9,13.7,0.8,34.4],"dynamo-vllm":[20.0,11.3,7.0,38.3]},"short-16":{"vllm":[20.1,27.7,11.4,59.2],"vllm-api4":[19.3,19.4,4.0,42.7],"vllm-rs":[18.5,14.7,0.6,33.8],"dynamo-vllm":[19.1,9.9,9.7,38.7]},"short-32":{"vllm":[26.9,33.3,15.2,75.4],"vllm-api4":[25.8,23.3,8.4,57.5],"vllm-rs":[24.0,17.8,0.7,42.5],"dynamo-vllm":[25.4,17.5,13.5,56.5]},"short-64":{"vllm":[32.2,49.9,16.2,98.3],"vllm-api4":[29.6,23.9,8.2,61.6],"vllm-rs":[38.9,16.8,0.4,56.1],"dynamo-vllm":[30.2,19.7,18.0,67.9]}},"A6000":{"chat-1":{"vllm":[16.2,6.6,3.0,25.8],"vllm-api4":[17.3,7.5,2.6,27.4],"vllm-rs":[15.2,2.0,0.5,17.7],"dynamo-vllm":[17.4,2.3,6.1,25.8]},"chat-8":{"vllm":[16.4,22.3,6.2,44.9],"vllm-api4":[15.4,15.3,3.3,34.0],"vllm-rs":[12.6,9.8,0.3,22.6],"dynamo-vllm":[14.6,7.5,9.4,31.5]},"chat-16":{"vllm":[23.7,37.0,12.4,73.2],"vllm-api4":[18.8,19.9,4.8,43.5],"vllm-rs":[15.4,11.2,0.5,27.1],"dynamo-vllm":[16.1,10.6,9.2,35.9]},"chat-32":{"vllm":[16.4,43.3,8.4,68.1],"vllm-api4":[24.3,26.4,7.9,58.5],"vllm-rs":[22.3,15.2,0,37.3],"dynamo-vllm":[18.2,10.4,10.6,39.3]},"chat-64":{"vllm":[25.7,37.5,7.5,70.8],"vllm-api4":[28.0,25.9,6.7,60.5],"vllm-rs":[34.7,18.1,0.6,53.4],"dynamo-vllm":[27.4,13.2,15.2,55.9]},"short-1":{"vllm":[10.7,5.1,2.3,18.0],"vllm-api4":[10.9,4.7,2.3,17.9],"vllm-rs":[10.3,1.6,0.9,12.7],"dynamo-vllm":[10.9,1.9,3.8,16.6]},"short-8":{"vllm":[12.7,18.0,6.4,37.0],"vllm-api4":[9.9,10.2,2.7,22.9],"vllm-rs":[8.0,7.5,0.6,16.1],"dynamo-vllm":[9.9,5.6,10.0,25.5]},"short-16":{"vllm":[14.3,23.6,10.4,48.3],"vllm-api4":[11.9,14.1,4.0,30.0],"vllm-rs":[9.0,8.9,0.6,18.6],"dynamo-vllm":[11.1,8.5,9.2,28.9]},"short-32":{"vllm":[21.7,30.0,10.2,61.9],"vllm-api4":[16.8,20.7,6.8,44.4],"vllm-rs":[12.7,10.5,0.6,23.8],"dynamo-vllm":[10.4,6.1,9.1,25.6]},"short-64":{"vllm":[14.3,21.6,6.2,42.1],"vllm-api4":[15.2,18.2,6.2,39.6],"vllm-rs":[20.6,15.0,0.4,36.0],"dynamo-vllm":[14.6,10.9,16.7,42.2]}}}};
+const STACKS = [["vllm", "vLLM", "--s1"], ["vllm-api4", "vLLM ×4 API", "--s2"], ["vllm-rs", "vLLM Rust frontend", "--s3"], ["dynamo-vllm", "Dynamo", "--s4"]];
+const GPUS = [["W7900", "Radeon PRO W7900 · ROCm"], ["A6000", "RTX A6000 · CUDA"]];
+const C = [1, 8, 16, 32, 64];
+const NS = "http://www.w3.org/2000/svg";
+const el = (t, a = {}, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const v = k => `var(${k})`;
+const fmt = x => x.toFixed(1);
+const nice = m => { const s = [20, 25, 40, 50, 60, 80, 100, 120, 150]; return s.find(x => x >= m) || Math.ceil(m / 50) * 50; };
+
+document.getElementById("leg-a").innerHTML = STACKS.map(([, n, c]) => `<li><i style="background:${v(c)}"></i>${n}</li>`).join("");
+
+function lineChart(host, gpu, wl, ymax) {
+  host.innerHTML = `<h3>${GPUS.find(g => g[0] === gpu)[1]}</h3><div class="tip"></div>`;
+  const W = 520, H = 310, L = 42, R = 120, T = 10, B = 44, iw = W - L - R, ih = H - T - B;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `Time to first token by users on the ${gpu}` }, host);
+  const x = i => L + i * iw / (C.length - 1), y = val => T + ih - val / ymax * ih;
+  const ax = el("g", { class: "axis" }, svg);
+  const step = [10, 20, 25, 30, 40, 50].find(s => ymax % s === 0 && ymax / s <= 6) || ymax / 4;
+  for (let t = 0; t <= ymax; t += step) {
+    el("line", { x1: L, x2: L + iw, y1: y(t), y2: y(t), stroke: v("--grid"), "stroke-width": 1 }, ax);
+    if (t > 0) el("text", { x: L - 8, y: y(t) + 4, "text-anchor": "end" }, ax).textContent = t;
+  }
+  C.forEach((c, i) => { el("text", { x: x(i), y: T + ih + 18, "text-anchor": "middle" }, ax).textContent = c; });
+  el("text", { x: L + iw / 2, y: T + ih + 38, "text-anchor": "middle" }, ax).textContent = "simultaneous users";
+  const ends = [];
+  for (const [s, name, col] of STACKS) {
+    const d = D.ttft[gpu][wl][s];
+    el("path", { d: d.map((val, i) => `${i ? "L" : "M"}${x(i)},${y(val)}`).join(""), fill: "none", stroke: v(col), "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+    d.forEach((val, i) => el("circle", { cx: x(i), cy: y(val), r: 4, fill: v(col), stroke: v("--panel"), "stroke-width": 2 }, svg));
+    ends.push({ y: y(d[d.length - 1]), name, col, val: d[d.length - 1] });
+  }
+  ends.sort((a, b) => a.y - b.y);                       // direct labels at the line ends, pushed apart to avoid overlap
+  for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 17) ends[i].y = ends[i - 1].y + 17;
+  for (const e of ends) { const t = el("text", { x: L + iw + 10, y: e.y + 4, class: "lab ink" }, svg); t.textContent = e.name; }
+  const cross = el("line", { y1: T, y2: T + ih, stroke: v("--faint"), "stroke-width": 1, "stroke-dasharray": "3 3", visibility: "hidden" }, svg);
+  const tip = host.querySelector(".tip");
+  const hit = el("rect", { x: L - 10, y: T, width: iw + 20, height: ih, fill: "transparent" }, svg);
+  const show = (evt) => {
+    const r = svg.getBoundingClientRect(), px = (evt.clientX - r.left) * W / r.width;
+    const i = Math.max(0, Math.min(C.length - 1, Math.round((px - L) / (iw / (C.length - 1)))));
+    cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("visibility", "visible");
+    const rows = STACKS.map(([s, n, col]) => [n, col, D.ttft[gpu][wl][s][i]]).sort((a, b) => b[2] - a[2]);
+    tip.innerHTML = `<b>${C[i]} user${C[i] > 1 ? "s" : ""}</b>` + rows.map(([n, col, val]) => `<div class="r"><span><i style="background:${v(col)}"></i>${n}</span><span class="n">${fmt(val)} ms</span></div>`).join("");
+    tip.style.display = "block";
+    const hx = x(i) * r.width / W, tw = tip.offsetWidth;
+    tip.style.left = (hx + 14 + tw > r.width ? hx - tw - 14 : hx + 14) + "px"; tip.style.top = "40px";
+  };
+  hit.addEventListener("pointermove", show); hit.addEventListener("pointerdown", show);
+  hit.addEventListener("pointerleave", () => { tip.style.display = "none"; cross.setAttribute("visibility", "hidden"); });
+}
+
+function drawA(wl) {
+  const ymax = nice(Math.max(...GPUS.flatMap(([g]) => STACKS.flatMap(([s]) => D.ttft[g][wl][s]))));
+  for (const [g] of GPUS) lineChart(document.getElementById("ca-" + g), g, wl, ymax);
+  document.getElementById("ta").innerHTML = `<table><thead><tr><th>GPU · stack (TTFT p50, ms)</th>${C.map(c => `<th>${c} users</th>`).join("")}</tr></thead><tbody>` +
+    GPUS.flatMap(([g]) => STACKS.map(([s, n]) => `<tr><td>${g} · ${n}</td>${D.ttft[g][wl][s].map(x => `<td>${fmt(x)}</td>`).join("")}</tr>`)).join("") +
+    `</tbody></table><p class="note">Output tokens per second at 64 users: ` +
+    GPUS.map(([g]) => `${g} ` + STACKS.map(([s, n]) => `${n} ${D.tput[g][wl][s][4]}`).join(", ")).join("; ") + ".</p>";
+}
+
+function barChart(host, gpu, pt, xmax) {
+  host.innerHTML = `<h3>${GPUS.find(g => g[0] === gpu)[1]}</h3><div class="tip"></div>`;
+  const W = 520, rowH = 44, L = 132, R = 56, T = 4, H = T + rowH * STACKS.length + 26, iw = W - L - R;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `Time to first token split on the ${gpu}` }, host);
+  const x = val => L + val / xmax * iw;
+  const ax = el("g", { class: "axis" }, svg);
+  for (let t = 0; t <= xmax; t += xmax / 4) {
+    el("line", { x1: x(t), x2: x(t), y1: T, y2: H - 22, stroke: v("--grid"), "stroke-width": 1 }, ax);
+    el("text", { x: x(t), y: H - 6, "text-anchor": "middle" }, ax).textContent = t + (t === xmax ? " ms" : "");
+  }
+  const tip = host.querySelector(".tip");
+  const parts = [["engine core", "--core"], ["output path", "--hi"], ["API layer", "--api"]];
+  STACKS.forEach(([s, name], i) => {
+    const d = D.split[gpu][pt][s], cy = T + i * rowH + 10, h = 22;
+    el("text", { x: L - 10, y: cy + 15, "text-anchor": "end", class: "lab ink" }, svg).textContent = name;
+    let at = 0;
+    parts.forEach(([pn, col], k) => {
+      const w = Math.max(0, x(at + d[k]) - x(at) - (k < 2 ? 2 : 0));        // 2px surface gap between segments
+      if (w > 0) {
+        const rect = el("rect", { x: x(at), y: cy, width: w, height: h, fill: v(col), rx: k === 2 || (k === 1 && d[2] < 0.5) ? 4 : 0 }, svg);
+        const show = (evt) => {
+          const r = host.getBoundingClientRect();
+          tip.innerHTML = `<b>${name}</b><div class="r"><span><i style="background:${v(col)}"></i>${pn}</span><span class="n">${fmt(d[k])} ms</span></div><div class="r"><span>total (client mean)</span><span class="n">${fmt(d[3])} ms</span></div>`;
+          tip.style.display = "block";
+          const px = evt.clientX - r.left, tw = tip.offsetWidth;
+          tip.style.left = (px + 14 + tw > r.width ? px - tw - 14 : px + 14) + "px"; tip.style.top = (evt.clientY - r.top - 70) + "px";
+        };
+        rect.addEventListener("pointermove", show); rect.addEventListener("pointerdown", show);
+        rect.addEventListener("pointerleave", () => { tip.style.display = "none"; });
+      }
+      at += d[k];
+    });
+    el("text", { x: x(at) + 8, y: cy + 15, class: "lab" }, svg).textContent = fmt(d[3]);
+  });
+}
+
+function drawB(pt) {
+  const xmax = nice(Math.max(...GPUS.flatMap(([g]) => STACKS.map(([s]) => { const d = D.split[g][pt][s]; return Math.max(d[0] + d[1] + d[2], d[3]); }))));
+  for (const [g] of GPUS) barChart(document.getElementById("cb-" + g), g, pt, xmax);
+  document.getElementById("tb").innerHTML = `<table><thead><tr><th>GPU · stack (ms)</th><th>engine core</th><th>output path</th><th>API layer</th><th>client mean</th></tr></thead><tbody>` +
+    GPUS.flatMap(([g]) => STACKS.map(([s, n]) => `<tr><td>${g} · ${n}</td>${D.split[g][pt][s].map(x => `<td>${fmt(x)}</td>`).join("")}</tr>`)).join("") + "</tbody></table>";
+}
+
+function seg(attr, draw) {
+  const btns = document.querySelectorAll(`[data-${attr}]`);
+  btns.forEach(b => b.addEventListener("click", () => { btns.forEach(x => x.setAttribute("aria-pressed", x === b)); draw(b.dataset[attr]); }));
+}
+seg("wl", drawA); seg("pt", drawB);
+drawA("chat"); drawB("chat-16");
+</script>
+</body>
+</html>
