@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-23T16:07:14Z",
+ "generated": "2026-11-24T15:58:22Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -127,18 +127,22 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3941": {
    "closed_reason": null,
-   "comments": 0,
+   "comments": 1,
    "labels": [
     "bug",
-    "area/resource-management",
+    "issue/approved",
     "community",
     "team/infra"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
+   "last_comment": {
+    "at": "2026-11-24T15:25:58Z",
+    "author": "Snirx1",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3941#issuecomment-7136016891"
+   },
+   "reply_waiting": true,
    "state": "open",
    "title": "[bug] GPU nodes counted as not ready when GPU fractioning has no target nodes",
-   "updated": "2026-11-23T09:32:48Z"
+   "updated": "2026-11-24T15:32:04Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3942": {
    "closed_reason": "reopened",
