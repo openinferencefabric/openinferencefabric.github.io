@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-24T15:58:22Z",
+ "generated": "2026-11-25T08:04:01Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -29,19 +29,19 @@
   },
   "https://github.com/ROCm/rocm-systems/issues/14860": {
    "closed_reason": null,
-   "comments": 2,
+   "comments": 3,
    "labels": [
     "status: assessed"
    ],
    "last_comment": {
-    "at": "2026-11-17T19:09:29Z",
-    "author": "harkgill-amd",
-    "url": "https://github.com/ROCm/rocm-systems/issues/14860#issuecomment-6958107710"
+    "at": "2026-11-25T08:02:23Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/ROCm/rocm-systems/issues/14860#issuecomment-7156535501"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "[Feature]: hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit",
-   "updated": "2026-11-18T15:28:56Z"
+   "updated": "2026-11-25T08:02:23Z"
   },
   "https://github.com/ROCm/rocm-systems/issues/14861": {
    "closed_reason": null,
@@ -127,7 +127,7 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3941": {
    "closed_reason": null,
-   "comments": 1,
+   "comments": 2,
    "labels": [
     "bug",
     "issue/approved",
@@ -135,32 +135,32 @@
     "team/infra"
    ],
    "last_comment": {
-    "at": "2026-11-24T15:25:58Z",
-    "author": "Snirx1",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3941#issuecomment-7136016891"
+    "at": "2026-11-25T08:02:11Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3941#issuecomment-7156531519"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "[bug] GPU nodes counted as not ready when GPU fractioning has no target nodes",
-   "updated": "2026-11-24T15:32:04Z"
+   "updated": "2026-11-25T08:02:11Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3942": {
    "closed_reason": "reopened",
-   "comments": 9,
+   "comments": 10,
    "labels": [
     "area/installation",
     "community",
     "team/infra"
    ],
    "last_comment": {
-    "at": "2026-11-23T08:08:54Z",
-    "author": "nsober",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-7095097465"
+    "at": "2026-11-25T08:02:20Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3942#issuecomment-7156534544"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "[feature] A setting to replace the New cluster wizard when clusters are installed by other tooling",
-   "updated": "2026-11-23T08:08:55Z"
+   "updated": "2026-11-25T08:02:20Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3943": {
    "closed_reason": "completed",
@@ -284,17 +284,17 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3949": {
    "closed_reason": null,
-   "comments": 3,
+   "comments": 4,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-11T19:53:03Z",
+    "at": "2026-11-25T08:02:09Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3949#issuecomment-6805788429"
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3949#issuecomment-7156530956"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "go-operator: report GPU fractions unavailable when the fractioning daemons have no target nodes",
-   "updated": "2026-11-11T19:53:03Z"
+   "updated": "2026-11-25T08:02:09Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3950": {
    "closed_reason": null,
@@ -309,6 +309,16 @@
    "state": "closed",
    "title": "cluster-sync: count AMD GPUs (amd.com/gpu) in the node inventory",
    "updated": "2026-11-11T19:37:16Z"
+  },
+  "https://github.com/dsx-ai-factory/run-ai/pull/5996": {
+   "closed_reason": null,
+   "comments": 1,
+   "labels": [],
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "[release-3.0] go-operator: GPU fractions unavailable when the fractioning daemons have no target nodes",
+   "updated": "2026-11-25T08:01:40Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/1544": {
    "closed_reason": null,
@@ -355,17 +365,17 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556": {
    "closed_reason": null,
-   "comments": 4,
+   "comments": 5,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-19T13:55:32Z",
-    "author": "enoodle",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-7011166684"
+    "at": "2026-11-25T08:02:38Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/issues/2556#issuecomment-7156540210"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "open",
    "title": "feat: GPU fractions on AMD GPU nodes (amd.com/gpu)",
-   "updated": "2026-11-19T13:55:32Z"
+   "updated": "2026-11-25T08:02:38Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/issues/2593": {
    "closed_reason": "completed",
@@ -379,7 +389,7 @@
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557": {
    "closed_reason": null,
-   "comments": 8,
+   "comments": 9,
    "labels": [
     "backport v0.14",
     "backport v0.16",
@@ -387,14 +397,14 @@
     "backport v0.19"
    ],
    "last_comment": {
-    "at": "2026-11-16T10:34:47Z",
-    "author": "KaiPilotBot",
-    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557#issuecomment-6914001497"
+    "at": "2026-11-25T08:02:22Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/kai-scheduler/KAI-Scheduler/pull/2557#issuecomment-7156534944"
    },
-   "reply_waiting": true,
+   "reply_waiting": false,
    "state": "merged",
    "title": "fix(binder): do not modify the configured reservation pod resources",
-   "updated": "2026-11-16T10:34:47Z"
+   "updated": "2026-11-25T08:02:22Z"
   },
   "https://github.com/kai-scheduler/KAI-Scheduler/pull/2594": {
    "closed_reason": null,
@@ -415,6 +425,26 @@
    "state": "merged",
    "title": "fix(scheduler): honour a required topology level above the job's lowest common domain",
    "updated": "2026-11-16T14:01:50Z"
+  },
+  "https://github.com/kai-scheduler/KAI-Scheduler/pull/2765": {
+   "closed_reason": null,
+   "comments": 0,
+   "labels": [],
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "fix(binder): do not modify the configured reservation pod resources",
+   "updated": "2026-11-25T08:01:44Z"
+  },
+  "https://github.com/kai-scheduler/KAI-Scheduler/pull/2766": {
+   "closed_reason": null,
+   "comments": 0,
+   "labels": [],
+   "last_comment": null,
+   "reply_waiting": false,
+   "state": "open",
+   "title": "fix(binder): do not modify the configured reservation pod resources",
+   "updated": "2026-11-25T08:01:49Z"
   },
   "https://github.com/kai-scheduler/gpu-fractioning/issues/173": {
    "closed_reason": null,
