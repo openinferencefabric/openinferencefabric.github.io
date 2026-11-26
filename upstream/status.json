@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-25T15:44:41Z",
+ "generated": "2026-11-26T15:26:19Z",
  "new": [],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
@@ -41,7 +41,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "[Feature]: hipMemGetInfo and the HSA memory pool size ignore the cgroup dmem.max VRAM limit",
-   "updated": "2026-11-25T08:02:23Z"
+   "updated": "2026-11-26T15:18:19Z"
   },
   "https://github.com/ROCm/rocm-systems/issues/14861": {
    "closed_reason": null,
@@ -108,22 +108,22 @@
    "updated": "2026-11-18T19:15:22Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3940": {
-   "closed_reason": "not_planned",
-   "comments": 3,
+   "closed_reason": "duplicate",
+   "comments": 4,
    "labels": [
     "enhancement",
     "area/workloads",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-18T19:15:24Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3940#issuecomment-6988894096"
+    "at": "2026-11-26T13:37:08Z",
+    "author": "camielRunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3940#issuecomment-7193600933"
    },
-   "reply_waiting": false,
+   "reply_waiting": true,
    "state": "closed",
    "title": "[feature] Show an AMD icon for workloads on ROCm images",
-   "updated": "2026-11-18T19:15:24Z"
+   "updated": "2026-11-26T13:37:33Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3941": {
    "closed_reason": null,
@@ -201,37 +201,41 @@
    "updated": "2026-11-11T17:17:56Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3945": {
-   "closed_reason": null,
-   "comments": 0,
+   "closed_reason": "completed",
+   "comments": 1,
    "labels": [
     "enhancement",
     "area/resource-management",
     "community",
     "team/platform"
    ],
-   "last_comment": null,
-   "reply_waiting": false,
-   "state": "open",
+   "last_comment": {
+    "at": "2026-11-26T13:50:12Z",
+    "author": "camielRunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3945#issuecomment-7193904245"
+   },
+   "reply_waiting": true,
+   "state": "closed",
    "title": "[feature] Default node pool order: GPU pools first, or a cluster-level default",
-   "updated": "2026-11-25T08:45:50Z"
+   "updated": "2026-11-26T13:50:15Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3946": {
-   "closed_reason": "not_planned",
-   "comments": 3,
+   "closed_reason": "completed",
+   "comments": 4,
    "labels": [
     "enhancement",
     "area/workloads",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-18T19:15:26Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3946#issuecomment-6988894745"
+    "at": "2026-11-26T13:45:13Z",
+    "author": "camielRunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/3946#issuecomment-7193787858"
    },
-   "reply_waiting": false,
+   "reply_waiting": true,
    "state": "closed",
    "title": "[feature] Sample workload templates for AMD GPUs (ROCm PyTorch training and Jupyter)",
-   "updated": "2026-11-18T19:15:26Z"
+   "updated": "2026-11-26T13:45:27Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/3947": {
    "closed_reason": "not_planned",
@@ -253,21 +257,21 @@
    "updated": "2026-11-13T04:00:53Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
-   "closed_reason": "not_planned",
-   "comments": 3,
+   "closed_reason": "reopened",
+   "comments": 4,
    "labels": [
     "enhancement",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-18T19:15:27Z",
-    "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-6988895403"
+    "at": "2026-11-26T13:48:32Z",
+    "author": "camielRunai",
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-7193866233"
    },
-   "reply_waiting": false,
-   "state": "closed",
+   "reply_waiting": true,
+   "state": "open",
    "title": "[feature] AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter",
-   "updated": "2026-11-18T19:15:27Z"
+   "updated": "2026-11-26T13:48:32Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
    "closed_reason": null,
@@ -473,7 +477,7 @@
    "reply_waiting": false,
    "state": "open",
    "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
-   "updated": "2026-11-16T05:29:54Z"
+   "updated": "2026-11-26T09:04:13Z"
   },
   "https://github.com/kubernetes-sigs/kwok/issues/1802": {
    "closed_reason": null,
