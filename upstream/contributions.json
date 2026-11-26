@@ -21,7 +21,8 @@
       {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6803066882", "date": "2026-11-11", "note": "Review fixes pushed (261f6ce, 584b4b8), with a reply on each of the 13 inline comments; lab check of the re-apply path to follow"},
       {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6841571283", "date": "2026-11-13", "note": "Lab result on the W7900 node, 11/11: readiness, 4096 MiB dmem.max on create, no dmem.min, re-apply in place after fractiond was down, fail-closed with the clear error; suggests AMD metrics as a follow-up PR"}
      ,
-              {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6908219007", "date": "2026-11-16", "note": "Asked danbar2 for a re-review: every review point addressed (261f6ce, 584b4b8), lab results posted"}]}
+              {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6908219007", "date": "2026-11-16", "note": "Asked danbar2 for a re-review: every review point addressed (261f6ce, 584b4b8), lab results posted"},
+              {"url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-7203131911", "date": "2026-11-27", "note": "Second review: all four points fixed in fa42620 (test race, readiness re-check, one dmem.capacity read per sync, best-effort re-apply documented); rebased on main with every commit signed; four inline replies"}]}
    ]
   },
   {
@@ -77,7 +78,8 @@
     {"url": "https://github.com/dsx-ai-factory/run-ai/issues/4274", "kind": "issue", "ref": "R11", "date": "2026-11-04",
      "summary": "Feature request: AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter. Run:ai's AMD rules read amd_gpu_* names no current exporter emits and its Prometheus does not watch kube-amd-gpu, so AMD GPUs are missing from GPU totals, memory, utilization and free GPUs. Offers OIF's working mapping as a PR.",
      "links": [{"label": "OIF rules", "url": "https://github.com/openinferencefabric/oif/blob/8d0fd98c41a4093cf72c641865d8cc4cd1156dc1/platform/observability/rules/oif-gpu.rules.yaml#L10-L49"}],
-     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-6988895403", "date": "2026-11-18", "note": "Parallel version maintained in OIF: link to the AMD metrics rules"}]},
+     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-6988895403", "date": "2026-11-18", "note": "Parallel version maintained in OIF: link to the AMD metrics rules"},
+              {"url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-7203137002", "date": "2026-11-27", "note": "Reopened by Run:ai with a ServiceMonitor + PrometheusRule workaround; we will test it on Run:ai 3.0.20 (A6000 + W7900) and report"}]},
     {"url": "https://github.com/dsx-ai-factory/run-ai/discussions/4103", "kind": "discussion", "ref": "K7", "date": "2026-11-03",
      "summary": "AMD GPU fractions with a hard VRAM cap (dmem cgroup): implementation and lab results, and where it touches Run:ai."},
     {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3939", "kind": "issue", "ref": "R1", "date": "2026-11-01",
@@ -91,7 +93,8 @@
      "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3940#issuecomment-6988894096", "date": "2026-11-18", "note": "Parallel version maintained in OIF: link to the AMD icon patch"}]},
     {"url": "https://github.com/dsx-ai-factory/run-ai/pull/3948", "kind": "pr", "ref": "R2", "date": "2026-11-01",
      "summary": "frontend: AMD icon for workloads on ROCm images (fixes #3940).",
-     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-6805787888", "date": "2026-11-11", "note": "Reply to 'we are reviewing it': the required approved-issue check cannot pass while #3940 is closed, so the PR waits on discussion #5023; offered a rebase when they review"}]},
+     "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-6805787888", "date": "2026-11-11", "note": "Reply to 'we are reviewing it': the required approved-issue check cannot pass while #3940 is closed, so the PR waits on discussion #5023; offered a rebase when they review"},
+              {"url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-7203137581", "date": "2026-11-27", "note": "Closed in favour of #6006 (custom icon upload and image-to-icon mapping API)"}]},
     {"url": "https://github.com/dsx-ai-factory/run-ai/issues/3941", "kind": "issue", "ref": "R3", "date": "2026-11-01",
      "summary": "GPU nodes counted as not ready when GPU fractioning has no target nodes.",
      "ours": [{"url": "https://github.com/dsx-ai-factory/run-ai/issues/3941#issuecomment-7156531519", "date": "2026-11-25", "note": "Pointer to the updated #3949 and the release-3.0 backport #5996"}]},
