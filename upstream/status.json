@@ -1,7 +1,9 @@
 {
  "failed": [],
- "generated": "2026-11-26T15:26:19Z",
- "new": [],
+ "generated": "2026-11-26T21:27:23Z",
+ "new": [
+  "https://github.com/ROCm/rocm-systems/pull/16042"
+ ],
  "threads": {
   "https://github.com/ROCm/device-metrics-exporter/issues/722": {
    "closed_reason": null,
@@ -52,6 +54,25 @@
    "state": "open",
    "title": "[Feature]: Per-process compute busy time for KFD queues (per-container GPU utilization)",
    "updated": "2026-11-02T20:56:26Z"
+  },
+  "https://github.com/ROCm/rocm-systems/pull/16042": {
+   "closed_reason": null,
+   "comments": 5,
+   "kind": "pr",
+   "labels": [
+    "project: rocr-runtime",
+    "organization: ROCm",
+    "Not ready to Review"
+   ],
+   "last_comment": {
+    "at": "2026-11-21T16:47:19Z",
+    "author": "nigelhutch",
+    "url": "https://github.com/ROCm/rocm-systems/pull/16042#issuecomment-7065921209"
+   },
+   "reply_waiting": true,
+   "state": "open",
+   "title": "fix(rocr): report the dmem cgroup VRAM cap as pool size and free memory",
+   "updated": "2026-11-26T21:26:11Z"
   },
   "https://github.com/ai-dynamo/dynamo/pull/12537": {
    "closed_reason": null,
@@ -258,34 +279,34 @@
   },
   "https://github.com/dsx-ai-factory/run-ai/issues/4274": {
    "closed_reason": "reopened",
-   "comments": 4,
+   "comments": 5,
    "labels": [
     "enhancement",
     "community"
    ],
    "last_comment": {
-    "at": "2026-11-26T13:48:32Z",
-    "author": "camielRunai",
-    "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-7193866233"
-   },
-   "reply_waiting": true,
-   "state": "open",
-   "title": "[feature] AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter",
-   "updated": "2026-11-26T13:48:32Z"
-  },
-  "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
-   "closed_reason": null,
-   "comments": 3,
-   "labels": [],
-   "last_comment": {
-    "at": "2026-11-11T19:53:01Z",
+    "at": "2026-11-26T20:51:06Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-6805787888"
+    "url": "https://github.com/dsx-ai-factory/run-ai/issues/4274#issuecomment-7203137002"
    },
    "reply_waiting": false,
    "state": "open",
+   "title": "[feature] AMD GPU metrics from the AMD GPU Operator's Device Metrics Exporter",
+   "updated": "2026-11-26T20:51:06Z"
+  },
+  "https://github.com/dsx-ai-factory/run-ai/pull/3948": {
+   "closed_reason": null,
+   "comments": 4,
+   "labels": [],
+   "last_comment": {
+    "at": "2026-11-26T20:51:08Z",
+    "author": "manmohanbrahma",
+    "url": "https://github.com/dsx-ai-factory/run-ai/pull/3948#issuecomment-7203137581"
+   },
+   "reply_waiting": false,
+   "state": "closed",
    "title": "frontend: AMD icon for workloads on ROCm images",
-   "updated": "2026-11-11T19:53:02Z"
+   "updated": "2026-11-26T20:51:09Z"
   },
   "https://github.com/dsx-ai-factory/run-ai/pull/3949": {
    "closed_reason": null,
@@ -467,17 +488,17 @@
   },
   "https://github.com/kai-scheduler/gpu-fractioning/pull/175": {
    "closed_reason": null,
-   "comments": 4,
+   "comments": 5,
    "labels": [],
    "last_comment": {
-    "at": "2026-11-16T05:29:54Z",
+    "at": "2026-11-26T20:50:47Z",
     "author": "manmohanbrahma",
-    "url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-6908219007"
+    "url": "https://github.com/kai-scheduler/gpu-fractioning/pull/175#issuecomment-7203131911"
    },
    "reply_waiting": false,
    "state": "open",
    "title": "feat(fractiond): limit AMD GPU memory with the dmem cgroup",
-   "updated": "2026-11-26T09:04:13Z"
+   "updated": "2026-11-26T20:50:49Z"
   },
   "https://github.com/kubernetes-sigs/kwok/issues/1802": {
    "closed_reason": null,
