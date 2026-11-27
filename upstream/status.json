@@ -1,6 +1,6 @@
 {
  "failed": [],
- "generated": "2026-11-26T21:27:23Z",
+ "generated": "2026-11-27T15:13:41Z",
  "new": [
   "https://github.com/ROCm/rocm-systems/pull/16042"
  ],
@@ -57,7 +57,7 @@
   },
   "https://github.com/ROCm/rocm-systems/pull/16042": {
    "closed_reason": null,
-   "comments": 5,
+   "comments": 8,
    "kind": "pr",
    "labels": [
     "project: rocr-runtime",
@@ -65,14 +65,14 @@
     "Not ready to Review"
    ],
    "last_comment": {
-    "at": "2026-11-21T16:47:19Z",
-    "author": "nigelhutch",
-    "url": "https://github.com/ROCm/rocm-systems/pull/16042#issuecomment-7065921209"
+    "at": "2026-11-27T00:34:22Z",
+    "author": "cfreeamd",
+    "url": "https://github.com/ROCm/rocm-systems/pull/16042#issuecomment-7206572149"
    },
    "reply_waiting": true,
    "state": "open",
    "title": "fix(rocr): report the dmem cgroup VRAM cap as pool size and free memory",
-   "updated": "2026-11-26T21:26:11Z"
+   "updated": "2026-11-27T00:34:22Z"
   },
   "https://github.com/ai-dynamo/dynamo/pull/12537": {
    "closed_reason": null,
